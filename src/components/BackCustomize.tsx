@@ -7,10 +7,10 @@ export const BackCustomize = () => {
   const router = useRouter();
   return (
     <div className=" inline-flex flex-row border border-pink-600 w-full m-1">
-      <div className="justify-start border border-green-500 m-1 inline-flex flex-row items-center">
+      <div className="justify-start m-1 inline-flex flex-row items-center">
         <button
           onClick={() => router.back()}
-          className="bg-white  text-black py-1 px-2  rounded-md"
+          className="bg-white  text-black py-2 px-3  rounded-md"
         >
           Back
         </button>

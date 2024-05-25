@@ -58,7 +58,8 @@ export const Editor = observer(() => {
       <main className="flex flex-col items-center justify-between border border-white m-1 p-1  w-full">
         <div className="flex flex-col border border-green-500 m-1  w-full">
           <BackCustomize />
-          </div><div className="flex flex-col border border-green-500 m-1 p-1 w-full">
+          </div>
+          <div className="flex flex-col border border-green-500 m-1 p-1 w-full">
           <MainPart />
         </div>
         <div className="flex flex-row items-start justify-between w-full border border-pink-500 m-1 p-1">
