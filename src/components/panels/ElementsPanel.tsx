@@ -30,7 +30,7 @@ export const ElementsPanel = observer(({elementtype}:ElementsPanelProps) => {
   const store = React.useContext(StoreContext);
   
   return (
-  <div className="w-[18.3%] h-[510px] max-h-[510px] flex flex-col border border-red-500 m-0.5 p-0.5  items-center justify-start">
+  <div className="w-[17%] h-[510px] max-h-[510px] flex flex-col border border-red-500 m-0.5 p-0.5  items-center justify-start">
     {elementtype=== undefined ? <><Header header={"Canvas"} /><section className=" sidesection">
          <Layers/>
          <Dimensions/>
