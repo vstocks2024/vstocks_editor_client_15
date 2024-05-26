@@ -45,10 +45,8 @@ export const ImageResource = observer(
           }}
           crossOrigin = "anonymous"
           ref={ref}
-          className="max-h-[100px] max-w-[150px]"
+          className="h-[125px] w-[187.5px]"
           src={filesource}
-          height={200}
-          width={200}
           id={`image-${index}`}
         ></img>
       </div>

@@ -9,6 +9,38 @@ import axios from "axios";
 
 export const ImageResourcesPanel = observer(() => {
   const store = React.useContext(StoreContext);
+  const init_user_uploaded_images = async () => {
+    try {
+      store.setImages([]);
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_URL}/user/list_user_uploaded_images`)
+        .then(async (resolve) => {
+          if (resolve.data.data?.length > 0) {
+            resolve.data.data.forEach(async (ele: any) => {
+              const fileid = ele.id;
+              const imageid_fileid = ele.id.split(".");
+              const filename = ele.image_name;
+              const url: string = await getObjectURL(
+                `user_uploaded_images/${imageid_fileid[0]}`
+              );
+              
+
+              store.addImageResource({
+                fileid: fileid,
+                filename: filename,
+                filesource: url,
+              });
+            });
+          }
+        })
+        .catch((reject) => {
+          console.log(reject);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const init1 = async () => {
     try {
       store.setImages([]);
@@ -23,6 +55,7 @@ export const ImageResourcesPanel = observer(() => {
               const url: string = await getObjectURL(
                 `users/uploads/images/category/mahashivaratri/${imageid_fileid[0]}`
               );
+              
 
               store.addImageResource({
                 fileid: fileid,
@@ -88,11 +121,13 @@ export const ImageResourcesPanel = observer(() => {
     init1();
   }, []);
   return (
-    <div className="items-center align-middle flex flex-col mx-2">
-      <div className="w-auto">
-        <div className="text-sm px-[16px] pt-[16px] pb-[8px] font-semibold">
-          Add Image
-        </div>
+    <div className="items-center justify-start border border-red-500 flex flex-col m-0.5 p-0.5">
+        <UploadButton
+        accept="image/*"
+        className=" uploadbutton"
+        onChange={handleFileChange}
+      />
+    <div className=" border border-blue-500 m-0.5 p-1 overflow-y-auto h-[405px]  w-full">
         {store.images.map((file, index) => {
           return (
             <ImageResource
@@ -105,12 +140,6 @@ export const ImageResourcesPanel = observer(() => {
           );
         })}
       </div>
-      <UploadButton
-        accept="image/*"
-        className=" uploadbutton"
-        onChange={handleFileChange}
-      />
-      {/* <button onClick={init1}>init</button> */}
     </div>
   );
 });

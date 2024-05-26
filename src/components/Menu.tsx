@@ -21,7 +21,7 @@ import { getObjectURL } from "./functions/get_put_url";
 export const Menu = observer(() => {
   const store = React.useContext(StoreContext);
   return (
-    <div className="inline-flex flex-col border border-white m-1  py-4 bg-[#202020]">
+    <div className="inline-flex flex-col border border-white m-0.5  py-4 bg-[#202020]">
       {MENU_OPTIONS.map((option) => {
         return (
           <button
