@@ -10,7 +10,6 @@ import { Menu } from "@/components/Menu";
 import { TimeLine } from "@/components/TimeLine";
 import "@/utils/fabric-utils";
 import { MainPart } from "./MainPart";
-import { BackCustomize } from "@/components/BackCustomize";
 import { MainCanvas } from "@/components/MainCanvas";
 import { CanvasFooter } from "@/components/CanvasFooter";
 import { Store } from "@/store/Store";
@@ -56,9 +55,7 @@ export const Editor = observer(() => {
   return (
     <React.Fragment>
       <main className="flex flex-col items-center justify-between border border-white m-0.5 p-0.5  w-full">
-        <div className="flex flex-col border border-green-500 m-0.5  w-full">
-          <BackCustomize />
-          </div>
+     
           <div className="flex flex-col border border-green-500 m-0.5 p-0.5 w-full">
           <MainPart />
         </div>
