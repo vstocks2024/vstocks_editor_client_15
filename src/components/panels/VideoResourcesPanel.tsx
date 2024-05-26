@@ -103,11 +103,13 @@ export const VideoResourcesPanel = observer(() => {
   }, []);
 
   return (
-    <div className="items-center align-middle flex flex-col mx-2">
-      <div className="w-auto">
-        <div className="text-sm px-[16px] pt-[16px] pb-[8px] text-center font-semibold">
-          Add Video
-        </div>
+    <div className="items-center justify-start border border-red-500 flex flex-col m-0.5 p-0.5">
+          <UploadButton
+        accept="video/mp4,video/x-m4v,video/*"
+        className="uploadbutton"
+        onChange={handleFileChange}
+      />
+      <div className=" border border-blue-500 m-0.5 p-1 overflow-y-auto h-[405px]  w-full">
         {store.videos.map((file, index) => {
           return (
             <VideoResource
@@ -120,12 +122,6 @@ export const VideoResourcesPanel = observer(() => {
           );
         })}
       </div>
-      <UploadButton
-        accept="video/mp4,video/x-m4v,video/*"
-        className="uploadbutton"
-        onChange={handleFileChange}
-      />
-      {/* <button onClick={init1}>init1</button> */}
     </div>
   );
 });

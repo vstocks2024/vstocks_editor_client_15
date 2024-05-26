@@ -67,6 +67,12 @@ export class Store {
   get currentTimeInMs() {
     return this.currentKeyFrame * 1000 / this.fps;
   }
+  
+  setCanvasWidthandHeight(w:number,h:number){
+    this.width=w;
+    this.height=h;
+    console.log(this.width,this.height);
+  }
 
   setCurrentTimeInMs(time: number) {
     this.currentKeyFrame = Math.floor(time / 1000 * this.fps);

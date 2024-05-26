@@ -20,7 +20,7 @@ export const Resources = observer(() => {
   const store = React.useContext(StoreContext);
   const selectedMenuOption = store.selectedMenuOption;
   return (
-    <div className=" flex flex-col justify-start border border-green-500 m-0.5 p-0.5 h-[510px]  bg-[#303030]" >
+    <div className=" flex flex-col justify-start border border-green-500 w-[17%] m-0.5 p-0.5 h-[510px]  bg-[#303030]" >
       <div className=" inline-flex items-center flex-row border border-pink-500 m-0.5 p-0.5 h-10 bg-[#202020]  justify-between">
         <h3 className="border border-white m-1 p-1 text-[12px]">{store.selectedMenuOption}</h3>
         <button onClick={()=>{store.selectedMenuOption=null}} className="border border-green-500 m-0.5 p-0.5">

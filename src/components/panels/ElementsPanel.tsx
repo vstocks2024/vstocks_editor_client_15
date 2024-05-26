@@ -30,7 +30,7 @@ export const ElementsPanel = observer(({elementtype}:ElementsPanelProps) => {
   const store = React.useContext(StoreContext);
   
   return (
-  <div className="w-[250px] max-w-[250px] min-w-[233px] h-[510px] max-h-[510px] flex flex-col">
+  <div className=" max-w-[20%] min-w-[18%] h-[510px] max-h-[510px] flex flex-col border border-red-500 m-0.5 p-0.5  items-center justify-start">
     {elementtype=== undefined ? <><Header header={"Canvas"} /><section className="overflow-y-auto block mt-2">
          <Layers/>
          <Dimensions/>

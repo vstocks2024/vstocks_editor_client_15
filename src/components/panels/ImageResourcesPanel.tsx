@@ -24,7 +24,6 @@ export const ImageResourcesPanel = observer(() => {
                 `user_uploaded_images/${imageid_fileid[0]}`
               );
               
-
               store.addImageResource({
                 fileid: fileid,
                 filename: filename,
