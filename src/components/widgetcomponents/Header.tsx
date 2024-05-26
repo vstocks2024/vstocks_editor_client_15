@@ -13,7 +13,7 @@ export const Header =observer (({header}:HeaderProps) => {
   const store = React.useContext(StoreContext);
   return (
   <>
-      <section className="flex border border-green-400 m-0.5 p-0.5 flex-row w-[20p%] min-w-[18%] h-10 bg-[#101010] justify-between px-[2px] text-base items-center">
+      <section className="flex border border-green-400 m-0.5 p-0.5 flex-row w-full h-10 bg-[#101010] justify-between px-[2px] text-base items-center">
             <div className="left items-center px-[2px]">
               <h2 className="title text-[14px] font-bold pl-3">{header} Properties</h2>
             </div>

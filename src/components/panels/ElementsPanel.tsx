@@ -30,13 +30,13 @@ export const ElementsPanel = observer(({elementtype}:ElementsPanelProps) => {
   const store = React.useContext(StoreContext);
   
   return (
-  <div className=" max-w-[20%] min-w-[18%] h-[510px] max-h-[510px] flex flex-col border border-red-500 m-0.5 p-0.5  items-center justify-start">
-    {elementtype=== undefined ? <><Header header={"Canvas"} /><section className="overflow-y-auto block mt-2">
+  <div className="w-[18.3%] h-[510px] max-h-[510px] flex flex-col border border-red-500 m-0.5 p-0.5  items-center justify-start">
+    {elementtype=== undefined ? <><Header header={"Canvas"} /><section className=" sidesection">
          <Layers/>
          <Dimensions/>
          <Background/>
         </section></> :null}
-    {elementtype==="video" ? <><Header header={"Animation"} /><section className="overflow-y-auto block mt-2">
+    {elementtype==="video" ? <><Header header={"Animation"} /><section className="sidesection">
           <Layers/>
           <Alignment/>
           <Arrange/>
@@ -44,7 +44,7 @@ export const ElementsPanel = observer(({elementtype}:ElementsPanelProps) => {
           <Transform/>
           <Opacity/>    
       </section></> :null}
-      {elementtype==="image" ? <><Header header={"Image"} /> <section className=" overflow-y-auto block mt-2">
+      {elementtype==="image" ? <><Header header={"Image"} /> <section className="sidesection">
           <Layers/>
           <Alignment/>
           <Arrange/>
@@ -54,7 +54,7 @@ export const ElementsPanel = observer(({elementtype}:ElementsPanelProps) => {
           <TextShadow/>
           <Opacity/>    
       </section></> :null}
-      {elementtype==="text" ? <><Header header={"Text"} />   <section className="overflow-y-auto block mt-2">
+      {elementtype==="text" ? <><Header header={"Text"} />   <section className="sidesection">
           <Layers/>
           <Alignment/>
           <Arrange/>

@@ -3,10 +3,6 @@ import { StoreContext } from '@/store';
 import { observer } from 'mobx-react';
 import React, { useState } from 'react'
 import { IoMdVolumeOff,IoMdVolumeHigh} from "react-icons/io";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import { AiOutlineClose } from 'react-icons/ai';
 
 
@@ -42,7 +38,7 @@ export const MainCanvas = observer(() => {
   return (
     // <div className='flex border border-green-500 m-0.5 grow shrink basis-0 p-4 min-w-[785] h-[510px] max-w-[1035px]'>
     //   <div className='flex flex-col border  border-yellow-400 m-0.5 p-0.5 w-full min-h-[478px] min-w-[753px] max-h-[478px] max-w-[1003px] justify-center items-center '>
-    <div className='flex border border-green-500  grow shrink basis-0 m-0.5 p-0.5  min-w-[56%] h-[510px] max-w-[76%]'>
+    <div className='flex border border-green-500  grow shrink basis-0 m-0.5 p-0.5  min-w-[59%] h-[510px] max-w-[76%]'>
     <div className='flex flex-col border  border-yellow-400 m-0.5 p-0.5 w-full justify-center items-center '>
         <div className='inline-flex flex-row items-center justify-center border border-green-500 p-1 w-[210px] h-[40px] max-w-[210px] max-h-[40px] gap-3'>
           <button onClick={()=>setResizeOpen(true)} className='bg-[#202020] text-[12px] border border-pink-500 m-0.5  hover: hover:bg-[#101010]  h-full px-4  rounded-md'>Resize</button>
