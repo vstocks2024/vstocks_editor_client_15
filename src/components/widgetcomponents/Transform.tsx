@@ -71,11 +71,14 @@ export const Transform = observer(() => {
     }
     return (
       <>
+      <div className='border border-pink-500 p-0.5 m-0.5'>
        <section onClick={()=>setExpand(!expand)} className={`comphead ${expand===true ? "border-none":"border-b-[0.2px]"}`}>
-          <h3>Transform</h3>
+        <div className='compheadsec1'>
+        <h3 className='border border-green-500 m-0.5 p-0.5'>Transform</h3>
           <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
+          </div>
       </section>
-      {expand   ? <section className={`cursor-pointer px-2 py-3 border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
+      {expand   ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
         <div className='flex flex-row py-2 items-center   text-gray-500 gap-2'>
           <div  className='flex flex-col gap-1'>
             <div className='w-12 min-w-[48px] gap-2 block font-semibold text-center items-center py-1 text-xs'>
@@ -109,6 +112,7 @@ export const Transform = observer(() => {
           </div>
         </div>
     </section>:null}
+    </div>
       </>
   )
 })

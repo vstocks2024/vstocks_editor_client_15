@@ -2,7 +2,11 @@
 @tailwind components;
 
 .comphead{
-  @apply cursor-pointer border border-red-600 m-0.5 p-0.5 dark:border-gray-50 font-semibold flex flex-row justify-between items-center text-xs bg-[#151515] pl-3 pr-2
+  @apply cursor-pointer border border-red-600 m-0.5 p-0.5 dark:border-gray-50 font-semibold flex flex-row justify-between items-center text-xs bg-[#151515]
+}
+
+.compheadsec1{
+  @apply w-full inline-flex justify-between items-center flex-row border border-orange-300 m-0.5 p-0.5
 }
 
 .uploadbutton{

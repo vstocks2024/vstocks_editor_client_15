@@ -53,26 +53,30 @@ export const Arrange = observer(() => {
     
   return (
     <>
+    <div className='border border-pink-500 p-0.5 m-0.5'>
    <section onClick={()=>setExpand(!expand)} className={`comphead ${expand===true ? "border-none":"border-b-[0.2px]"}`}>
-          <h3>Arrange</h3>
+   <div className='compheadsec1'>
+          <h3 className='border border-green-500 m-0.5 p-0.5'>Arrange</h3>
           <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
+          </div>
       </section>
-      {expand  ? <section className={`cursor-pointer px-3 py-2 w-[233px] max-w-[233px] h-[56px] max-h-[56px] border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-     <button onClick={handleBringToFront}  className='w-[40px] h-[40px]' type='button'>
-        <span><RiBringToFront size={24}/></span><span></span><span></span>
+      {expand  ? <section className={`cursor-pointer m-0.5 p-0.5 w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
+        <div className='border border-red-500 space-x-3 m-0.5 p-0.5 inline-flex flex-row items-center justify-start'>
+     <button onClick={handleBringToFront}  className='' type='button'>
+        <RiBringToFront size={24}/>
       </button>
-      <button onClick={handleBringForward} className='w-[40px] h-[40px]' type='button'>
-        <span><RiBringForward size={24}/></span><span></span><span></span>
+      <button onClick={handleBringForward} className='' type='button'>
+        <RiBringForward size={24}/>
       </button>
-      <button onClick={handleSendBackward} className='w-[40px] h-[40px]' type='button'>
-        <span><RiSendBackward size={24}/></span><span></span><span></span>
+      <button onClick={handleSendBackward} className='' type='button'>
+        <RiSendBackward size={24}/>
       </button>
-      <button onClick={handleSendToBack} className='w-[40px] h-[40px]' type='button'>
-        <span><RiSendToBack size={24}/></span><span></span><span></span>
+      <button onClick={handleSendToBack} className='' type='button'>
+        <RiSendToBack size={24}/>
       </button>
-    
+    </div>
     </section>:null}
-
+</div>
     </>
   )
 });
