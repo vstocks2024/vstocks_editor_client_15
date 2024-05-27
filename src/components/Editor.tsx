@@ -28,6 +28,7 @@ export const Editor = observer(() => {
   document.title = "Editor--VSTOCKS";
 
   useEffect(() => {
+    console.log(store.width,store.height);
     const canvas = new fabric.Canvas("lower-canvas", {
       height: store.height,
       width: store.width,

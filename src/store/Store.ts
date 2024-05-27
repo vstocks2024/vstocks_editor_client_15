@@ -43,7 +43,7 @@ export class Store {
     this.audios = [];
     this.editorElements = [];
     this.width=775;
-    this.height=436;
+    this.height=450;
     this.backgroundColor = '#242728';
     this.maxTime = 15 * 1000;
     this.playing = false;
@@ -68,11 +68,13 @@ export class Store {
     return this.currentKeyFrame * 1000 / this.fps;
   }
   
-  setCanvasWidthandHeight(w:number,h:number){
-    this.width=w;
-    this.height=h;
-    console.log(this.width,this.height);
+  setCanvasWidthandHeight(canvas: fabric.Canvas | null,w:number,h:number){
+    this.canvas=canvas;
+    if(this.canvas){
+    this.canvas.setWidth(w);
+    this.canvas.setHeight(h);
   }
+}
 
   setCurrentTimeInMs(time: number) {
     this.currentKeyFrame = Math.floor(time / 1000 * this.fps);
@@ -1550,10 +1552,10 @@ shadow:newShadow};
         name: `Text ${index + 1}`,
         type: "text",
         placement: {
-          x: 0,
-          y: 0,
-          width: 100,
-          height: 100,
+          x: 400,
+          y: 250,
+          width: 200,
+          height: 200,
           rotation: 0,
           scaleX: 1,
           scaleY: 1,
@@ -1579,7 +1581,8 @@ shadow:newShadow};
           strokeLineCap:"butt",
           strokeLineJoin:"milter",
           strokeMiterLimit:1,
-          shadow:new fabric.Shadow({color:"blue",blur:0.6,offsetX:2,offsetY:2}),
+          // shadow:new fabric.Shadow({color:"blue",blur:0.6,offsetX:2,offsetY:2}),
+          shadow:undefined
         
         },
         timeFrame: {

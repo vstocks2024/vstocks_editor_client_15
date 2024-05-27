@@ -23,15 +23,16 @@ export const MainCanvas = observer(() => {
   const store = React.useContext(StoreContext);
   const [resizeopen,setResizeOpen]=useState<boolean>(false);
   function handleFacebookEvent(){
-   store.setCanvasWidthandHeight(775,436);
+   store.setCanvasWidthandHeight(store.canvas,775,450);
+   
    setResizeOpen(false);
   }
   function handleInstagramPost(){
-    store.setCanvasWidthandHeight(436,775);
+    store.setCanvasWidthandHeight(store.canvas,261.29,450);
     setResizeOpen(false);
   }
   function handleInstagramStory(){
-    store.setCanvasWidthandHeight(436,436);
+    store.setCanvasWidthandHeight(store.canvas,450,450);
     setResizeOpen(false);
   }
 
@@ -65,8 +66,8 @@ export const MainCanvas = observer(() => {
                           color="#FFFFFF"
                         />
                         </div>
-                        <div className='border h-full border-green-400 m-0.5 p-0.5'>
-                        <div className='border h-full w-full items-center justify-center border-pink-400 inline-flex gap-y-1 flex-col m-0.5 p-3'>
+                        <div className='border flex flex-col h-full items-center justify-center border-green-400 m-0.5 p-0.5'>
+                        <div className='border items-center justify-between h-full py-4 border-pink-400 inline-flex flex-col m-0.5 px-3'>
                                    <button onClick={()=>{handleFacebookEvent()}} className='w-full px-2 py-2 text-[16px] border border-white text-center rounded-md'>Facebook Event Cover (1920 x 1080)</button>
                                    <button onClick={()=>{handleInstagramPost()}} className='w-full px-2 py-2 text-[16px] border border-white text-center rounded-md'>Instagram Post (1080 x 1920)</button>
                                    <button onClick={()=>{handleInstagramStory()}} className='w-full px-2 py-2 text-[16px] border border-white text-center rounded-md'>Instagram Story (1080 x 1080)</button>
