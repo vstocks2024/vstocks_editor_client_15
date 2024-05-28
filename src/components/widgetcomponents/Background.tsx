@@ -26,14 +26,14 @@ export const Background = observer(() => {
           <button><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
           </div>
       </section>
-   {expand ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
-      <div className='flex flex-row items-center justify-between w-full border border-green-500 m-0.5 p-0.5'>
-        <div className='inline-flex flex-row items-center justify-start space-x-2 m-0.5 p-0.5 border border-red-500'>
+   {expand ? <section className={`cursor-pointer py-3 w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
+      <div className='flex flex-row items-center justify-between  border border-green-500 m-0.5 p-0.5'>
+        <div className='inline-flex flex-row items-center justify-start space-x-0.5 m-0.5 p-0.5 border border-red-500'>
         <input  type='checkbox' ref={refBgColor}  className='bg-transparent accent-black size-4 border text-xs'/>
           <input type='color' disabled={disable} onChange={handleCanvasBackgroundColor} className='bg-transparent w-[24px] h-[24px]'/>
           <label  htmlFor='Background Color' className='text-[10px]'>Background Color</label>
           </div>
-          <div><button><MdColorLens size={24}/></button></div>
+          <div><button className='border border-blue-500 m-0.5 p-0.5'><MdColorLens size={24}/></button></div>
       </div>
     </section> :null}
     </div>

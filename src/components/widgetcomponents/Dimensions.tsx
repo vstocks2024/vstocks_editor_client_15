@@ -16,7 +16,7 @@ export const Dimensions = observer(() => {
           <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
           </div>
       </section>
-      {expand ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
+      {expand ? <section className={`cursor-pointer py-3 w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
     <div className="flex flex-row w-[226px] h-[34px] gap-2 text-gray-500 font-semibold">
       <div className='flex flex-col'>
         <label className='w-[48px] text-center text-[10px] ' htmlFor='width'>Width</label>
