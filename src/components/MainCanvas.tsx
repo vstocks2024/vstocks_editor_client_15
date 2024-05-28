@@ -5,20 +5,6 @@ import React, { useState } from 'react'
 import { IoMdVolumeOff,IoMdVolumeHigh} from "react-icons/io";
 import { AiOutlineClose } from 'react-icons/ai';
 
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 320,
-  height:256,
-  bgcolor: '#FFFFFF',
-  // border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
 export const MainCanvas = observer(() => {
   const store = React.useContext(StoreContext);
   const [resizeopen,setResizeOpen]=useState<boolean>(false);
@@ -68,9 +54,9 @@ export const MainCanvas = observer(() => {
                         </div>
                         <div className='border flex flex-col h-full items-center justify-center border-green-400 m-0.5 p-0.5'>
                         <div className='border items-center justify-between h-full py-4 border-pink-400 inline-flex flex-col m-0.5 px-3'>
-                                   <button onClick={()=>{handleFacebookEvent()}} className='w-full px-2 py-2 text-[16px] border border-white text-center rounded-md'>Facebook Event Cover (1920 x 1080)</button>
-                                   <button onClick={()=>{handleInstagramPost()}} className='w-full px-2 py-2 text-[16px] border border-white text-center rounded-md'>Instagram Post (1080 x 1920)</button>
-                                   <button onClick={()=>{handleInstagramStory()}} className='w-full px-2 py-2 text-[16px] border border-white text-center rounded-md'>Instagram Story (1080 x 1080)</button>
+                                   <button onClick={()=>{handleFacebookEvent()}} className={`${store.canvas?.width===775 && store.canvas?.height===450 ? "bg-slate-200 text-black" :"bg-[#202020] text-white"} w-full px-2 py-2 text-[16px] border border-white text-center rounded-md`}>Facebook Event Cover (1920 x 1080)</button>
+                                   <button onClick={()=>{handleInstagramPost()}} className={`${store.canvas?.width===261.29 && store.canvas?.height===450 ? "bg-slate-200 text-black" :"bg-[#202020] text-white"} w-full px-2 py-2 text-[16px] border border-white text-center rounded-md`}>Instagram Post (1080 x 1920)</button>
+                                   <button onClick={()=>{handleInstagramStory()}} className={`${store.canvas?.width===450 && store.canvas?.height===450 ? "bg-slate-200 text-black" :"bg-[#202020] text-white"} w-full px-2 py-2 text-[16px] border border-white text-center rounded-md`}>Instagram Story (1080 x 1080)</button>
                           </div>
                         </div>
 
