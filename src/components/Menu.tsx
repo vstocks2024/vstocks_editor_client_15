@@ -104,32 +104,32 @@ const MENU_OPTIONS = [
       store.setSelectedMenuOption("Assets");
     },
   },
-  {
-    name: "Animation",
-    icon: MdAnimation,
-    action: (store: Store) => {
-      store.setSelectedMenuOption("Animation");
-    },
-  },
-  /*{
-    name: "Effects",
-    icon: MdMovieFilter,
-    action: (store: Store) => {
-      store.setSelectedMenuOption("Effect");
-    },
-  },
-  {
-    name: "Fill",
-    icon: MdOutlineFormatColorFill,
-    action: (store: Store) => {
-      store.setSelectedMenuOption("Fill");
-    },
-  },
+  // {
+  //   name: "Animation",
+  //   icon: MdAnimation,
+  //   action: (store: Store) => {
+  //     store.setSelectedMenuOption("Animation");
+  //   },
+  // },
+  // {
+  //   name: "Effects",
+  //   icon: MdMovieFilter,
+  //   action: (store: Store) => {
+  //     store.setSelectedMenuOption("Effect");
+  //   },
+  // },
+  // {
+  //   name: "Fill",
+  //   icon: MdOutlineFormatColorFill,
+  //   action: (store: Store) => {
+  //     store.setSelectedMenuOption("Fill");
+  //   },
+  // },
   {
     name: "Export",
     icon: MdDownload,
     action: (store: Store) => {
       store.setSelectedMenuOption("Export");
     },
-  },*/
+  },
 ];

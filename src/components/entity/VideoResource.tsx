@@ -61,7 +61,7 @@ export const VideoResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="max-h-[100px] max-w-[150px] transition-all"
+          className="max-h-[200px] max-w-[200px] transition-all"
           src={filesource}
           height={200}
           width={200}
