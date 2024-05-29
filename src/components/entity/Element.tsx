@@ -117,8 +117,6 @@ export const Element = observer((props: ElementProps) => {
       <button
         className= "text-white mr-1 text-xs py-0 px-1 rounded"
         onClick={(e) => {
-          
-          
           e.preventDefault();
           e.stopPropagation();
         }}

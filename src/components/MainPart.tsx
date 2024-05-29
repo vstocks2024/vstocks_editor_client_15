@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreContext } from "@/store";
 import axios from "axios";
@@ -21,10 +21,14 @@ import {
 import { getObjectURL } from "./functions/get_put_url";
 import { Store } from "@/store/Store";
 import { EditorElement } from "@/types";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { isHtmlVideoElement } from "@/utils";
+import { useTemplate } from "@/app/context/template";
 
 export const MainPart = observer(() => {
+  
+  const template=useTemplate();
+  
   const store = React.useContext(StoreContext);
   const Icon = store.playing ? MdPause : MdPlayArrow;
 
@@ -53,7 +57,7 @@ export const MainPart = observer(() => {
     try {
       await axios
         .get(
-          `${process.env.NEXT_PUBLIC_URL}/get_template_by_id/93478276-e060-4a28-9f81-e46c55106b50`
+          `${process.env.NEXT_PUBLIC_URL}/get_template_by_id/${template.templateid}`
         )
         .then(async (resolve) => {
           store.setVideos([]);
@@ -262,9 +266,12 @@ export const MainPart = observer(() => {
     }
     store.setPlaying(!store.playing);
   };
-  // React.useEffect(() => {
-  
-  // }, []);
+  useEffect(() => {
+   handleGetTemplateById();
+   if(store.editorElements.length>0){
+    store.setPlaying(true);
+}
+   }, []);
   return (
     <div className=" bg-[#202020]  dark:bg-[#202020] border border-red-500 flex justify-content-center p-3">
       <div className="justify-between items-center flex-row border  border-white flex w-full">

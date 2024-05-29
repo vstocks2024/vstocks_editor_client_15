@@ -1,7 +1,7 @@
 
 import { StoreContext } from '@/store';
 import { observer } from 'mobx-react';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { IoMdVolumeOff,IoMdVolumeHigh} from "react-icons/io";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -27,7 +27,7 @@ export const MainCanvas = observer(() => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
   return (
     <div className='flex grow shrink basis-0 p-4 min-w-[785] min-h-[510px] max-h-[510px] max-w-[1035px]'>
       <div className='flex flex-col w-full min-h-[478px] min-w-[753px] max-h-[478px] max-w-[1003px] justify-center items-center '>
@@ -58,7 +58,8 @@ export const MainCanvas = observer(() => {
           </div>
         </div>
         <div className='flex w-full  min-w-[750px] min-h-[422px] max-w-[1003px]  max-h-[438px] justify-center items-center  border-solid border-slate-400 border-[0.01px]'>
-    <canvas id="lower-canvas" className={`absolute touch-none  select-none min-w-[750px] min-h-[422px] h-[436px] w-[775px]  max-w-[775px]  max-h-[436px] border-[0.1px] border-green-300`}/> 
+    <canvas id="lower-canvas" className={`relative touch-none  select-none min-w-[750px] min-h-[422px] h-[436px] w-[775px]  max-w-[775px]  max-h-[436px] border-[0.1px] border-green-300`}/> 
+    
     </div>
     </div>
     </div>
