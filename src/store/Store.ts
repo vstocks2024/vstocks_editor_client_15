@@ -1653,7 +1653,7 @@ shadow:newShadow};
   //   }, this.maxTime);
 
   // }
-
+  
   setVideoFormat(format: 'mp4' | 'webm') {
     this.selectedVideoFormat = format;
   }
