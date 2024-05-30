@@ -1436,16 +1436,16 @@ shadow:newShadow};
         name: `${filename}`,
         type: "video",
         placement: {
-          x: 400,
-          y: 250,
+          x: 100,
+          y: 100,
           width: 100 * aspectRatio,
           height: 100,
           rotation: 0,
           scaleX: 1,
           scaleY: 1,
-          flipX:false,
-          flipY:false,
-          opacity:1.0,
+          flipX: false,
+          flipY: false,
+          opacity: 1.0,
         },
         timeFrame: {
           start: 0,
@@ -1458,6 +1458,7 @@ shadow:newShadow};
             type: "none",
           }
         },
+        
       },
     );
   }
@@ -1482,9 +1483,9 @@ shadow:newShadow};
           rotation: 0,
           scaleX: 1,
           scaleY: 1,
-          flipX:false,
-          flipY:false,
-          opacity:1.0,
+          flipX: false,
+          flipY: false,
+          opacity: 1.0,
         },
         timeFrame: {
           start: 0,
@@ -1497,6 +1498,7 @@ shadow:newShadow};
             type: "none",
           }
         },
+        
       },
     );
   }
@@ -1559,31 +1561,30 @@ shadow:newShadow};
           rotation: 0,
           scaleX: 1,
           scaleY: 1,
-          flipX:false,
-          flipY:false,
-          textAlign:"center",
-          opacity:1.0,
-          underline:false,
-          overline:false,
-          linethrough:false,
-          lineHeight:1.6,
-          fill:"#FFFFFF",
-          backgroundColor:undefined,
-          selectable:true,
+          flipX: false,
+          flipY: false,
+          textAlign: "center",
+          opacity: 1.0,
+          underline: false,
+          overline: false,
+          linethrough: false,
+          lineHeight: 1.6,
+          fill: "#FFFFFF",
+          backgroundColor: undefined,
+          selectable: true,
           visible: true,
           hasControls: true,
           hasBorders: true,
           hasRotatingPoint: true,
           lockMovementX: false,
-          stroke:undefined,
-          strokeWidth:1,
-          strokeUniform:undefined,
-          strokeLineCap:"butt",
-          strokeLineJoin:"milter",
-          strokeMiterLimit:1,
+          stroke: undefined,
+          strokeWidth: 1,
+          strokeUniform: undefined,
+          strokeLineCap: "butt",
+          strokeLineJoin: "milter",
+          strokeMiterLimit: 1,
           // shadow:new fabric.Shadow({color:"blue",blur:0.6,offsetX:2,offsetY:2}),
-          shadow:undefined
-        
+          shadow: undefined
         },
         timeFrame: {
           start: 0,
@@ -1595,6 +1596,7 @@ shadow:newShadow};
           fontWeight: options.fontWeight,
           splittedTexts: [],
         },
+        
       },
     );
   }
@@ -1675,7 +1677,9 @@ shadow:newShadow};
     console.log('modified')
     let mp4 = this.selectedVideoFormat === 'mp4'
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    console.log(canvas);
     const stream = canvas.captureStream(30);
+    
     const audioElements = this.editorElements.filter(isEditorAudioElement)
     const audioStreams: MediaStream[] = [];
     audioElements.forEach((audio) => {
