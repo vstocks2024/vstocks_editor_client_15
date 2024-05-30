@@ -3,9 +3,7 @@ import React from "react";
 import { StoreContext } from "@/store";
 import { observer } from "mobx-react";
 import { Element } from "@/components/entity/Element";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import Widget from '@/components/entity/Widget';
+
 import { Layers } from "@/components/widgetcomponents/Layers";
 import { Dimensions } from "@/components/widgetcomponents/Dimensions";
 import {Background} from "@/components/widgetcomponents/Background";
