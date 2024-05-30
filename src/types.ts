@@ -3,7 +3,7 @@ import { Gradient, Pattern, Shadow } from "fabric/fabric-impl";
 
 export type EditorElementBase<T extends string, Properties> = {
   readonly id: string;
-  fabricObject: fabric.Object;
+  fabricObject?: fabric.Object;
   name: string;
   readonly type: T;
   placement: Placement;
