@@ -23,6 +23,7 @@ export const Arrange = observer(() => {
     const handleBringForward =()=>{
       try{
         if(!store.selectedElement) return;
+        if(!store.selectedElement.fabricObject) return;
         store.selectedElement.fabricObject.bringForward(true);
       }
       catch(err)
@@ -33,6 +34,7 @@ export const Arrange = observer(() => {
     const handleSendBackward=()=>{
       try{
         if(!store.selectedElement) return;
+        if(!store.selectedElement.fabricObject) return;
         store.selectedElement.fabricObject.sendBackwards(true);
       }
       catch(err)
@@ -43,6 +45,7 @@ export const Arrange = observer(() => {
     const handleSendToBack=()=>{
           try{
         if(!store.selectedElement) return;
+        if(!store.selectedElement.fabricObject) return;
         store.selectedElement.fabricObject.sendToBack();
       }
       catch(err)

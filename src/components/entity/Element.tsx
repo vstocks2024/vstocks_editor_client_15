@@ -98,6 +98,7 @@ export const Element = observer((props: ElementProps) => {
         className= "text-white mr-1 text-xs py-0 px-1 rounded"
         onClick={(e) => {
           //handleLockButton();
+          if(!element.fabricObject) return;
           element.fabricObject.hasControls=!element.fabricObject.hasControls
           element.fabricObject.lockMovementX=!element.fabricObject.lockMovementX;
           element.fabricObject.lockMovementY=!element.fabricObject.lockMovementY;

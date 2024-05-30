@@ -21,7 +21,11 @@ export const AssetsPanel = observer(() => {
         Add Video
       </div>
     {store.videos.map((file, index) => {
-          return <AssetsResource  key={file["filename"]} filename={file["filename"]} filesource={file["filesource"]} index={index} />;
+          return <AssetsResource             key={file["fileid"]}
+          fileid={file["fileid"]}
+          filename={file["filename"]}
+          filesource={file["filesource"]}
+          index={index} />;
     })}
     </div>
   </>);
