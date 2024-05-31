@@ -7,7 +7,6 @@ import { MdOutlineTextFields, MdMovie, MdDelete, MdLockOpen , MdLock } from "rea
 import { MdVisibility } from "react-icons/md";
 import { MdVisibilityOff } from "react-icons/md";
 import { MdModeEdit } from "react-icons/md";
-import { MdPlayArrow } from "react-icons/md";
 
 export type ElementProps = {
   element: EditorElement;
@@ -17,12 +16,10 @@ export const Element = observer((props: ElementProps) => {
   const store = React.useContext(StoreContext);
   const [hide,setHide]=React.useState<boolean>(true);
   const [lock,setLock]=React.useState<boolean>(false);
-  const [editbtn,setEditBtn]=React.useState<boolean>(false);
  
   
   const { element } = props;
-  console.log(element);
-  // const Icon = element.type === "video" ? MdMovie : MdOutlineTextFields;
+  const Icon = element.type === "video" ? MdMovie : MdOutlineTextFields;
   const isSelected = store.selectedElement?.id === element.id;
   const bgColor = isSelected ? "rgba(0, 160, 245, 0.1)" : "";
   return (
@@ -31,16 +28,15 @@ export const Element = observer((props: ElementProps) => {
         backgroundColor: bgColor,
         
       }}
-      className={`inline-flex border border-red-500 m-0.5 p-0.5 text-xs border-b-2 flex-row justify-start items-center ${bgColor} w-full`}
+      className={`flex text-xs border-b-2 pb-1 my-1 border-gray-900 flex-row justify-start items-center ${bgColor} w-full`}
       key={element.id}
       onClick={() => {
         store.setSelectedElement(element);
       }}
     >
-      {/* <Icon size="20" color="gray"></Icon> */}
-      <div><MdPlayArrow className={`${isSelected===true ? "brightness-200":" brightness-50"}`} size={10}/></div>
-      <div className="truncate text-xs flex-1 font-medium">
-        <input defaultValue={element.name} disabled={isSelected && editbtn}/>
+      <Icon size="20" color="gray"></Icon>
+      <div className="truncate text-xs ml-2 flex-1 font-medium">
+        {element.name}
       </div>
       <div>
         {element.type === "video" ? (
@@ -87,10 +83,8 @@ export const Element = observer((props: ElementProps) => {
           ></audio>
         ) : null}
       </div>
-
-      {/* Code of hide button */}
       <button
-        className= "text-white  text-xs  rounded"
+        className= "text-white mr-1 text-xs py-0 px-1 rounded"
         onClick={(e) => {
           store.setObjectHidden(element);
           setHide(!hide);
@@ -98,14 +92,13 @@ export const Element = observer((props: ElementProps) => {
           e.stopPropagation();
         }}
       >
-      { hide ? <MdVisibility size={20}/>:<MdVisibilityOff size={20}/>}
+      { hide ? <MdVisibility size={24}/>:<MdVisibilityOff size={24}/>}
       </button>
-      {/* End of Code of hide button */}
-
       <button
-        className= "text-white text-xs rounded"
+        className= "text-white mr-1 text-xs py-0 px-1 rounded"
         onClick={(e) => {
           //handleLockButton();
+          if(element.fabricObject=== undefined) return;
           element.fabricObject.hasControls=!element.fabricObject.hasControls
           element.fabricObject.lockMovementX=!element.fabricObject.lockMovementX;
           element.fabricObject.lockMovementY=!element.fabricObject.lockMovementY;
@@ -123,10 +116,10 @@ export const Element = observer((props: ElementProps) => {
         {lock ?<MdLock size={20}/>:<MdLockOpen size={20}/>}
       </button>
       <button
-        className= "text-white m-0.5 text-xs p-0.5 rounded"
+        className= "text-white mr-1 text-xs py-0 px-1 rounded"
         onClick={(e) => {
           
-          setEditBtn(!editbtn);
+          
           e.preventDefault();
           e.stopPropagation();
         }}
@@ -134,7 +127,7 @@ export const Element = observer((props: ElementProps) => {
         <MdModeEdit size={20}/>
       </button>
       <button
-        className= " text-white m-0.5 text-xs  p-0.5 rounded"
+        className= " text-white mr-1 text-xs py-0 px-1 rounded"
         onClick={(e) => {
           store.removeEditorElement(element.id);
           store.refreshElements();

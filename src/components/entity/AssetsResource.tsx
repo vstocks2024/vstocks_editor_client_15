@@ -9,12 +9,13 @@ import { IoIosPricetag } from "react-icons/io";
 
 import axios from "axios";
 type AssetsResourceProps = {
-  filename:string;
-  filesource: string;
-  index: number;
-};
+    fileid:string
+    filename:string;
+    filesource: string;
+    index: number;
+  };
 export const AssetsResource = observer(
-  ({filename,filesource, index }: AssetsResourceProps) => {
+  ({fileid,filename,filesource, index }: AssetsResourceProps) => {
     const store = React.useContext(StoreContext);
     const ref = React.useRef<HTMLVideoElement>(null);
     const [formatedVideoLength, setFormatedVideoLength] =React.useState("00:00");
@@ -30,7 +31,7 @@ export const AssetsResource = observer(
           <button className="hover:bg-[#00a0f5] bg-[rgba(0,0,0,.25)] rounded z-10 text-white font-bold py-1 absolute text-lg top-2 right-2"
           onClick={() => {}}><MdDelete size={20}/></button>
         <button className="hover:bg-[#00a0f5] bg-[rgba(0,0,0,.25)] rounded z-10 text-white font-bold py-1 absolute text-lg bottom-2 right-2"
-          onClick={() => {store.addVideo(filename,index) }}>
+          onClick={() => {store.addVideo(fileid,filename,index) }}>
           <MdAdd size={20} />
         </button>
         <video
@@ -40,7 +41,7 @@ export const AssetsResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="max-h-[100px] max-w-[150px]"
+          className="max-h-[150px] max-w-[150px]"
           src={filesource}
           height={200}
           width={200}
@@ -49,6 +50,5 @@ export const AssetsResource = observer(
     );
   }
 );
-
 
 
