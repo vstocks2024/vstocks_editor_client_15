@@ -30,13 +30,15 @@ export const Flip = observer(() => {
           <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
           </div>
       </section>
-      {expand   ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-        <button onClick={handleFlipHorizontal}  className='w-[40px] h-[40px]'>
-          <span><LuFlipHorizontal2 className={`cursor-pointer ${store.selectedElement?.placement.flipX===true ?"brightness-200" :"brightness-50"}`} size={24}/></span><span></span><span></span>
+      {expand   ? <section className={`cursor-pointer m-0.5  p-0.5 w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
+        <div className='inline-flex flex-row items-center justify-start space-x-3 border border-red-500 m-0.5 p-0.5'>
+        <button onClick={handleFlipHorizontal}  className=''>
+          <span><LuFlipHorizontal2 className={`cursor-pointer ${store.selectedElement?.placement.flipX===true ?"brightness-200" :"brightness-50"}`} size={24}/></span>
         </button>
-        <button onClick={handleFlipVertical}  className='w-[40px] h-[40px]'>
-          <span><LuFlipVertical2 className={`cursor-pointer ${store.selectedElement?.placement.flipY===true ?"brightness-200" :"brightness-50"}`} size={24}/></span><span></span><span></span>
+        <button onClick={handleFlipVertical}  className=''>
+          <span><LuFlipVertical2 className={`cursor-pointer ${store.selectedElement?.placement.flipY===true ?"brightness-200" :"brightness-50"}`} size={24}/></span>
         </button>
+        </div>
     </section>:null}
     </div>
     </>

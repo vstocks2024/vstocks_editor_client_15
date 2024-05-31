@@ -3,7 +3,6 @@ import React from 'react'
 import { observer } from 'mobx-react';
 import { StoreContext } from "@/store";
 import { MdColorLens, MdOutlineExpandLess,MdOutlineExpandMore } from 'react-icons/md';
-import {Shadow} from 'fabric/fabric-impl';
 import {fabric} from 'fabric';
 
 
@@ -32,38 +31,27 @@ export const TextShadow =  observer(() => {
     <div className='border border-pink-500 p-0.5 m-0.5'>
     <section onClick={()=>setExpand(!expand)} className={`comphead ${expand===true ? "border-none":"border-b-[0.2px]"}`}>
       <div className='compheadsec1'>
-      <h3 className='border border-green-500 m-0.5 p-0.5'>hadow</h3>
+      <h3 className='border border-green-500 m-0.5 p-0.5'>Shadow</h3>
         <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
         </div>
     </section>
-    {expand ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-      <form className='flex flex-col' >
-        <div className='flex items-center'>
-        <input type='checkbox'  className='w-4 h-4  accent-white bg-transparent cursor-pointer border-[0.1px] '/>
-                <div className='ml-1 flex items-center w-[105px] h-7'>
-                    <input type='color' onChange={handleTextBoxShadow} ref={reftextshadowcolor} className='h-6 w-6 bg-transparent cursor-pointer'/>
-                    <label className=' flex items-center cursor-default text-[11px] w-[77px] h-7 ml-2'>Shadow Color</label>
-                </div>
-                 <span className=' flex flex-col h-10 w-[52px] self-stretch'></span> 
-                <button className='flex justify-center items-center ml-1 h-10 w-10'><span><MdColorLens size={24}/></span><span></span><span></span></button>
+    {expand ? <section className={`cursor-pointer w-full border border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
+      <div className='flex flex-col items-center justify-between border border-green-500 m-[1px] p-[1px]' >
+       <div className='flex flex-row items-center w-full justify-between border border-red-500 m-[1px] p-[1px]'>
+        <div className='inline-flex flex-row  items-center justify-between space-x-1 border border-blue-500 m-[1px] p-[1px]'>
+        <input type='checkbox'  className=' accent-white bg-transparent cursor-pointer border-[0.1px] '/>
+        <input type='color' onChange={handleTextBoxShadow} ref={reftextshadowcolor} className='h-7 w-6 bg-transparent cursor-pointer'/>
+      <h4 className='text-[11px]'>Shadow Color</h4>
         </div>
-        <div  className=' flex items-center gap-3'>
-          <div className='flex flex-col'>
-          <label className='w-12 flex items-center text-center text-[11px] h-[14px] text-[#999999]' htmlFor='Offset X'>Offset X</label>
-          <input ref={reftextshadowoffsetX}   className='w-12 h-5 focus:outline-none text-sm bg-transparent border-b'/>
-          </div>
-          <div className='flex flex-col'>
-          <label className='w-12 flex items-center text-center text-[11px] h-[14px] text-[#999999]' htmlFor='Offset Y'>Offset Y</label>
-          <input ref={reftextshadowoffsetY}   className='w-12 h-5 focus:outline-none text-sm bg-transparent border-b'/>
-          </div>
-          <div className='flex flex-col'>
-          <label className='w-12 flex items-center text-center text-[11px] h-[14px] text-[#999999]' htmlFor='Blur'>Blur</label>
-          <input ref={reftextshadowblur}   className='w-12 h-5 focus:outline-none text-sm bg-transparent border-b'/>
-          </div>
-        </div>
-      </form>
-        
- 
+        <div className='inline-flex flex-col items-center justify-center border border-blue-500 m-[1px] p-[1px]'><button onClick={()=>{}}><MdColorLens size={24}/></button></div>
+       </div>
+       <div className='flex flex-row items-center justify-start border border-blue-500 m-[1px] p-[1px]'>
+           <div className='inline-flex flex-col m-[1px] p-[1px] items-center justify-between space-y-1'>
+           <label className='text-center text-[11px] text-[#999999]' htmlFor='Offset X'>Offset X</label>
+          <input ref={reftextshadowoffsetX}   className='focus:outline-none text-sm bg-transparent border-b'/>
+           </div>
+       </div>
+      </div>
     </section>:null}
     </div>
     </>

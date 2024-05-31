@@ -13,6 +13,7 @@ import { MainPart } from "./MainPart";
 import { MainCanvas } from "@/components/MainCanvas";
 import { CanvasFooter } from "@/components/CanvasFooter";
 import { Store } from "@/store/Store";
+import MainLayout from "@/app/layouts/MainLayout";
 
 export const EditorWithStore = () => {
   const [store] = useState(new Store());
@@ -54,13 +55,12 @@ export const Editor = observer(() => {
     });
   }, []);
   return (
-    <React.Fragment>
-      <main className="flex flex-col items-center justify-between border border-white m-0.5 p-0.5  w-full">
-     
-          <div className="flex flex-col border border-green-500 m-0.5 p-0.5 w-full">
+  <MainLayout>
+      <main className="flex flex-col items-center justify-between border border-white m-[1px] p-0.5  w-full">
+     <div className="flex flex-col border border-green-500 m-0.5 p-0.5 w-full">
           <MainPart />
         </div>
-        <div className="flex flex-row items-start justify-between w-full border border-pink-500 m-0.5 p-0.5">
+        <div className="flex flex-row items-center justify-between w-full border border-pink-500 m-0.5 p-0.5">
           <Menu />
           {store.selectedMenuOption ? <Resources /> : null}
           <MainCanvas />
@@ -69,7 +69,6 @@ export const Editor = observer(() => {
         </div>
         <CanvasFooter />
       </main>
-      
-    </React.Fragment>
+      </MainLayout>
   );
 });

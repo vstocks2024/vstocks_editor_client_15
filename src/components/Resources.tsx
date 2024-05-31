@@ -20,14 +20,13 @@ export const Resources = observer(() => {
   const store = React.useContext(StoreContext);
   const selectedMenuOption = store.selectedMenuOption;
   return (
-    <div className=" flex flex-col justify-start border border-green-500 w-[17%] m-0.5 p-0.5 h-[510px]  bg-[#303030]" >
+    <div className=" hidden min-[977px]:flex min-[977px]:flex-col min-[977px]:justify-start border border-green-500 w-[17%] m-0.5 p-0.5 h-[510px]  bg-[#303030]" >
       <div className=" inline-flex items-center flex-row border border-pink-500 m-0.5 p-0.5 h-10 bg-[#202020]  justify-between">
         <h3 className="border border-white m-1 p-1 text-[12px]">{store.selectedMenuOption}</h3>
         <button onClick={()=>{store.selectedMenuOption=null}} className="border border-green-500 m-0.5 p-0.5">
           <IoMdArrowBack size={24}/>
         </button>
         </div>
-        
       {selectedMenuOption === "Video" ? <VideoResourcesPanel /> : null}
       {selectedMenuOption === "Audio" ? <AudioResourcesPanel /> : null}
       {selectedMenuOption === "Images" ? <ImageResourcesPanel /> : null}

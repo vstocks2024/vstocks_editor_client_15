@@ -4,8 +4,7 @@ import { observer } from 'mobx-react';
 import { StoreContext } from "@/store";
 import React, { useEffect } from 'react'
 import { MdColorLens, MdOutlineExpandLess, MdOutlineExpandMore } from 'react-icons/md';
-//import { getfonturl } from '@/components/shared/getfonturl';
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { HiDotsVertical } from "react-icons/hi";
 import { MdFormatUnderlined,MdFormatOverline,MdFormatStrikethrough  } from "react-icons/md";
 
 
@@ -99,60 +98,71 @@ export const Font = observer(() => {
           <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
           </div>
       </section>
-    {expand  ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-      <div className='flex flex-col gap-3'>
-        <div className='flex flex-row items-center'>
-          <div className='flex flex-col'>
-          <label htmlFor='Family' className='font-semibold text-[10px] w-[121px] h-[14px] text-[#999999]'>Family</label>
+    {expand  ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
+      <div className='flex flex-col items-center justify-between border border-green-500 m-[1px] p-[1px] '>
+        <div className='flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]'>
+          <div className='inline-flex flex-row items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
+            <div className='inline-flex flex-col items-center justify-between border border-orange-500 m-[1px] p-[1px]'>
+            <label htmlFor='Family' className='font-semibold text-[10px] w-[121px] h-[14px] text-[#999999]'>Family</label>
           { results? <select ref={reffamily}  className=' appearance-none focus:outline-none border-b-[1px] border-[#444444] bg-transparent w-[121px] h-[20px] text-xs pr-4 cursor-pointer'>
     { 
     results.map((val:any,ind:any,oa:any)=>{
     return <option key={`${val[`family`]}_${ind}`}>{val[`family`]}</option>
     })} </select> :<select></select>}
         
+            </div>
+            <div>
+              <HiDotsVertical size={24}/>
+            </div>
           </div>
-          <button  className=' flex w-10 h-10 justify-center items-center'>
-            <span ><BsThreeDotsVertical  size={24}/></span>
-            <span></span><span></span>
-          </button>
-          <div className='flex flex-col w-12 h-[34px] justify-center items-center'>
-            <label className='w-12 h-[14px] font-semibold text-[10px] text-[#999999]'>Size</label>
-            <input type='text' className='w-12 h-[20px] border-b-[1px] border-[#444444] bg-transparent text-[#999999] focus:outline-none'></input>
-          </div>
-        </div>
-        <div className='flex flex-row items-center gap-3'>
-          <div className='flex flex-col max-w-[93px] h-[34px]'>
-            <label htmlFor='Variant' className=' font-semibold text-[10px] w-[93px] h-[14px] text-[#999999]'>Variant</label>
-              
-           {
-     (reffamily.current?.value && results) ? <select className=' focus:outline-none appearance-none h-5 w-[93px] border-b-[1px] border-[#444444] bg-transparent text-xs  cursor-pointer'>
-         <option>{reffamily.current.value}</option>  
-      </select> :<select></select>} 
-          </div>
-          <div className='max-w-[104px] h-7 items-end gap-1'>
-            <button onClick={handleUnderLine}  className='w-8 h-7'><span><MdFormatUnderlined className={` cursor-pointer ${store.selectedElement?.placement.underline===true ? "brightness-200":"brightness-50"} `} size={24}/></span></button><span></span><span></span>
-            <button onClick={handleOverLine} className='w-8 h-7'><span><MdFormatOverline className={` cursor-pointer ${store.selectedElement?.placement.overline===true ? "brightness-200":"brightness-50"} `} size={24}/></span></button><span></span><span></span>
-            <button onClick={handleLineThrough}  className='w-8 h-7'><span><MdFormatStrikethrough className={` cursor-pointer ${store.selectedElement?.placement.linethrough===true ? "brightness-200":" brightness-50"} `} size={24}/></span></button><span></span><span></span></div>
-        </div>
-        <div className='flex flex-row items-center gap-1'>
-          <div className='flex flex-col'>
-            <label htmlFor='L. Height' className=' font-semibold text-[10px] w-[48px] h-[14px] text-[#999999]'>L.Height</label>
-            <input className='w-12 h-5 border-[#444444] bg-transparent text-xs focus:outline-none  cursor-pointer' onChange={handleLineHeight} value={ store.selectedElement?.placement.lineHeight ? store.selectedElement?.placement.lineHeight:""}/>
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='Spacing' className=' font-semibold text-[10px] w-[48px] h-[14px]  text-[#999999]'>Spacing</label>
-            <input className='w-12 h-5 border-[#444444] bg-transparent text-xs focus:outline-none  cursor-pointer' value={0.5}/>
+          <div className='inline-flex flex-col  items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
+          <label className='font-semibold text-[10px] text-[#999999]'>Size</label>
+             <select className=' border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
+              <option>8</option>
+              <option>8</option>
+              <option>8</option>
+              <option>8</option>
+              <option>8</option>
+              <option>8</option>
+             </select>
           </div>
         </div>
-        <div className='flex flex-row items-center'>
-        <input type='checkbox' ref={reftextcolorfill}   className='bg-transparent w-[16px] h-[16px] border text-xs '/>
-        <div className='flex text-xs  box-border flex-row my-2 h-[28px]'>
-          <input type='color' onChange={handleTextBoxFill}      className='bg-transparent border-none mx-2 mt-[2.5px] align-middle w-[24px] h-[24px] ' />
-          <label  htmlFor='Background Color' className='pt-[6.4px] items-center align-middle'>Text Color</label>
-          <span className='grow shrink basis-0 w-[90px]  self-stretch '></span>
-          </div>
-          <button><span className='align-middle'><MdColorLens size={24}/></span></button>
+        <div className='flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]'>
+        <div className=' w-1/2 inline-flex flex-col items-start justify-between border border-blue-500 m-[1px] p-[1px]'>
+        <label htmlFor='Variant' className=' font-semibold text-[10px]  text-[#999999]'>Variant</label>
+              {
+        (reffamily.current?.value && results) ? <select className=' focus:outline-none appearance-none border-b-[1px] border-[#444444] bg-transparent text-xs  cursor-pointer'>
+            <option>{reffamily.current.value}</option>  
+         </select> :<select></select>} 
         </div>
+        <div className=' w-1/2 inline-flex flex-row items-center border justify-between space-x-2 border-blue-500 m-[1px] p-[1px]'>
+        <button onClick={handleUnderLine}  className=''><span><MdFormatUnderlined className={` cursor-pointer ${store.selectedElement?.placement.underline===true ? "brightness-200":"brightness-50"} `} size={24}/></span></button>
+            <button onClick={handleOverLine} className=''><span><MdFormatOverline className={` cursor-pointer ${store.selectedElement?.placement.overline===true ? "brightness-200":"brightness-50"} `} size={24}/></span></button>
+            <button onClick={handleLineThrough}  className=''><span><MdFormatStrikethrough className={` cursor-pointer ${store.selectedElement?.placement.linethrough===true ? "brightness-200":" brightness-50"} `} size={24}/></span></button>
+          </div>
+       </div>
+       <div className='flex flex-row items-center justify-between   border border-red-500 m-[1px] p-[1px]'>
+        <div className='inline-flex flex-row items-center justify-start   border-blue-500 border m-[1px] p-[1px]'>
+          <div className='inline-flex flex-col w-1/4 items-start justify-between space-y-1 border border-green-500 m-[1px] p-[1px]'>
+          <label htmlFor='L. Height' className=' border border-yellow-400 font-semibold text-[10px]  text-[#999999]'>L.Height</label>
+            <input className='border w-full border-yellow-400 bg-transparent text-xs focus:outline-none  cursor-pointer' onChange={handleLineHeight} value={ store.selectedElement?.placement.lineHeight ? store.selectedElement?.placement.lineHeight:""}/>
+          </div>
+          <div className='inline-flex flex-col  items-start w-1/4 justify-between space-y-1 border border-green-500 m-[1px] p-[1px]'>
+          <label htmlFor='Spacing' className=' font-semibold text-[10px] border border-yellow-400  text-[#999999]'>Spacing</label>
+            <input className=' border border-yellow-400 w-full  bg-transparent text-xs focus:outline-none  cursor-pointer' value={0.5}/>
+          </div>
+        </div>
+       </div>
+       <div className='flex flex-row items-center justify-between w-full   border border-red-500 m-[1px] p-[1px]'>
+        <div className='inline-flex flex-row border-blue-500 border m-[1px] p-[1px]  items-center justify-between space-x-1'>
+        <input type='checkbox' ref={reftextcolorfill}   className='bg-transparent border'/>
+        <input type='color' onChange={handleTextBoxFill} className='bg-transparent h-6 w-5 border-none ' />
+        <h3 className='text-[12px]'>Text Color</h3>
+        </div>
+        <div className='flex flex-col border border-blue-500 p-[1px] m-[1px]  items-center justify-center'>
+        <MdColorLens size={24}/>
+        </div>
+       </div>
       </div>
       
 
