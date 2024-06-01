@@ -64,7 +64,7 @@ export const Arrange = observer(() => {
           </div>
       </section>
       {expand  ? <section className={`cursor-pointer m-0.5 p-0.5 w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
-        <div className='border border-red-500 space-x-3 m-0.5 p-0.5 inline-flex flex-row items-center justify-start'>
+        <div className='space-x-3  px-3 py-2 inline-flex flex-row items-center justify-start'>
      <button onClick={handleBringToFront}  className='' type='button'>
         <RiBringToFront size={24}/>
       </button>

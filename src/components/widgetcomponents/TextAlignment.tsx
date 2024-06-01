@@ -34,7 +34,7 @@ export const TextAlignment = observer(() => {
           </div>
       </section>
     {expand  ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-      <div className='flex flex-row w-full px-2 gap-1'>
+      <div className='flex flex-row w-full px-3 py-2 gap-1'>
         <div className='relative border-r-2 pr-1 '>
         <button onClick={handleLeftTextAlignment} className='cursor-pointer'><span><MdFormatAlignLeft className={`cursor-pointer ${store.selectedElement?.placement.textAlign==="left" ? "brightness-200":"brightness-50"}`} size={24}/></span></button><span></span><span></span>
         </div>

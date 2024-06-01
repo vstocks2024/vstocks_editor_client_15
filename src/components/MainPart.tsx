@@ -266,9 +266,9 @@ export const MainPart = observer(() => {
   
   // }, []);
   return (
-    <div className=" bg-[#202020]  dark:bg-[#202020] border border-red-500 flex justify-content-center m-0.5 p-0.5">
-      <div className="justify-between items-center flex-row border  border-white flex w-full">
-        <div className="inline-flex flex-row px-2  items-center border border-green-500 m-0.5 justify-start p-0.5 w-full">
+    <div className=" bg-[#202020]  dark:bg-[#202020] flex  ">
+      <div className="justify-between items-center flex-row py-2 flex w-full">
+        <div className="inline-flex flex-row px-5  items-center  justify-start w-full">
           <button className="w-10 h-10">
             <span>
               <MdSave
@@ -330,7 +330,7 @@ export const MainPart = observer(() => {
     
           </button>
         </div>
-        <div className="inline-flex flex-row items-center border border-green-500 m-0.5 justify-end p-0.5 w-full">
+        <div className="inline-flex flex-row items-center  justify-end  w-full">
           <button className="w-10 h-10">
             <span>
               <MdFullscreen size={24} className=" cursor-pointer" />

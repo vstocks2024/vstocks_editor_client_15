@@ -103,7 +103,7 @@ export const VideoResourcesPanel = observer(() => {
   }, []);
 
   return (
-    <div className="items-center justify-start border border-red-500 flex flex-col m-0.5 p-0.5">
+    <div className="items-center justify-start p-0.5">
           <UploadButton
         accept="video/mp4,video/x-m4v,video/*"
         className="uploadbutton"

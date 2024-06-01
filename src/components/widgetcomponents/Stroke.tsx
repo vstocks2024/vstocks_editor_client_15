@@ -85,68 +85,68 @@ export const Stroke =  observer(() => {
         </div>
     </section>
     {expand   ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-        <div className='flex flex-col gap-3'>
-        <form onSubmit={()=>{addEventListener("submit",(event)=>{event.preventDefault()})}} action={"#"} noValidate autoComplete='off' className='flex flex-col gap-3 max-w-[209px] max-h-[176px]'>
-            <section className=' flex items-center w-[233px] h-[40px] min-w-[233px] min-h-[40px]'>
-                <input type='checkbox' ref={refstrokecheckbox}   className='w-4 h-4  accent-white bg-transparent cursor-pointer border-[0.1px] '/>
-                <div className='ml-1 flex items-center w-[98px] h-7'>
-                    <input type='color' value={store.selectedElement?.placement.stroke ? store.selectedElement.placement.stroke: undefined} onChange={handleTextBoxStrokeColor} className='h-6 w-6 bg-transparent cursor-pointer'/>
-                    <label className=' flex items-center cursor-default text-[11px] w-[67px] h-7 ml-2'>Stroke Color</label>
-                </div>
-                <div className=' flex flex-col ml-3 w-12 h-7 items-center'>
-                   <label className='w-12 flex items-center text-center text-[11px] h-[14px] text-[#999999]' htmlFor='width'>Width</label>
-                   <input onChange={handleTextBoxStrokeWidth} value={store.selectedElement?.placement.strokeWidth ? store.selectedElement.placement.strokeWidth : undefined} className='w-12 h-5 focus:outline-none text-sm bg-transparent border-b'/>
-                    <span className=' flex flex-col h-10 w-2 self-stretch'></span> 
-                </div>
-                <button className=' flex justify-end items-center  h-10 w-10'><span><MdColorLens size={24}/></span><span></span><span></span></button>
-            </section>
-            <section className='w-[209px] h-4 flex items-center'>
-                <input type='checkbox' checked={store.selectedElement?.placement.strokeUniform ? store.selectedElement.placement.strokeUniform :false} onChange={handleTextBoxUniformStroke} className='w-4 h-4 accent-white text-black bg-transparent cursor-pointer border '/>
-                <label htmlFor='uniform stroke' className='ml-2 w-20 text-[11px] items-center'>Uniform Stroke</label>
-            </section>
-            <section className='w-[209px] h-[34px] flex flex-row items-center gap-3'>
-                <div className='block'>
-                    <label htmlFor='Line Cap' className='text-[11px] font-semibold w-fit text-[#999999]'>Line Cap</label>
-                    <select onChange={handleTextBoxStrokeLineCap}  value={store.selectedElement?.placement.strokeLineCap ? store.selectedElement.placement.strokeLineCap : "butt"} className='text-[11px] w-fit font-semibold appearance-none border-b focus:outline-none border-[#444444] bg-transparent'>
+        <div className='flex flex-col items-center border border-pink-500 gap-y-3 justify-between px-3 py-2'>
+        <div className='flex flex-row items-center w-full gap-x-1  justify-between'>
+            <div className='inline-flex  w-3/5 flex-row items-center gap-x-1 justify-start'>
+            <input type='checkbox' ref={refstrokecheckbox}   className= 'accent-white bg-transparent cursor-pointer border-[0.1px] '/>
+            <input type='color' value={store.selectedElement?.placement.stroke ? store.selectedElement.placement.stroke: undefined} onChange={handleTextBoxStrokeColor} className='h-6 w-5 bg-transparent cursor-pointer'/>
+            <h4 className=' flex items-center cursor-default text-[11px] '>Stroke Color</h4>
+            </div>
+            <div className='inline-flex  w-1/5  flex-col items-center gap-y-1 justify-between '>
+            <label className='flex items-center text-center text-[11px] text-[#999999]' htmlFor='width'>Width</label>
+            <input onChange={handleTextBoxStrokeWidth} value={store.selectedElement?.placement.strokeWidth ? store.selectedElement.placement.strokeWidth : undefined} className='focus:outline-none w-full text-sm bg-transparent border-b'/>
+            </div>
+            <div className=' inline-flex  w-1/5 flex-col items-center justify-center'>
+                 <button onClick={()=>{}}><MdColorLens size={24}/></button>
+            </div>
+        </div>
+        <div className='flex flex-row items-center w-full  justify-between '>
+            <div className='inline-flex flex-row items-center justify-between space-x-1'>
+            <input type='checkbox' checked={store.selectedElement?.placement.strokeUniform ? store.selectedElement.placement.strokeUniform :false} onChange={handleTextBoxUniformStroke} className='accent-white text-black bg-transparent cursor-pointer border '/>
+                <label htmlFor='uniform stroke' className='text-[11px]'>Uniform Stroke</label>
+            </div>
+        </div>
+        <div className='flex flex-row gap-x-1 items-center justify-between w-full '>
+         <div className='inline-flex w-[30%] flex-col items-center justify-between gap-y-1 '>
+         <label htmlFor='Line Cap' className='text-[11px] font-semibold text-[#999999]'>Line Cap</label>
+                    <select onChange={handleTextBoxStrokeLineCap}  value={store.selectedElement?.placement.strokeLineCap ? store.selectedElement.placement.strokeLineCap : "butt"} className='text-[11px] w-full font-semibold appearance-none border-b focus:outline-none border-[#444444] bg-transparent bg-black text-white'>
                         <option value={"butt"}>Butt</option>
                         <option value={"round"}>Round</option>
                         <option value={"square"}>Square</option>
                     </select>
-                </div>
-                <div className='block'>
-                    <label htmlFor='Line Join' className='text-[11px] w-fit font-semibold text-[#999999]'>Line Join</label>
-                    <select onChange={handleTextBoxStrokeLineJoin} value={store.selectedElement?.placement.strokeLineJoin ? store.selectedElement.placement.strokeLineJoin : "milter"} className='text-[11px] w-fit border-b font-semibold appearance-none focus:outline-none border-[#444444] bg-transparent'>
+         </div>
+         <div className='inline-flex w-[30%] flex-col items-center justify-between gap-y-1 '>
+         <label htmlFor='Line Join' className='text-[11px] font-semibold text-[#999999]'>Line Join</label>
+                    <select onChange={handleTextBoxStrokeLineJoin} value={store.selectedElement?.placement.strokeLineJoin ? store.selectedElement.placement.strokeLineJoin : "milter"} className='text-[11px] w-full border-b font-semibold appearance-none focus:outline-none border-[#444444] bg-black text-white bg-transparent'>
                         <option value={"bevil"}>Bevill</option>
                         <option value={"round"}>Round</option>
                         <option value={"milter"}>Milter</option>
                     </select>
-                </div>
-                <div>
-                    <label htmlFor='Milter' className='text-[11px] w-fit font-semibold text-[#999999]'>Milter</label>
-                    <input value={store.selectedElement?.placement.strokeMiterLimit ? store.selectedElement.placement.strokeMiterLimit : undefined} onChange={handleTextBoxStrokeMiterLimit} disabled={store.selectedElement?.placement.strokeLineJoin ? store.selectedElement.placement.strokeLineJoin==="milter" ? false : true : true } className='w-12 h-5 focus:outline-none text-sm bg-transparent border-b'/>
-                </div>
-            </section>
-        
+         </div>
+         <div className='inline-flex w-[30%] flex-col items-center justify-between gap-y-1 '>
+         <label htmlFor='Milter' className='text-[11px] font-semibold text-[#999999]'>Milter</label>
+                    <input value={store.selectedElement?.placement.strokeMiterLimit ? store.selectedElement.placement.strokeMiterLimit : undefined} onChange={handleTextBoxStrokeMiterLimit} disabled={store.selectedElement?.placement.strokeLineJoin ? store.selectedElement.placement.strokeLineJoin==="milter" ? false : true : true } className='focus:outline-none w-full border-[#444444] text-[11px] bg-transparent border-b'/>
+         </div>
 
-        </form>
-        <form onSubmit={()=>{addEventListener("submit",(event)=>{event.preventDefault()})}} noValidate autoComplete='off' className='flex flex-row gap-3'>
-            <div className='min-w-9 w-9 block'>
-                <label className='text-[11px] w-9 h-[14px] text-[#999999]' htmlFor='Dash'>Dash</label>
-                <input autoComplete='off' className=' w-9 h-5 focus:outline-none text-sm bg-transparent border-b-[1px] '/>
+        </div>
+        <div className='flex flex-row gap-x-2 items-center justify-start w-full'>
+            <div className='inline-flex gap-y-1 w-1/5 flex-col items-center justify-between'>
+            <label className='text-[11px] text-[#999999]' htmlFor='Dash'>Dash</label>
+                <input autoComplete='off' className='focus:outline-none w-full text-[11px] bg-transparent border-[#444444] border-b-[1px] '/>
             </div>
-            <div className='min-w-9 w-9 block'>
-            <label className='text-[11px] text-[#999999]  w-9 h-[14px]' htmlFor='Gap'>Gap</label>
-            <input autoComplete='off' className=' w-9 h-5 focus:outline-none text-sm bg-transparent border-b-[1px] '/>
+            <div className='inline-flex flex-col w-1/5 gap-y-1 items-center justify-between'>
+            <label className='text-[11px] text-[#999999]' htmlFor='Gap'>Gap</label>
+            <input autoComplete='off' className='focus:outline-none w-full text-[11px] bg-transparent border-[#444444] border-b-[1px] '/>
             </div>
-            <div className='min-w-9 w-9 block'>
-            <label className='text-[11px] text-[#999999]  w-9 h-[14px]' htmlFor='Dash'>Dash</label>
-                <input autoComplete='off' className=' w-9 h-5 focus:outline-none text-sm bg-transparent border-b-[1px] '/>
+            <div className='inline-flex flex-col w-1/5 gap-y-1 items-center justify-between'>
+            <label className='text-[11px] text-[#999999]' htmlFor='Dash'>Dash</label>
+                <input autoComplete='off' className=' w-full focus:outline-none text-[11px] bg-transparent border-[#444444] border-b-[1px] '/>
             </div>
-            <div className='min-w-9 w-9 block'>
-            <label className='text-[11px] text-[#999999]  w-9 h-[14px]' htmlFor='Gap'>Gap</label>
-                <input autoComplete='off' className=' w-9 h-5 focus:outline-none text-sm bg-transparent border-b-[1px] '/>
+            <div className='inline-flex flex-col w-1/5 gap-y-1 items-center justify-between '>
+            <label className='text-[11px] text-[#999999]' htmlFor='Gap'>Gap</label>
+                <input autoComplete='off' className=' w-full focus:outline-none text-[11px] bg-transparent border-[#444444] border-b-[1px] '/>
             </div>
-        </form>
+        </div>
         </div>
       
     </section>:null}

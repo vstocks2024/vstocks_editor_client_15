@@ -21,16 +21,16 @@ import { getObjectURL } from "./functions/get_put_url";
 export const Menu = observer(() => {
   const store = React.useContext(StoreContext);
   return (
-    <div className="hidden min-[977px]:flex min-[977px]:flex-col min-[977px]:items-center min-[977px]:justify-start gap-y-[18px]  border border-white m-0.5 min-w-[59px] max-w-[4.3%]   py-4 bg-[#202020]">
+    <div className="hidden min-[977px]:flex min-[977px]:flex-col min-[977px]:items-center min-[977px]:justify-start gap-y-[18px] min-w-[59px] max-w-[4.3%]   py-4 bg-[#202020]">
       {MENU_OPTIONS.map((option) => {
         return (
           <button
             key={option.name}
             onClick={() => {store.selectedMenuOption===option.name ? store.selectedMenuOption=null: option.action(store) }}
             className=" hover:brightness-200 bg-transparent px-[1px]  justify-between items-center flex-col inline-flex ">
-            <span className=" inline-flex border-red-500 border flex-col justify-center items-center">
+            <span className=" inline-flex flex-col justify-center items-center">
             <option.icon
-              className={`${store.selectedMenuOption===option.name ? "brightness-200":"brightness-75" }`}
+              className=""
               size={24}
               color={
                 `${store.selectedMenuOption === option.name} ? "#00a0f5" : "black" `

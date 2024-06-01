@@ -58,8 +58,8 @@ export const Alignment =  observer(() => {
           </div>
 </section>
 {expand  ? <section className={`cursor-pointer w-full border-white dark:border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
-      <div className='flex flex-col items-start justify-between border border-blue-500 m-0.5 p-0.5'>
-      <div className='border border-red-500 m-0.5 p-0.5 inline-flex flex-row  items-center justify-start space-x-3'>
+      <div className='flex flex-col items-start justify-between  gap-y-1  py-2 px-3'>
+      <div className='m-0.5 p-0.5 inline-flex flex-row  items-center justify-start space-x-3'>
      <button className='' type='button' onClick={handleAlignHorizontalLeft}>
           <span><MdAlignHorizontalLeft size={24}/></span>
           
@@ -78,7 +78,7 @@ export const Alignment =  observer(() => {
         </button>
         
       </div>
-      <div className='border border-red-500 m-0.5 p-0.5 inline-flex flex-row  items-center justify-start space-x-3'>
+      <div className='m-0.5 p-0.5 inline-flex flex-row  items-center justify-start space-x-3'>
       <button   className='' onClick={handleAlignVerticalTop} type='button'>
           <span><MdAlignVerticalTop size={24}/></span>
           

@@ -7,6 +7,7 @@ import { FaTwitter } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function Footer(){
   
@@ -33,7 +34,7 @@ export default function Footer(){
     <div className="rounded-full p-2 m-1 "><MdFacebook color="#FFFFFF" size={35}/></div>
     </Link>
         <Link  href={"/"} className=" cursor-pointer">
-        <div className="rounded-full p-3 m-1 "><FaTwitter color="#FFFFFF" size={22}/></div>
+        <div className="rounded-full p-3 m-1 "><FaXTwitter color="#FFFFFF" size={22}/></div>
         </Link>
         <Link href={"/"}  className="cursor-pointer">
           <div className="rounded-full p-3 m-1 ">

@@ -32,13 +32,17 @@ export const Opacity = observer(() => {
   </div>
 </section>
 {expand ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-         <div className='flex flex-row items-center'>
-         <div className='flex-1 grow shrink basis-0'><input id="slider" value={store.selectedElement?.placement.opacity ? store.selectedElement?.placement.opacity*100 : 0 } onChange={handleChangeSlider}  className=' appearance-none block rounded-s-lg  accent-black cursor-pointer h-2 ' type="range" max="100" min="0"/></div>
-         <div className='flex flex-col'>
-          <label className='text-[10px] max-w-[48px]  max-h-[14px]' htmlFor='opacity'>Opacity</label>
-          <input className='max-w-[48px] max-h-5 text-xs' ref={refPercent} disabled value={store.selectedElement?.placement.opacity ? store.selectedElement.placement.opacity*100:0}  id="opacity" type='text' />
+         <div className='flex flex-row items-center justify-between gap-x-1 px-3 py-2'>
+         <div className='inline-flex flex-col items-center w-[70%] justify-center'>
+         <input id="slider" value={store.selectedElement?.placement.opacity ? store.selectedElement?.placement.opacity*100 : 0 } onChange={handleChangeSlider}  className=' appearance-none rounded-s-lg  accent-black cursor-pointer' type="range" max="100" min="0"/>
          </div>
-         <span>%</span>
+         <div className='inline-flex flex-col items-center gap-y-1 w-[20%] justify-between '>
+         <label className='text-[10px]' htmlFor='opacity'>Opacity</label>
+        <input className='text-[11px] border-[#444444] border-b w-full' ref={refPercent} disabled value={store.selectedElement?.placement.opacity ? store.selectedElement.placement.opacity*100:0}  id="opacity" type='text' />
+         </div>
+         <div className='inline-flex flex-col-reverse h-full items-start justify-end  w-[10%] '>
+          <span className='text-[11px]'>%</span>
+         </div>
          </div>
         </section>:null}
         </div>

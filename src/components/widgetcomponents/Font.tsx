@@ -99,15 +99,15 @@ export const Font = observer(() => {
           </div>
       </section>
     {expand  ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
-      <div className='flex flex-col items-center justify-between border border-green-500 m-[1px] p-[1px] '>
+      <div className='flex flex-col items-center gap-y-3 px-3 py-2 justify-between border border-green-500'>
         <div className='flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]'>
-          <div className='inline-flex flex-row items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
-            <div className='inline-flex flex-col items-center justify-between border border-orange-500 m-[1px] p-[1px]'>
-            <label htmlFor='Family' className='font-semibold text-[10px] w-[121px] h-[14px] text-[#999999]'>Family</label>
-          { results? <select ref={reffamily}  className=' appearance-none focus:outline-none border-b-[1px] border-[#444444] bg-transparent w-[121px] h-[20px] text-xs pr-4 cursor-pointer'>
+          <div className='inline-flex w-4/5 flex-row items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
+            <div className='inline-flex flex-col gap-y-2 w-4/5 items-center justify-between border border-orange-500 m-[1px] p-[1px]'>
+            <label htmlFor='Family' className='font-semibold text-[10px] text-[#999999]'>Family</label>
+          { results? <select ref={reffamily}  className='focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-xs cursor-pointer'>
     { 
     results.map((val:any,ind:any,oa:any)=>{
-    return <option key={`${val[`family`]}_${ind}`}>{val[`family`]}</option>
+    return <option className='bg-black text-white' key={`${val[`family`]}_${ind}`}>{val[`family`]}</option>
     })} </select> :<select></select>}
         
             </div>
@@ -115,15 +115,17 @@ export const Font = observer(() => {
               <HiDotsVertical size={24}/>
             </div>
           </div>
-          <div className='inline-flex flex-col  items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
+          <div className='inline-flex flex-col w-1/5 gap-y-2 items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
           <label className='font-semibold text-[10px] text-[#999999]'>Size</label>
-             <select className=' border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
+             <select className=' w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
               <option>8</option>
-              <option>8</option>
-              <option>8</option>
-              <option>8</option>
-              <option>8</option>
-              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+              <option>11</option>
+              <option>12</option>
+              <option>14</option>
+              <option>18</option>
+              <option>14</option>
              </select>
           </div>
         </div>
@@ -148,7 +150,7 @@ export const Font = observer(() => {
             <input className='border w-full border-yellow-400 bg-transparent text-xs focus:outline-none  cursor-pointer' onChange={handleLineHeight} value={ store.selectedElement?.placement.lineHeight ? store.selectedElement?.placement.lineHeight:""}/>
           </div>
           <div className='inline-flex flex-col  items-start w-1/4 justify-between space-y-1 border border-green-500 m-[1px] p-[1px]'>
-          <label htmlFor='Spacing' className=' font-semibold text-[10px] border border-yellow-400  text-[#999999]'>Spacing</label>
+          <label htmlFor='Spacing' className='font-semibold text-[10px] border border-yellow-400  text-[#999999]'>Spacing</label>
             <input className=' border border-yellow-400 w-full  bg-transparent text-xs focus:outline-none  cursor-pointer' value={0.5}/>
           </div>
         </div>

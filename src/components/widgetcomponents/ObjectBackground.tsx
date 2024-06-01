@@ -34,7 +34,7 @@ export const ObjectBackground = observer(() => {
           </div>
       </section>
    {expand ? <section className={`cursor-pointer w-full m-0.5 p-0.5 border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
-      <div className='flex flex-row border  border-green-500 w-full m-[1px] p-[1px]  items-center justify-between'>
+      <div className='flex flex-row border  border-green-500 w-full py-2 px-3  items-center justify-between'>
         <div className='inline-flex flex-row items-center justify-between space-x-1 text-xs border border-yellow-400 m-[1px] p-[1px] '>
         <input type='checkbox' ref={reftextboxbgcolor}   className='bg-transparent accent-black border text-xs'/>
           <input type='color' onChange={handleTextBoxBackgroundColor} id='textboxbgfill'  className='bg-transparent w-5 h-6 border-none'/>

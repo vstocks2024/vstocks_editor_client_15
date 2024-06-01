@@ -31,12 +31,12 @@ export const Flip = observer(() => {
           </div>
       </section>
       {expand   ? <section className={`cursor-pointer m-0.5  p-0.5 w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
-        <div className='inline-flex flex-row items-center justify-start space-x-3 border border-red-500 m-0.5 p-0.5'>
+        <div className='inline-flex flex-row items-center justify-start space-x-3  px-3 py-2'>
         <button onClick={handleFlipHorizontal}  className=''>
-          <span><LuFlipHorizontal2 className={`cursor-pointer ${store.selectedElement?.placement.flipX===true ?"brightness-200" :"brightness-50"}`} size={24}/></span>
+          <span><LuFlipHorizontal2 className={`cursor-pointer`} size={24}/></span>
         </button>
         <button onClick={handleFlipVertical}  className=''>
-          <span><LuFlipVertical2 className={`cursor-pointer ${store.selectedElement?.placement.flipY===true ?"brightness-200" :"brightness-50"}`} size={24}/></span>
+          <span><LuFlipVertical2 className={`cursor-pointer`} size={24}/></span>
         </button>
         </div>
     </section>:null}
