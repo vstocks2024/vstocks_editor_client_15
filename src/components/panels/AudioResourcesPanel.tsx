@@ -60,12 +60,12 @@ await axios.get(`${process.env.NEXT_PUBLIC_URL}/list_audios`)
   }
   return (
     <>
-    <div className="items-center justify-start border border-red-500 flex flex-col m-0.5 p-0.5">
+    <div className="items-center justify-start flex flex-col py-2  px-0.5">
     <UploadButton
         accept="audio/mp3,audio/*"
         className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold text-center mx-2 py-2 px-4 rounded"
         onChange={handleFileChange}/>
-        <div className=" border border-blue-500 m-0.5 p-1 overflow-y-auto h-[405px]  w-full">
+        <div className="p-0.5 overflow-y-auto w-full">
       {store.audios.map((audio, index) => {
         return <AudioResource key={`${audio["fileid"]}_${index}`} fileid={audio["fileid"]} filename={audio["filename"]} filesource={audio["filesource"]} index={index} />;
       })}

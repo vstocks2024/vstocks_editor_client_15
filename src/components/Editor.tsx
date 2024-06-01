@@ -13,7 +13,7 @@ import { MainPart } from "./MainPart";
 import { MainCanvas } from "@/components/MainCanvas";
 import { CanvasFooter } from "@/components/CanvasFooter";
 import { Store } from "@/store/Store";
-import MainLayout from "@/app/layouts/MainLayout";
+import {MainLayout} from "@/app/layouts/MainLayout";
 import { BackCustomize } from "./BackCustomize";
 
 export const EditorWithStore = () => {
@@ -25,9 +25,13 @@ export const EditorWithStore = () => {
   );
 }
 
+
+
 export const Editor = observer(() => {
   const store = React.useContext(StoreContext);
   document.title = "Editor--VSTOCKS";
+
+
 
   useEffect(() => {
     console.log(store.width,store.height);
@@ -54,6 +58,9 @@ export const Editor = observer(() => {
       canvas.renderAll();
       fabric.util.requestAnimFrame(render);
     });
+
+    
+
   }, []);
   return (
   <MainLayout>

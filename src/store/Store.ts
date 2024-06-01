@@ -33,6 +33,7 @@ export class Store {
   possibleVideoFormats: string[] = ['mp4', 'webm'];
   selectedVideoFormat: 'mp4' | 'webm';
   expandAll:boolean;
+  maximize:boolean;
   
    
 
@@ -55,6 +56,7 @@ export class Store {
     this.selectedMenuOption = null;
     this.selectedVideoFormat = 'mp4';
     this.expandAll=true;
+    this.maximize=false;
     
 
     makeAutoObservable(this);
@@ -68,6 +70,11 @@ export class Store {
     return this.currentKeyFrame * 1000 / this.fps;
   }
   
+setMaximizeButton(maximize:boolean){
+  this.maximize=true;
+}
+
+
   setCanvasWidthandHeight(canvas: fabric.Canvas | null,w:number,h:number){
     this.canvas=canvas;
     if(this.canvas){

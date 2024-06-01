@@ -265,6 +265,10 @@ export const MainPart = observer(() => {
   // React.useEffect(() => {
   
   // }, []);
+
+  const handleMaximizeButton=()=>{
+        store.setMaximizeButton(false);
+  }
   return (
     <div className=" bg-[#202020]  dark:bg-[#202020] flex  ">
       <div className="justify-between items-center flex-row py-2 flex w-full">
@@ -331,7 +335,9 @@ export const MainPart = observer(() => {
           </button>
         </div>
         <div className="inline-flex flex-row items-center  justify-end  w-full">
-          <button className="w-10 h-10">
+          <button onClick={()=>{
+            handleMaximizeButton
+          }} className="w-10 h-10">
             <span>
               <MdFullscreen size={24} className=" cursor-pointer" />
             </span>
