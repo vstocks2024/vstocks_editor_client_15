@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import React, { useState ,useEffect } from 'react'
 import { IoMdVolumeOff,IoMdVolumeHigh} from "react-icons/io";
 import { AiOutlineClose } from 'react-icons/ai';
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 export const MainCanvas = observer(() => {
   const store = React.useContext(StoreContext);
@@ -56,12 +57,13 @@ export const MainCanvas = observer(() => {
     //   <div className='flex flex-col border  border-yellow-400 m-0.5 p-0.5 w-full min-h-[478px] min-w-[753px] max-h-[478px] max-w-[1003px] justify-center items-center '>
     <div className='flex w-full flex-col items-center justify-center grow shrink basis-0 m-[1px] p-[1px] h-[510px] min-[977px]:min-w-[33%] min-[977px]:max-w-[74%]'>
     <div className='flex flex-col w-full m-[1px] p-[1px] justify-center items-center '>
-        <div className='inline-flex m-[1px] flex-row items-center justify-center p-1 w-[210px] h-[40px] max-w-[210px] max-h-[40px] gap-3'>
+        <div className='inline-flex m-[1px] gap-x-2 flex-row items-center justify-center p-1  border border-green-500 gap-3'>
           <button onClick={()=>
             setResizeOpen(true)
       
           } className='bg-[#202020] text-[12px]  hover:bg-[#101010]  h-full px-4 py-2 font-bold rounded'>Resize</button>
           <button className=''><IoMdVolumeOff className={` rounded-md   brightness-50`} size={24}/></button>
+          <button className=''><BsThreeDotsVertical color='#FFF' size={18}/></button>
         </div>
       
         {/* <div className='flex w-full  min-w-[750px] min-h-[422px] max-w-[1003px]  max-h-[438px] justify-center items-center  border-solid border-slate-400 border-[0.01px]'> */}

@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { BsPlusCircleFill } from "react-icons/bs";
+import { MenuFooter } from "./MenuFooter";
 
 export const CanvasFooter = () => {
+  const [menufooter,setMenuFooter]=useState<boolean>(false);
   return (
-    <div className="bg-[#202020] w-full">
-      <div className="flex flex-row items-center justify-end px-1">
+    <div className="bg-[rgb(32,32,32)] border relative border-green-500 m-[1px] p-[1px] w-full">
+      {menufooter===true ? <><MenuFooter/></>:null}
+   <button onClick={()=>setMenuFooter(!menufooter)} className={`absolute flex min-[977px]:hidden -top-[calc(50%-10px)]  left-[calc(50%-20px)]`}><BsPlusCircleFill  color="#2E67DD" size={40}/></button>
+      <div className=" border border-pink-500 m-[1px] p-[1px] flex flex-row items-center justify-end px-1">
+
         <div className="flex flex-row items-center justify-center m-0.5">
           <div>
             <FaMinus size={12} />
