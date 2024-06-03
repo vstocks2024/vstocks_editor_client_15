@@ -6,6 +6,7 @@ import React, { useEffect } from 'react'
 import { MdColorLens, MdOutlineExpandLess, MdOutlineExpandMore } from 'react-icons/md';
 import { HiDotsVertical } from "react-icons/hi";
 import { MdFormatUnderlined,MdFormatOverline,MdFormatStrikethrough  } from "react-icons/md";
+import { family_variants_arr } from '@/types';
 
 
 export const Font = observer(() => {
@@ -13,8 +14,29 @@ export const Font = observer(() => {
     const [expand,setExpand]=React.useState<boolean>(true);
     const [results,setResults]=React.useState([]);
     const [family,setFamily]=React.useState<string>("");
+    const [variants,setVariants]=React.useState([]);
     const reffamily=React.useRef<HTMLSelectElement>(null);
     const reftextcolorfill=React.useRef<HTMLInputElement>(null);
+    const fontsizearr:Number[]=[];
+    for(let i=8;i<101;i++){
+      fontsizearr.push(i);
+    }
+    
+    
+    var family_ind=0;
+
+    const handleFontFamily=(event:React.ChangeEvent<HTMLSelectElement>)=>{
+           if(!event) return;
+           if(!event.target) return;
+           try{
+             family_ind=results.findIndex((val)=>val['family']==event.target.value);
+            console.log(results[family_ind]["variants"]);
+            setVariants(results[family_ind]["variants"]);
+           }
+           catch(err){
+                 console.log(err);
+           }
+    }
     
     
     
@@ -88,6 +110,7 @@ export const Font = observer(() => {
     }
       React.useEffect(()=>{
         getFonts(process.env.NEXT_PUBLIC_GET_FONT_URL as string);
+        console.log(results);
         },[])
     return (
       <>
@@ -101,41 +124,42 @@ export const Font = observer(() => {
     {expand  ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
       <div className='flex flex-col items-center gap-y-3 px-3 py-2 justify-between border border-green-500'>
         <div className='flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]'>
-          <div className='inline-flex w-4/5 flex-row items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
-            <div className='inline-flex flex-col gap-y-2 w-4/5 items-center justify-between border border-orange-500 m-[1px] p-[1px]'>
-            <label htmlFor='Family' className='font-semibold text-[10px] text-[#999999]'>Family</label>
-          { results? <select ref={reffamily}  className='focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-xs cursor-pointer'>
+          <div className='inline-flex w-[75%] flex-row items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
+            <div className='inline-flex flex-col gap-y-1 w-4/5 items-start justify-between border border-orange-500 m-[1px] p-[1px]'>
+            <label htmlFor='Family' className='m-[1px] p-[1px] font-semibold text-start text-[11px] text-[#999999]'>Family</label>
+          { results.length>0  ? <select ref={reffamily} onChange={handleFontFamily}  className='focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] cursor-pointer'>
     { 
     results.map((val:any,ind:any,oa:any)=>{
-    return <option className='bg-black text-white' key={`${val[`family`]}_${ind}`}>{val[`family`]}</option>
-    })} </select> :<select></select>}
+    return <option value={`${val["family"]}`} className='bg-black text-white' key={`${val[`family`]}_${ind}`}>{val[`family`]}</option>
+    })} </select> :<select></select>
+    }
         
             </div>
             <div>
               <HiDotsVertical size={24}/>
             </div>
           </div>
-          <div className='inline-flex flex-col w-1/5 gap-y-2 items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
-          <label className='font-semibold text-[10px] text-[#999999]'>Size</label>
+          <div className='inline-flex flex-col w-1/4 gap-y-1 items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
+          <label className='font-semibold text-[11px] text-[#999999]'>Size</label>
              <select className=' w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-              <option>11</option>
-              <option>12</option>
-              <option>14</option>
-              <option>18</option>
-              <option>14</option>
+              {
+              fontsizearr.map((val:Number,ind,oa)=>{
+                return (<><option className='bg-black text-white' key={`${val}_${ind}`} value={`${val}`}>{`${val}`}</option></>);
+              })  
+              }
              </select>
           </div>
         </div>
         <div className='flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]'>
         <div className=' w-1/2 inline-flex flex-col items-start justify-between border border-blue-500 m-[1px] p-[1px]'>
-        <label htmlFor='Variant' className=' font-semibold text-[10px]  text-[#999999]'>Variant</label>
-              {
-        (reffamily.current?.value && results) ? <select className=' focus:outline-none appearance-none border-b-[1px] border-[#444444] bg-transparent text-xs  cursor-pointer'>
-            <option>{reffamily.current.value}</option>  
-         </select> :<select></select>} 
+        <label htmlFor='Variant' className=' font-semibold text-[11px]  text-[#999999]'>Variant</label>
+        { (results.length>0 && variants.length>0 ) ? <select className='focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] cursor-pointer'>
+           {
+            variants.map((val,ind,oa)=>{
+              return <><option className='bg-black text-white' value={`${val}`}>{family_variants_arr[`${val}`]}</option></>;
+            }) 
+          }
+        </select>:<select></select>}
         </div>
         <div className=' w-1/2 inline-flex flex-row items-center border justify-between space-x-2 border-blue-500 m-[1px] p-[1px]'>
         <button onClick={handleUnderLine}  className=''><span><MdFormatUnderlined className={` cursor-pointer ${store.selectedElement?.placement.underline===true ? "brightness-200":"brightness-50"} `} size={24}/></span></button>
@@ -146,12 +170,12 @@ export const Font = observer(() => {
        <div className='flex flex-row items-center justify-between   border border-red-500 m-[1px] p-[1px]'>
         <div className='inline-flex flex-row items-center justify-start   border-blue-500 border m-[1px] p-[1px]'>
           <div className='inline-flex flex-col w-1/4 items-start justify-between space-y-1 border border-green-500 m-[1px] p-[1px]'>
-          <label htmlFor='L. Height' className=' border border-yellow-400 font-semibold text-[10px]  text-[#999999]'>L.Height</label>
-            <input className='border w-full border-yellow-400 bg-transparent text-xs focus:outline-none  cursor-pointer' onChange={handleLineHeight} value={ store.selectedElement?.placement.lineHeight ? store.selectedElement?.placement.lineHeight:""}/>
+          <label htmlFor='L. Height' className=' border border-yellow-400 font-semibold text-[11px]  text-[#999999]'>L.Height</label>
+            <input className='border w-full border-yellow-400 bg-transparent text-[11px] focus:outline-none  cursor-pointer' onChange={handleLineHeight} value={ store.selectedElement?.placement.lineHeight ? store.selectedElement?.placement.lineHeight:""}/>
           </div>
           <div className='inline-flex flex-col  items-start w-1/4 justify-between space-y-1 border border-green-500 m-[1px] p-[1px]'>
-          <label htmlFor='Spacing' className='font-semibold text-[10px] border border-yellow-400  text-[#999999]'>Spacing</label>
-            <input className=' border border-yellow-400 w-full  bg-transparent text-xs focus:outline-none  cursor-pointer' value={0.5}/>
+          <label htmlFor='Spacing' className='font-semibold text-[11px] border border-yellow-400  text-[#999999]'>Spacing</label>
+            <input className=' border border-yellow-400 w-full  bg-transparent text-[11px] focus:outline-none  cursor-pointer' value={0.5}/>
           </div>
         </div>
        </div>

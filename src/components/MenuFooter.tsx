@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { StoreContext } from "@/store";
 import { observer } from "mobx-react";
 import {
@@ -18,8 +18,9 @@ import { Store } from "@/store/Store";
 
 export const MenuFooter=observer(()=>{
     const store = React.useContext(StoreContext);
+
     return (
-      <div className="absolute top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-row min-[977px]:hidden items-center  justify-between gap-x-[18px] min-w-[59px] px-4 py-2 bg-[#202020]">
+      <div  className="absolute top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-row min-[977px]:hidden items-center  justify-between gap-x-[18px] min-w-[59px] px-4 py-2 bg-[#202020]">
         {MENU_OPTIONS.map((option) => {
           return (
             <button

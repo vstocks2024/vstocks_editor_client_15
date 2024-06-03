@@ -22,15 +22,15 @@ import { TextShadow } from "@/components/widgetcomponents/TextShadow";
 import { ObjectBackground } from "../widgetcomponents/ObjectBackground";
 
 
-type ElementsPanelProps={
+type ElementsShortPanelProps={
   elementtype:string | undefined;
 }
 
-export const ElementsPanel = observer(({elementtype}:ElementsPanelProps) => {
+export const ElementsShortPanel = observer(({elementtype}:ElementsShortPanelProps) => {
   const store = React.useContext(StoreContext);
   
   return (
-  <div className="w-[19.7%] min-w-[269.102px]    hidden min-[977px]:flex  h-[510px]  min-[977px]:flex-col border border-white  min-[977px]:items-center min-[977px]:justify-start">
+  <div className="absolute z-30 w-[250px] top-5 flex flex-col min-[977px]:hidden h-[510px] max-h-[510px]   border border-red-500 m-[1px] p-[1px]  items-center justify-start">
     {elementtype=== undefined ? <><Header header={"Canvas"} /><section className=" sidesection">
          <Layers/>
          <Dimensions/>
@@ -66,6 +66,7 @@ export const ElementsPanel = observer(({elementtype}:ElementsPanelProps) => {
           <Stroke/>
           <TextShadow/>
           <Opacity/> 
+          
       </section></> :null}
     </div>
   )});

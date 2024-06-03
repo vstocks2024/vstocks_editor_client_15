@@ -6,7 +6,7 @@ import React from "react";
 export const BackCustomize = () => {
   const router = useRouter();
   return (
-    <div className=" inline-flex flex-row  px-1.5 w-full">
+    <div className=" inline-flex flex-row py-3 px-1.5 w-full">
       <div className="justify-start m-1  inline-flex flex-row items-center">
         <button
           onClick={() => router.back()}

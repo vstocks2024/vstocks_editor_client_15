@@ -270,7 +270,7 @@ export const MainPart = observer(() => {
         store.setMaximizeButton(false);
   }
   return (
-    <div className=" bg-[#202020]  dark:bg-[#202020] flex  ">
+    <div className=" bg-[#202020] py-1  dark:bg-[#202020] flex  ">
       <div className="justify-between items-center flex-row py-2 flex w-full">
         <div className="inline-flex flex-row px-5  items-center  justify-start w-full">
           <button className="w-10 h-10">

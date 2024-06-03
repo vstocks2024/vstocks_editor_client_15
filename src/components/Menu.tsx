@@ -21,7 +21,7 @@ import { getObjectURL } from "./functions/get_put_url";
 export const Menu = observer(() => {
   const store = React.useContext(StoreContext);
   return (
-    <div className="hidden min-[977px]:flex min-[977px]:flex-col min-[977px]:items-center min-[977px]:justify-start gap-y-[18px] min-w-[59px] max-w-[4.3%]   py-4 bg-[#202020]">
+    <div className="hidden h-[510px]   min-[977px]:flex min-[977px]:flex-col min-[977px]:items-center min-[977px]:justify-between gap-y-[18px] min-w-[59px] max-w-[4.3%]   py-10 bg-[#202020]">
       {MENU_OPTIONS.map((option) => {
         return (
           <button
@@ -37,7 +37,7 @@ export const Menu = observer(() => {
               }
             />
             <span
-              className={`w-full text-white text-center  text-[11px] leading-relaxed ${store.selectedMenuOption === option.name ? "font-bold brightness-200" : "font-light brightness-75"}`}>
+              className={`w-full text-white text-center  text-[11px] leading-relaxed`}>
               {option.name}
             </span>
             </span>

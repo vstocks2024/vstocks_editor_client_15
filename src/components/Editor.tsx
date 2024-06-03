@@ -58,9 +58,7 @@ export const Editor = observer(() => {
       canvas.renderAll();
       fabric.util.requestAnimFrame(render);
     });
-
     
-
   }, []);
   return (
   <MainLayout>
@@ -69,7 +67,7 @@ export const Editor = observer(() => {
       <BackCustomize/>
           <MainPart />
         </div>
-        <div className="flex flex-row items-center justify-between w-full">
+        <div className="flex flex-row items-start justify-between w-full">
           <Menu />
           {store.selectedMenuOption ? <Resources /> : null}
           <MainCanvas />

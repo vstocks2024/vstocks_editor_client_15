@@ -12,6 +12,9 @@ export default function Home() {
             -&gt;
           </span>
         </h2>
+        <h4>
+          Developed By Inspiring Wave
+        </h4>
       </a>
     </main>
   );

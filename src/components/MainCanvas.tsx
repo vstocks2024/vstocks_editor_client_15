@@ -1,20 +1,22 @@
 
 import { StoreContext } from '@/store';
 import { observer } from 'mobx-react';
-import React, { useState ,useEffect } from 'react'
+import React, { useState ,useEffect, useRef } from 'react'
 import { IoMdVolumeOff,IoMdVolumeHigh} from "react-icons/io";
 import { AiOutlineClose } from 'react-icons/ai';
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { ElementsShortPanel } from './panels/ElementsShortPanel';
 
 export const MainCanvas = observer(() => {
   const store = React.useContext(StoreContext);
+  const [openElementsShortPanel,setOpenElementsShortPanel]=useState<boolean>(false);
   const [resizeopen,setResizeOpen]=useState<boolean>(false);
   const [toggleRatio,setToggleRatio]=useState({wr:1.76258025,ar:0.579354839});
   const [windowDimenions,setWindowDimenions]=useState<object>({
     wW:window.innerWidth,
     wH:window.innerHeight
   });
-
+  
   const handleWindowCanvasResize=()=>{
    setWindowDimenions({
     wW:window.innerWidth,
@@ -31,6 +33,8 @@ export const MainCanvas = observer(() => {
     }
     
   },[windowDimenions])
+
+
   
   function handleFacebookEvent(){
     // 
@@ -42,35 +46,36 @@ export const MainCanvas = observer(() => {
   function handleInstagramPost(){
     // 
     store.setCanvasWidthandHeight(store.canvas,449,449);
-    setToggleRatio({wr:3.035556,ar:1});
+    setToggleRatio({wr:5.22791,ar:1.71839718});
     setResizeOpen(false);
   }
   function handleInstagramStory(){
     // 
     store.setCanvasWidthandHeight(store.canvas,261.29,449);
-    setToggleRatio({wr:5.22791,ar:1.71839718});
+    setToggleRatio({wr:3.035556,ar:1});
     setResizeOpen(false);
   }
   
   return (
     // <div className='flex border border-green-500 m-0.5 grow shrink basis-0 p-4 min-w-[785] h-[510px] max-w-[1035px]'>
     //   <div className='flex flex-col border  border-yellow-400 m-0.5 p-0.5 w-full min-h-[478px] min-w-[753px] max-h-[478px] max-w-[1003px] justify-center items-center '>
-    <div className='flex w-full flex-col items-center justify-center grow shrink basis-0 m-[1px] p-[1px] h-[510px] min-[977px]:min-w-[33%] min-[977px]:max-w-[74%]'>
+    <div className='flex w-full h-[510px] flex-col items-center justify-center grow shrink basis-0 p-[1px]  min-[977px]:min-w-[33%] min-[977px]:max-w-[74%]'>
     <div className='flex flex-col w-full m-[1px] p-[1px] justify-center items-center '>
-        <div className='inline-flex m-[1px] gap-x-2 flex-row items-center justify-center p-1  border border-green-500 gap-3'>
+        <div className='relative inline-flex m-[1px] gap-x-2 flex-row items-center justify-center p-1  border border-green-500 gap-3'>
           <button onClick={()=>
             setResizeOpen(true)
       
           } className='bg-[#202020] text-[12px]  hover:bg-[#101010]  h-full px-4 py-2 font-bold rounded'>Resize</button>
           <button className=''><IoMdVolumeOff className={` rounded-md   brightness-50`} size={24}/></button>
-          <button className=''><BsThreeDotsVertical color='#FFF' size={18}/></button>
+          <button onClick={()=>{setOpenElementsShortPanel(!openElementsShortPanel)}} className='flex min-[977px]:hidden'><BsThreeDotsVertical color='#FFF' size={18}/></button>
+          {openElementsShortPanel===true ? <ElementsShortPanel elementtype={store.selectedElement?.type} />:null}
         </div>
       
         {/* <div className='flex w-full  min-w-[750px] min-h-[422px] max-w-[1003px]  max-h-[438px] justify-center items-center  border-solid border-slate-400 border-[0.01px]'> */}
     {/* <canvas id="lower-canvas" className={`absolute touch-none  select-none min-w-[750px] min-h-[422px] h-[436px] w-[775px]  max-w-[775px]  max-h-[436px] border-[0.1px] border-green-300`}/> */}
 
       {/* New Code is written for above two div */}
-    <div className='relative m-[1px] p-[1px]  flex w-full h-full justify-center items-center  border-solid border-slate-400 border '>
+    <div className='relative m-[1px] p-[1px]  flex w-full  justify-center items-center  border-solid border-slate-400 border '>
     <canvas id="lower-canvas" className={`absolute w-full shrink touch-none select-none border border-green-300`}/>
     {
           resizeopen===true ? (<> <div className="fixed flex flex-grow items-center justify-center p-2 md:p-2  top-0 left-0 w-full h-full bg-black bg-opacity-50">

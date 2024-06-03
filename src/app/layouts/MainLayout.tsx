@@ -10,6 +10,6 @@ export const MainLayout=observer(({children}:{children:React.ReactNode})=>{
     return (<>
     {/* <Header/> */}
     {children}
-    {store.maximize===true ? null:<Footer/>}
+    {/* {store.maximize===true ? null:<Footer/>} */}
     </>)
 });

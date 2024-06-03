@@ -71,6 +71,8 @@ export type Placement = {
   strokeMiterLimit?: number | undefined;
   shadow?: Shadow | string | undefined;
 
+  
+
 };
 
 export type TimeFrame = {
@@ -137,3 +139,20 @@ export type MenuOption =
   |"Stickers"
   |"Shapes"
   |null;
+
+export const family_variants_arr={
+'300':"Light", 
+'300italic':"Light Italic",
+'regular':"Regular",
+'italic':"Italic",
+'500':"Medium", 
+'500italic':"Medium Itallic",
+'600':"Semi Bold",
+'600italic':"Semi Bold Itallic",
+'700':"Bold",
+'700italic':"Bold Itallic",
+"800":"Extra Bold",
+'800italic':"Extra Bold Itallic",
+"900":"Black",
+'900italic':"Black Itallic"
+};

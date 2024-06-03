@@ -1561,8 +1561,8 @@ shadow:newShadow};
         name: `Text ${index + 1}`,
         type: "text",
         placement: {
-          x: 400,
-          y: 250,
+          x: 0,
+          y: 0,
           width: 200,
           height: 200,
           rotation: 0,
@@ -1962,6 +1962,9 @@ shadow:newShadow};
             strokeLineJoin:element.placement.strokeLineJoin,
             strokeMiterLimit:element.placement.strokeMiterLimit,
             shadow:element.placement.shadow,
+
+            
+
           });
           element.fabricObject = textObject;
           element.properties.textboxObject=textObject;

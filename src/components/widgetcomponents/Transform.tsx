@@ -79,36 +79,40 @@ export const Transform = observer(() => {
           </div>
       </section>
       {expand   ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
-        <div className='flex flex-row py-2 items-center   text-gray-500 gap-2'>
-          <div  className='flex flex-col gap-1'>
-            <div className='w-12 min-w-[48px] gap-2 block font-semibold text-center items-center py-1 text-xs'>
-              <label htmlFor='Width' className='w-full text-[11px] '>Width</label>
-              <input disabled={lock} onChange={handleChangeWidth} value={store.selectedElement?.placement.width ? store.selectedElement.placement.width.toFixed(2) : 0} id='width' className=" w-full text-white text-center bg-transparent focus:outline-none text-xs" />
+        <div className='flex flex-row py-2 px-3 items-start'>
+          <div  className='flex flex-col m-[1px] p-[1px] w-[28%] gap-y-1'>
+            <div className='flex flex-col items-start justify-between m-[1px] p-[1px] gap-y-1 w-full  font-semibold text-center text-[11px]'>
+              <label htmlFor='Width' className=' text-[11px] text-gray-500 '>Width</label>
+              <input disabled={lock} onChange={handleChangeWidth} value={store.selectedElement?.placement.width ? store.selectedElement.placement.width.toFixed(2) : 0} id='width' className="w-full  text-white text-start bg-transparent focus:outline-none text-[11px]" />
             </div>
-            <div className='w-12 min-w-[48px] gap-2 block font-semibold text-center text-xs'>
-              <label htmlFor='height' className='w-full text-[11px]'>Height</label>
-              <input disabled={lock} onChange={handleChangeHeight} value={store.selectedElement?.placement.height ? store.selectedElement.placement.height.toFixed(2) :0} className="w-full text-white text-center bg-transparent focus:outline-none text-xs" />
-            </div>
-            </div>
-            <button className=' relative flex justify-center items-center'>
-              <span onClick={()=>{setLock(!lock)}}  className=' text-white'>{ lock ? <MdLock size={20}/> :<MdLockOpen size={20}/>}</span><span className='overflow-hidden'></span><span></span>
-            </button>
-        <div  className='flex flex-col gap-1'>
-            <div className='w-12 min-w-[48px] gap-2 block font-semibold text-center items-center py-1 text-xs'>
-              <label htmlFor='Left' className='w-full text-[11px] '>Left</label>
-              <input disabled={lock} onChange={handleChangeLeft} value={store.selectedElement?.placement.x ? store.selectedElement.placement.x.toFixed(2) :0}  className=" w-full text-center text-white bg-transparent focus:outline-none  text-xs"  />
-            </div>
-            <div className='w-12 min-w-[48px] gap-2 block font-semibold text-center text-xs'>
-              <label htmlFor='Top' className='w-full text-[11px]'>Top</label>
-              <input disabled={lock}  onChange={handleChangeTop} value={store.selectedElement?.placement.y ? store.selectedElement.placement.y.toFixed(2) :0}   className="w-full text-white text-center bg-transparent focus:outline-none text-xs"  />
+            <div className='flex flex-col items-start justify-between  m-[1px] p-[1px] gap-y-1 w-full font-semibold text-center text-[11px]'>
+              <label htmlFor='height' className='text-[11px] text-gray-500'>Height</label>
+              <input disabled={lock} onChange={handleChangeHeight} value={store.selectedElement?.placement.height ? store.selectedElement.placement.height.toFixed(2) :0} className=" w8text-start  text-white bg-transparent focus:outline-none text-[11px]" />
             </div>
             </div>
-        <div  className='block'>
-            <div className='w-12 min-w-12 gap-2  flex flex-col  font-semibold '>
-              <label htmlFor='Rotation' className=' text-center w-full text-[11px]'>Rotation</label>
-              <input value={store.selectedElement?.placement.rotation ? store.selectedElement.placement.rotation : 0} disabled={lock} onChange={handleChangeRotation} className=" w-full text-white text-center  bg-transparent focus:outline-none text-xs" />
+            <div className='flex flex-col  m-[1px] p-[1px] h-full items-center justify-center w-[16%]'>
+            <div className='flex flex-col justify-center items-center  m-[1px] p-[1px]'>
+              <div className='h-8  border-t border-r border-gray-500 w-1/4'/>
+              <button onClick={()=>{setLock(!lock)}}  className=' text-white'>{ lock ? <MdLock size={20}/> :<MdLockOpen size={20}/>}</button>
+              <div className='h-8   border-b border-r border-gray-500 w-1/4'/>
             </div>
-            <div className='w-12 min-w-[48px]'></div>
+            </div>
+        <div  className='flex flex-col m-[1px] p-[1px]  w-[28%] gap-y-1 items-center justify-between '>
+            <div className='inline-flex flex-col m-[1px] p-[1px] gap-y-1  justify-between font-semibold items-center text-[11px]'>
+              <label htmlFor='Left' className='w-full text-[11px] text-gray-500 '>Left</label>
+              <input disabled={lock} onChange={handleChangeLeft} value={store.selectedElement?.placement.x ? store.selectedElement.placement.x.toFixed(2) :0}  className=" w-full text-white bg-transparent focus:outline-none  text-[11px]"  />
+            </div>
+            <div className='inline-flex flex-col m-[1px] p-[1px] gap-y-1 justify-between font-semibold items-center text-[11px]'>
+              <label htmlFor='Top' className='w-full text-[11px] text-gray-500'>Top</label>
+              <input disabled={lock}  onChange={handleChangeTop} value={store.selectedElement?.placement.y ? store.selectedElement.placement.y.toFixed(2) :0}   className="w-full text-white  bg-transparent focus:outline-none text-[11px]"  />
+            </div>
+            </div>
+        <div  className='inline-flex flex-col w-[28%]  m-[1px] p-[1px] items-center justify-center'>
+            <div className=' items-center justify-between gap-y-1 m-[1px] p-[1px]   inline-flex flex-col  font-semibold '>
+              <label htmlFor='Rotation' className='w-full text-[11px] text-gray-500'>Rotation</label>
+              <input value={store.selectedElement?.placement.rotation ? store.selectedElement.placement.rotation : 0} disabled={lock} onChange={handleChangeRotation} className=" w-full text-white bg-transparent focus:outline-none text-[11px]" />
+            </div>
+            
           </div>
         </div>
     </section>:null}
