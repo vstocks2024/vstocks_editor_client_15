@@ -20,7 +20,7 @@ export const MenuFooter=observer(()=>{
     const store = React.useContext(StoreContext);
 
     return (
-      <div  className="absolute top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-row min-[977px]:hidden items-center  justify-between gap-x-[18px] min-w-[59px] px-4 py-2 bg-[#202020]">
+      <div  className="absolute top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-row min-[977px]:hidden items-center  justify-between gap-x-10 min-h-[59px] px-4 py-2 bg-[#202020]">
         {MENU_OPTIONS.map((option) => {
           return (
             <button
@@ -57,6 +57,7 @@ export const MenuFooter=observer(()=>{
         store.addText({text:"Start Typing",
           fontSize:36,
           fontWeight:400,
+          fontFamily:"ABeeZee",
         });
       },
     },

@@ -7,6 +7,7 @@ import { FabricUitls } from '@/utils/fabric-utils';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
 import { Gradient, IShadowOptions, Pattern, Shadow,Textbox } from 'fabric/fabric-impl';
+import { RiFontFamily } from 'react-icons/ri';
 
 
 export class Store {
@@ -97,6 +98,9 @@ setMaximizeButton(maximize:boolean){
       canvas.backgroundColor = this.backgroundColor;
     }
   }
+
+
+  
   
   setFlipHorizontal(element:EditorElement){
     if(isEditorAudioElement(element)) return;
@@ -1068,10 +1072,43 @@ strokeMiterLimit:element.placement.strokeMiterLimit,
 shadow:newShadow};
     const newElement={...element,placement:newPlacement};
     this.updateEditorElement(newElement);
+}
 
-    
-  
-  }
+setTextBoxFontSize(element:EditorElement,newfontSize:number | undefined){
+    if(isEditorAudioElement(element)||isEditorImageElement(element)||isEditorVideoElement(element)) return;
+    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
+      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
+      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
+      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
+      underline:element.placement.underline,overline:element.placement.overline,
+      linethrough:element.placement.linethrough,
+      lineHeight:element.placement.lineHeight,
+      fill:element.placement.fill,
+      backgroundColor:element.placement.backgroundColor,
+      selectable:element.placement.selectable,
+      visible:element.placement.visible,
+      hasControls:element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX:element.placement.lockMovementX,
+    stroke:element.placement.stroke,
+    strokeWidth:element.placement.strokeWidth,
+  strokeUniform:element.placement.strokeUniform,
+  strokeLineCap:element.placement.strokeLineCap,
+strokeLineJoin:element.placement.strokeLineJoin,
+strokeMiterLimit:element.placement.strokeMiterLimit,
+shadow:element.placement.shadow};
+
+const newProperties={text:element.properties.text,fontSize:newfontSize,
+  fontWeight:element.properties.fontWeight,fontFamily:element.properties.fontFamily,
+  splittedTexts:element.properties.splittedTexts,textboxObject:element.properties.textboxObject
+}
+const newElement={...element,placement:newPlacement,properties:newProperties};
+this.updateEditorElement(newElement);
+}
+  setTextBoxFontWeight(element:EditorElement,newfontWeight: string | number | undefined){
+}
+
 
   setBackgroundColor(backgroundColor: string) {
     this.backgroundColor = backgroundColor;
@@ -1079,6 +1116,8 @@ shadow:newShadow};
       this.canvas.backgroundColor = backgroundColor;
     }
   }
+
+
 
 
 
@@ -1551,7 +1590,8 @@ shadow:newShadow};
   addText(options: {
     text: string,
     fontSize: number,
-    fontWeight: number
+    fontWeight: number,
+    fontFamily:string
   }) {
     const id = getUid();
     const index = this.editorElements.length;
@@ -1591,7 +1631,8 @@ shadow:newShadow};
           strokeLineJoin: "milter",
           strokeMiterLimit: 1,
           // shadow:new fabric.Shadow({color:"blue",blur:0.6,offsetX:2,offsetY:2}),
-          shadow: undefined
+          shadow: undefined,
+
         },
         timeFrame: {
           start: 0,
@@ -1601,6 +1642,7 @@ shadow:newShadow};
           text: options.text,
           fontSize: options.fontSize,
           fontWeight: options.fontWeight,
+          fontFamily:options.fontFamily,
           splittedTexts: [],
         },
         
@@ -1938,6 +1980,7 @@ shadow:newShadow};
             angle:element.placement.rotation,
             fontSize: element.properties.fontSize,
             fontWeight: element.properties.fontWeight,
+            fontFamily:element.properties.fontFamily,
             textAlign:element.placement.textAlign,
             underline:element.placement.underline,
             overline:element.placement.overline,
@@ -2007,6 +2050,7 @@ shadow:newShadow};
               strokeLineJoin:target.strokeLineJoin ?? placement.strokeLineJoin,
               strokeMiterLimit:target.strokeMiterLimit ?? placement.strokeMiterLimit,
               shadow:target.shadow ?? placement.shadow,
+              
             };
             const newElement = {
               ...element,
@@ -2015,7 +2059,9 @@ shadow:newShadow};
                 ...element.properties,
                 // @ts-ignore
                 text: target.text ?? element.properties.text,
-                
+                fontSize:target.fontSize ?? element.properties.fontSize,
+                fontWeight:target.fontWeight ?? element.properties.fontWeight,
+                fontFamily:target.fontFamily ?? element.properties.fontFamily
               },
            
             };

@@ -24,9 +24,9 @@ export type TextEditorElement = EditorElementBase<
   "text",
   {
     text: string;
-    fontSize: number;
-    fontWeight: number;
-    
+    fontSize?: number | undefined;
+    fontWeight?: string | number | undefined;
+    fontFamily?: string | undefined;
     splittedTexts: fabric.Text[];
     textboxObject?:fabric.Textbox
   }>;

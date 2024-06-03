@@ -25,11 +25,25 @@ export const Font = observer(() => {
     
     var family_ind=0;
 
-    const handleFontFamily=(event:React.ChangeEvent<HTMLSelectElement>)=>{
+    const handleFontSize=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
+      if(!event) return;
+      if(!event.target) return;
+      if(!store.selectedElement) return;
+      try{
+       console.log(typeof(parseInt(event.target.value)));
+       store.setTextBoxFontSize(store.selectedElement,parseInt(event.target.value));
+      }
+      catch(err){
+        console.log(err);
+      }
+
+    }
+
+    const handleFontFamily=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
            if(!event) return;
            if(!event.target) return;
            try{
-             family_ind=results.findIndex((val)=>val['family']==event.target.value);
+            family_ind=results.findIndex((val)=>val['family']===event.target.value);
             console.log(results[family_ind]["variants"]);
             setVariants(results[family_ind]["variants"]);
            }
@@ -111,6 +125,8 @@ export const Font = observer(() => {
       React.useEffect(()=>{
         getFonts(process.env.NEXT_PUBLIC_GET_FONT_URL as string);
         console.log(results);
+
+
         },[])
     return (
       <>
@@ -141,7 +157,7 @@ export const Font = observer(() => {
           </div>
           <div className='inline-flex flex-col w-1/4 gap-y-1 items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
           <label className='font-semibold text-[11px] text-[#999999]'>Size</label>
-             <select className=' w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
+             <select onChange={handleFontSize} className=' w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
               {
               fontsizearr.map((val:Number,ind,oa)=>{
                 return (<><option className='bg-black text-white' key={`${val}_${ind}`} value={`${val}`}>{`${val}`}</option></>);
