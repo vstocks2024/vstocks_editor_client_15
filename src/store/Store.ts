@@ -1588,10 +1588,11 @@ this.updateEditorElement(newElement);
 
   }
   addText(options: {
-    text: string,
-    fontSize: number,
-    fontWeight: number,
-    fontFamily:string
+
+    fontSize: number | undefined;
+    fontWeight: string | number | undefined;
+    fontFamily: string | undefined;
+    text: string;
   }) {
     const id = getUid();
     const index = this.editorElements.length;

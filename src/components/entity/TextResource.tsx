@@ -5,12 +5,14 @@ import { observer } from "mobx-react";
 import { MdAdd } from "react-icons/md";
 
 type TextResourceProps = {
-  fontSize: number;
-  fontWeight: number;
+
+  fontSize: number | undefined;
+  fontWeight: string | number | undefined;
+  fontFamily: string | undefined;
   sampleText: string;
 };
 export const TextResource = observer(
-  ({ fontSize, fontWeight,sampleText }: TextResourceProps) => {
+  ({ fontSize, fontWeight,sampleText ,fontFamily }: TextResourceProps) => {
     const store = React.useContext(StoreContext);
     return (
       <div className="items-center bg-slate-800 m-[15px] flex flex-row">
@@ -31,6 +33,7 @@ export const TextResource = observer(
               text:sampleText,
               fontSize:fontSize,
               fontWeight:fontWeight,
+              fontFamily:fontFamily,
               
             })
           }
