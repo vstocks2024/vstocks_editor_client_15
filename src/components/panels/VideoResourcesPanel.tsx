@@ -103,13 +103,13 @@ export const VideoResourcesPanel = observer(() => {
   }, []);
 
   return (
-    <div className="items-center justify-start flex flex-col py-2  px-0.5">
+    <div className="items-center overflow-x-hidden overflow-y-auto justify-start flex flex-col py-2  px-0.5">
           <UploadButton
         accept="video/mp4,video/x-m4v,video/*"
         className="uploadbutton"
         onChange={handleFileChange}
       />
-      <div className="p-0.5 overflow-y-auto w-full">
+      <div className="p-0.5  w-full">
         {store.videos.map((file, index) => {
           return (
             <VideoResource

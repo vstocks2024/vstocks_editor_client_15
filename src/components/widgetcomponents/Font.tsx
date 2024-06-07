@@ -7,6 +7,9 @@ import { MdColorLens, MdOutlineExpandLess, MdOutlineExpandMore } from 'react-ico
 import { HiDotsVertical } from "react-icons/hi";
 import { MdFormatUnderlined,MdFormatOverline,MdFormatStrikethrough  } from "react-icons/md";
 import { family_variants_arr } from '@/types';
+import { isEditorAudioElement, isEditorImageElement, isEditorVideoElement } from '@/store/Store';
+
+import { randomUUID } from 'crypto';
 
 
 export const Font = observer(() => {
@@ -23,6 +26,7 @@ export const Font = observer(() => {
     }
     
     
+    
     var family_ind=0;
 
     const handleFontSize=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
@@ -36,7 +40,19 @@ export const Font = observer(() => {
       catch(err){
         console.log(err);
       }
+    }
 
+    const handleFontWeight=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
+      if(!event) return;
+      if(!event.target) return;
+      if(!store.selectedElement) return;
+      try{
+        
+       store.setTextBoxFontWeight(store.selectedElement,event.target.value);
+      }
+      catch(err){
+        console.log(err);
+      }
     }
 
     const handleFontFamily=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
@@ -125,8 +141,6 @@ export const Font = observer(() => {
       React.useEffect(()=>{
         getFonts(process.env.NEXT_PUBLIC_GET_FONT_URL as string);
         console.log(results);
-
-
         },[])
     return (
       <>
@@ -146,21 +160,21 @@ export const Font = observer(() => {
           { results.length>0  ? <select ref={reffamily} onChange={handleFontFamily}  className='focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] cursor-pointer'>
     { 
     results.map((val:any,ind:any,oa:any)=>{
-    return <option value={`${val["family"]}`} className='bg-black text-white' key={`${val[`family`]}_${ind}`}>{val[`family`]}</option>
+    return <option value={`${val["family"]}`} className='bg-white text-black text-[16px]' key={`${val[`family`]}_${ind}`}>{val[`family`]}</option>
     })} </select> :<select></select>
     }
         
             </div>
-            <div>
+            <div >
               <HiDotsVertical size={24}/>
             </div>
           </div>
           <div className='inline-flex flex-col w-1/4 gap-y-1 items-center justify-between border border-blue-500 m-[1px] p-[1px]'>
           <label className='font-semibold text-[11px] text-[#999999]'>Size</label>
-             <select onChange={handleFontSize} className=' w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
+             <select onChange={handleFontSize} defaultValue={(store.selectedElement &&  !isEditorAudioElement(store.selectedElement) && !isEditorImageElement(store.selectedElement) && !isEditorVideoElement(store.selectedElement)) ? store.selectedElement.properties.fontSize : 8 } className=' w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[12px] text-white focus:outline-none'>
               {
               fontsizearr.map((val:Number,ind,oa)=>{
-                return (<><option className='bg-black text-white' key={`${val}_${ind}`} value={`${val}`}>{`${val}`}</option></>);
+                return (<><option  className='bg-white text-black text-[16px]' key={`${val}_${ind}`} value={`${val}`}>{`${val}`}</option></>);
               })  
               }
              </select>
@@ -169,13 +183,14 @@ export const Font = observer(() => {
         <div className='flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]'>
         <div className=' w-1/2 inline-flex flex-col items-start justify-between border border-blue-500 m-[1px] p-[1px]'>
         <label htmlFor='Variant' className=' font-semibold text-[11px]  text-[#999999]'>Variant</label>
-        { (results.length>0 && variants.length>0 ) ? <select className='focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] cursor-pointer'>
+          <select  defaultValue={"Select Variant"} onChange={handleFontWeight} className='focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] select-none cursor-pointer'>
+          <option   hidden disabled>Select Variant</option>
            {
-            variants.map((val,ind,oa)=>{
-              return <><option className='bg-black text-white' value={`${val}`}>{family_variants_arr[`${val}`]}</option></>;
-            }) 
-          }
-        </select>:<select></select>}
+          (results.length>0 && variants.length>0 ) ?  variants.map((val,ind,oa)=>{
+              return <>{ `${val}`.split("i").length>1  ? <option className='bg-white text-[16px] text-black italic' value={`${val}`}>{family_variants_arr[`${val}`]}</option>:<option  className='bg-white text-black text-[16px] not-italic' value={`${val}`}>{family_variants_arr[`${val}`]}</option>}</>;
+            }) :null
+          }</select>
+        
         </div>
         <div className=' w-1/2 inline-flex flex-row items-center border justify-between space-x-2 border-blue-500 m-[1px] p-[1px]'>
         <button onClick={handleUnderLine}  className=''><span><MdFormatUnderlined className={` cursor-pointer ${store.selectedElement?.placement.underline===true ? "brightness-200":"brightness-50"} `} size={24}/></span></button>

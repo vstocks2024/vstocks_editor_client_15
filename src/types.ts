@@ -141,18 +141,22 @@ export type MenuOption =
   |null;
 
 export const family_variants_arr={
+'100':'Thin',
+'100italic':'Thin Italic',
+'200':'Extra Light',
+'200italic':'Extra Light Italic',
 '300':"Light", 
 '300italic':"Light Italic",
 'regular':"Regular",
 'italic':"Italic",
 '500':"Medium", 
-'500italic':"Medium Itallic",
+'500italic':"Medium Italic",
 '600':"Semi Bold",
-'600italic':"Semi Bold Itallic",
+'600italic':"Semi Bold Italic",
 '700':"Bold",
-'700italic':"Bold Itallic",
+'700italic':"Bold Italic",
 "800":"Extra Bold",
-'800italic':"Extra Bold Itallic",
+'800italic':"Extra Bold Italic",
 "900":"Black",
-'900italic':"Black Itallic"
+'900italic':"Black Italic"
 };

@@ -120,7 +120,7 @@ export const ImageResourcesPanel = observer(() => {
     init1();
   }, []);
   return (
-    <div className="items-center justify-start flex flex-col py-2  px-0.5">
+    <div className="items-center overflow-y-auto justify-start flex flex-col py-2  px-0.5">
         <UploadButton
         accept="image/*"
         className=" uploadbutton"

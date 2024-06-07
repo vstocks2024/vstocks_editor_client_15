@@ -57,7 +57,7 @@ const MENU_OPTIONS = [
       //store.setSelectedMenuOption("Text")
       store.addText({text:"Start Typing",
         fontSize:55,
-        fontWeight:400,
+        fontWeight:'regular',
         fontFamily:"ABeeZee",
       });
     },

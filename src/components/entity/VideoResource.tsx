@@ -40,7 +40,7 @@ export const VideoResource = observer(
 
 
     return (
-      <div className="rounded-lg overflow-hidden items-center bg-slate-800 m-[15px] flex flex-col relative">
+      <div className="rounded-lg  bg-slate-800 m-2 flex flex-col items-center justify-start relative">
         <div className="bg-transparent text-white py-1 absolute  text-sm bottom-2 left-2">
           {formatedVideoLength}
           </div>
@@ -61,10 +61,10 @@ export const VideoResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="max-h-[200px] max-w-[200px] transition-all"
+          className="max-h-[150px] max-w-[150px] transition-all"
           src={filesource}
-          height={200}
-          width={200}
+          height={150}
+          width={150}
           id={`video-${index}`}
           muted
           onMouseOver={()=>
