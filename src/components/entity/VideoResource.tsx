@@ -19,24 +19,25 @@ export const VideoResource = observer(
     const store = React.useContext(StoreContext);
     const ref = React.useRef<HTMLVideoElement>(null);
     const [formatedVideoLength, setFormatedVideoLength] =React.useState("00:00");
-
-    const handleDeleteButton=async (videoname:string)=>
+   
+     // Code for Delete Video Buttton
+    const handleVideoDeleteButton=async()=>
     {
-      try{
-      //console.log(videoname);
-      await axios.delete(`http://localhost:2020/videos/delete_videos/${videoname}`).then(resolve=>
-      {
-        console.log(resolve)
-      }).catch((err)=>
-        {
-          console.log(err)
-        })
+     try{
+      console.log("Hi from delete video button");
+         await axios.delete(`${process.env.NEXT_PUBLIC_URL}/video/delete/${fileid}`).then((response)=>{
+              console.log(response);  
+         }).catch((reject)=>{
+              console.log(reject)
+         });
+      }
+      catch(error){
+        console.log(error);
+      }
+       
     }
-    catch(error:unknown)
-    {
-      console.log(error);
-    }
-    }
+    /// End of delete video code button
+   
 
 
     return (
@@ -48,7 +49,7 @@ export const VideoResource = observer(
             <IoIosPricetag size={20}/>
           </button>
           <button className="hover:bg-[#00a0f5] rounded z-10 text-white font-bold py-1 absolute text-lg top-2 right-2 bg-transparent"
-          onClick={() => {handleDeleteButton(filename)}}><MdDelete size={20}/></button>
+          onClick={handleVideoDeleteButton}><MdDelete size={20}/></button>
         <button
           className="hover:bg-[#00a0f5] bg-transparent rounded z-10 text-white font-bold py-1 absolute text-lg bottom-2 right-2"
           onClick={() => {store.addVideo(fileid,filename,index) }}>

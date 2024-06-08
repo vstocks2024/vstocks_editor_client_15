@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreContext } from "@/store";
 import axios from "axios";
@@ -23,10 +23,26 @@ import { Store } from "@/store/Store";
 import { EditorElement } from "@/types";
 import { useRouter } from "next/navigation";
 import { isHtmlVideoElement } from "@/utils";
+//import { useReducer } from "react";
 
 export const MainPart = observer(() => {
   const store = React.useContext(StoreContext);
+  
   const Icon = store.playing ? MdPause : MdPlayArrow;
+// Redo function to handle the redo state of canvas
+  const handleRedoButton=()=>{
+
+  }
+//End of redo function
+
+//Undo function to handle the undo state of canvas
+const handleUndoButton=()=>{
+
+}
+// End of undo function
+
+
+
 
   const handleDeleteButton = async () => {
     try {
