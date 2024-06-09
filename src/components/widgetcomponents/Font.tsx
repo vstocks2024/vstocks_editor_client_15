@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { observer } from 'mobx-react';
 import { StoreContext } from "@/store";
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdColorLens, MdOutlineExpandLess, MdOutlineExpandMore } from 'react-icons/md';
 import { HiDotsVertical } from "react-icons/hi";
 import { MdFormatUnderlined,MdFormatOverline,MdFormatStrikethrough  } from "react-icons/md";
@@ -20,6 +20,9 @@ export const Font = observer(() => {
     const [variants,setVariants]=React.useState([]);
     const reffamily=React.useRef<HTMLSelectElement>(null);
     const reftextcolorfill=React.useRef<HTMLInputElement>(null);
+   const [textboxFont,setTextBoxFont]=useState<string | undefined>();
+
+
     const fontsizearr:Number[]=[];
     for(let i=8;i<101;i++){
       fontsizearr.push(i);
@@ -59,6 +62,7 @@ export const Font = observer(() => {
            if(!event) return;
            if(!event.target) return;
            try{
+            console.log("Font Family:",reffamily.current)
             family_ind=results.findIndex((val)=>val['family']===event.target.value);
             console.log(results[family_ind]["variants"]);
             setVariants(results[family_ind]["variants"]);
