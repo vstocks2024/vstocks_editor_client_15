@@ -1143,6 +1143,40 @@ this.updateEditorElement(newElement);
 
 }
 
+setTextBoxFontFamily(element:EditorElement,newfontFamily: string | undefined){
+  if(isEditorAudioElement(element)||isEditorImageElement(element)||isEditorVideoElement(element)) return;
+  const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
+    ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
+    ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
+    textAlign:element.placement.textAlign,opacity:element.placement.opacity,
+    underline:element.placement.underline,overline:element.placement.overline,
+    linethrough:element.placement.linethrough,
+    lineHeight:element.placement.lineHeight,
+    fill:element.placement.fill,
+    backgroundColor:element.placement.backgroundColor,
+    selectable:element.placement.selectable,
+    visible:element.placement.visible,
+    hasControls:element.placement.hasControls,
+    hasBorders: element.placement.hasBorders,
+    hasRotatingPoint: element.placement.hasRotatingPoint,
+    lockMovementX:element.placement.lockMovementX,
+  stroke:element.placement.stroke,
+  strokeWidth:element.placement.strokeWidth,
+strokeUniform:element.placement.strokeUniform,
+strokeLineCap:element.placement.strokeLineCap,
+strokeLineJoin:element.placement.strokeLineJoin,
+strokeMiterLimit:element.placement.strokeMiterLimit,
+shadow:element.placement.shadow};
+
+const newProperties={text:element.properties.text,fontSize:element.properties.fontSize,
+fontWeight:element.properties.fontWeight,fontFamily:newfontFamily,
+splittedTexts:element.properties.splittedTexts,textboxObject:element.properties.textboxObject
+}
+const newElement={...element,placement:newPlacement,properties:newProperties};
+this.updateEditorElement(newElement);
+
+}
+
 
 
   setBackgroundColor(backgroundColor: string) {

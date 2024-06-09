@@ -58,7 +58,7 @@ const MENU_OPTIONS = [
       store.addText({text:"Start Typing",
         fontSize:55,
         fontWeight:600,
-        fontFamily:"ABeeZee",
+        fontFamily:"https://fonts.gstatic.com/s/livvic/v14/rnCs-x1S2hzjrlfXbdu6tV3GY_etWWIJ.ttf",
       });
     },
   },
