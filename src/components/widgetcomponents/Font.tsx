@@ -23,16 +23,17 @@ import {
 
 
 
+
 export const Font = observer(() => {
   const store = React.useContext(StoreContext);
   const [expand, setExpand] = React.useState<boolean>(true);
   const [results, setResults] = React.useState([]);
   const [family, setFamily] = React.useState<string>("");
   const [variants, setVariants] = React.useState([]);
-  const reffamily = React.useRef<HTMLSelectElement>(null);
+  
   const reftextcolorfill = React.useRef<HTMLInputElement>(null);
   
-  const [fontFile, setFontFile] = useState<string | undefined>();
+  
 
   const fontsizearr: Number[] = [];
   for (let i = 8; i < 101; i++) {
@@ -112,24 +113,23 @@ export const Font = observer(() => {
 
   // End of this function
 
- // This is an another function for font weight
+ // This function handle set Font Family
 
- const handleFontWeight2=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
-  if(!event) return;
-  if(!event.target) return;
-  if(!store.selectedElement) return;
+ const handleSetFontFamily=async(event: React.ChangeEvent<HTMLInputElement>)=>{
   try{
-  console.log(event.target.value);
-  const ind=results.findIndex((val) => val["family"] === event.target.value);
-  //store.setTextBoxFontFamily(store.selectedElement,);
+   console.log()
   }
   catch(err){
-    console.log(err);
+    console.log(new Error());
   }
+
  }
 
- // End  of this function
+ 
 
+
+
+ //End of this function
 
 
   const handleTextBoxFill = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,10 +191,33 @@ export const Font = observer(() => {
       console.log(err);
     }
   };
+
+
+  // This is font family function
+  const getfontFamily =async()=>{
+    try{
+      const query=await fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${family}`);
+      const response = await query.json();
+      console.log(response);
+      return  response;
+
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+// End of this code
+
   React.useEffect(() => {
     getFonts(process.env.NEXT_PUBLIC_GET_FONT_URL as string);
     console.log(results);
   }, []);
+
+ // Calling
+  React.useEffect(()=>{
+
+  },[]);
   return (
     <>
       <div className="border border-pink-500 p-0.5 m-0.5">
@@ -235,7 +258,7 @@ export const Font = observer(() => {
                     </label>
                     {results.length > 0 ? (
                       <select
-                        ref={reffamily}
+                        
                         onChange={handleFontFamily}
                         className="focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] cursor-pointer"
                       >
@@ -299,7 +322,7 @@ export const Font = observer(() => {
                   </label>
                   <select
                     defaultValue={"Select Variant"}
-                    onChange={handleFontWeight2}
+                    onChange={handleFontWeight}
                     className="focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] select-none cursor-pointer"
                   >
                     <option hidden disabled>

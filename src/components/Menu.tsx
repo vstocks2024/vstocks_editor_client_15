@@ -18,6 +18,8 @@ import { Store } from "@/store/Store";
 import axios from "axios";
 import { getObjectURL } from "./functions/get_put_url";
 
+
+
 export const Menu = observer(() => {
   const store = React.useContext(StoreContext);
   return (
@@ -58,7 +60,7 @@ const MENU_OPTIONS = [
       store.addText({text:"Start Typing",
         fontSize:55,
         fontWeight:600,
-        fontFamily:"https://fonts.gstatic.com/s/livvic/v14/rnCs-x1S2hzjrlfXbdu6tV3GY_etWWIJ.ttf",
+        fontFamily:"Calibri Light",
       });
     },
   },

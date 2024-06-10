@@ -17,6 +17,8 @@
   @apply overflow-y-auto border w-full space-y-1 border-green-400 m-0.5 p-0.5 block 
 }
 
+
+
 @tailwind utilities;
 
 

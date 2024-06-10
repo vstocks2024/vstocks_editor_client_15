@@ -10,14 +10,14 @@ export const BackCustomize = () => {
       <div className="justify-start m-1  inline-flex flex-row items-center">
         <button
           onClick={() => router.back()}
-          className="bg-white  text-black py-2 px-3  rounded"
+          className="bg-[#CCCCCC]  text-black py-2 px-3  rounded"
         >
           Back
         </button>
       </div>
       <div className="inline-flex flex-row  items-center justify-center  m-1  w-full">
         {" "}
-        <h1 className="item-center justify-center text-center text-xl ">
+        <h1 className="item-center text-[#CCCCCC] justify-center text-center text-xl ">
           Customize Your Template
         </h1>
       </div>
