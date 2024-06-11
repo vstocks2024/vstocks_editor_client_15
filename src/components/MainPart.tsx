@@ -278,9 +278,9 @@ const handleUndoButton=()=>{
     }
     store.setPlaying(!store.playing);
   };
-  // React.useEffect(() => {
-  
-  // }, []);
+   React.useEffect(() => {
+  console.log(store.editorElements);
+ }, []);
 
   const handleMaximizeButton=()=>{
         store.setMaximizeButton(false);

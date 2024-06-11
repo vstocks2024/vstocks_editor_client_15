@@ -21,6 +21,9 @@ import {
   isEditorVideoElement,
 } from "@/store/Store";
 
+import fs from 'fs';
+
+
 
 
 
@@ -30,6 +33,7 @@ export const Font = observer(() => {
   const [results, setResults] = React.useState([]);
   const [family, setFamily] = React.useState<string>("");
   const [variants, setVariants] = React.useState([]);
+  const [files,setFiles]=React.useState({});
   
   const reftextcolorfill = React.useRef<HTMLInputElement>(null);
   
@@ -42,22 +46,25 @@ export const Font = observer(() => {
 
   var family_ind = 0;
 
-  // This function is to set the Font Name  of Text Box
+  // This function is to set the Font Family  of Text Box
   const handleFontFamily = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     if (!event) return;
     if (!event.target) return;
-
+    if(!store.selectedElement) return;
     try {
-      family_ind = results.findIndex(
-        (val) => val["family"] === event.target.value
-      );
-      //console.log(results[family_ind]["variants"]);
-      console.log(results[family_ind]["files"]);
-      setVariants(results[family_ind]["variants"]);
-      //console.log(variants);
+    const familyname= event.target.value;
+    
+    await axios.get(`https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${familyname}&capability=WOFF2`)
+    .then((response)=>{
+      setFiles(response["data"]["items"][0]["files"]);
+    })
+    .catch((reject)=>{
+      console.log(reject);
+    })
       
+       
       
     } catch (err) {
       console.log(err);
@@ -72,7 +79,7 @@ export const Font = observer(() => {
     if (!event.target) return;
     if (!store.selectedElement) return;
     try {
-      console.log(typeof parseInt(event.target.value));
+      //console.log(typeof parseInt(event.target.value));
       store.setTextBoxFontSize(
         store.selectedElement,
         parseInt(event.target.value)
@@ -91,7 +98,7 @@ export const Font = observer(() => {
     if (!event.target) return;
     if (!store.selectedElement) return;
     try {
-      console.log(event.target.value);
+      //console.log(event.target.value);
       if(event.target.value.split("i").length>1){
         const arr=event.target.value.split("i");
         console.log(arr[0]);
@@ -112,25 +119,6 @@ export const Font = observer(() => {
   };
 
   // End of this function
-
- // This function handle set Font Family
-
- const handleSetFontFamily=async(event: React.ChangeEvent<HTMLInputElement>)=>{
-  try{
-   console.log()
-  }
-  catch(err){
-    console.log(new Error());
-  }
-
- }
-
- 
-
-
-
- //End of this function
-
 
   const handleTextBoxFill = (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -198,7 +186,7 @@ export const Font = observer(() => {
     try{
       const query=await fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${family}`);
       const response = await query.json();
-      console.log(response);
+      //console.log(response);
       return  response;
 
     }
@@ -211,13 +199,17 @@ export const Font = observer(() => {
 
   React.useEffect(() => {
     getFonts(process.env.NEXT_PUBLIC_GET_FONT_URL as string);
-    console.log(results);
+    //console.log(results);
   }, []);
 
- // Calling
+ // Calling this use effect when the file changes
   React.useEffect(()=>{
-
-  },[]);
+  const filesarr=Object.values(files);
+  filesarr.map(async(file)=>{
+   const response=await axios.get(file as string);
+  });
+  },[files]);
+// End of file
   return (
     <>
       <div className="border border-pink-500 p-0.5 m-0.5">
