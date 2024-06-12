@@ -18,12 +18,12 @@ import { Store } from "@/store/Store";
 import axios from "axios";
 import { getObjectURL } from "./functions/get_put_url";
 
-import styles from "./styles.module.css";
+
 
 
 export const Menu = observer(() => {
   const store = React.useContext(StoreContext);
-  console.log(styles);
+  
   return (
     <div className="hidden h-[510px]   min-[977px]:flex min-[977px]:flex-col min-[977px]:items-center min-[977px]:justify-between gap-y-[18px] min-w-[59px] max-w-[4.3%]   py-10 bg-[#202020]">
       {MENU_OPTIONS.map((option) => {
@@ -58,7 +58,6 @@ const MENU_OPTIONS = [
     name: "Text",
     icon: MdTitle,
     action: (store: Store) => {
-      //store.setSelectedMenuOption("Text")
       store.addText({text:"Start Typing",
         fontSize:55,
         fontWeight:600,
