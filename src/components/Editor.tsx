@@ -67,12 +67,14 @@ export const Editor = observer(() => {
       <BackCustomize/>
           <MainPart />
         </div>
-        <div className="flex flex-row items-start  h-[79.5632%] justify-between w-full">
+        <div className=" w-full border border-blue-500 m-[1px] p-[1px]  h-[79.5632vh] ">
+        <div className="flex flex-row items-start h-full border border-pink-500 m-[1px] p-[1px]  justify-between w-full">
           <Menu />
           {store.selectedMenuOption ? <Resources /> : null}
           <MainCanvas />
           <ElementsPanel elementtype={store.selectedElement?.type} />
           <TimeLine />
+        </div>
         </div>
         <CanvasFooter />
       </main>

@@ -1665,6 +1665,7 @@ this.updateEditorElement(newElement);
   }) {
     const id = getUid();
     const index = this.editorElements.length;
+    
     this.addEditorElement(
       {
         id,
@@ -1718,6 +1719,7 @@ this.updateEditorElement(newElement);
         
       },
     );
+    console.log(this.editorElements);
   }
 
   updateVideoElements() {

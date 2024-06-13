@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreContext } from "@/store";
 import axios from "axios";
@@ -23,10 +23,19 @@ import { Store } from "@/store/Store";
 import { EditorElement } from "@/types";
 import { useRouter } from "next/navigation";
 import { isHtmlVideoElement } from "@/utils";
+import { useUndoRedo } from "@/hooks/useUndoRedo";
 //import { useReducer } from "react";
 
 export const MainPart = observer(() => {
   const store = React.useContext(StoreContext);
+  const [value,setValue,undo,redo,inputRef]=useUndoRedo({},10);
+  console.log(store.editorElements);
+  console.log("value:",value);
+
+  useEffect(()=>{
+    setValue(store.editorElements);
+  },[store.editorElements.length])
+  
   
   const Icon = store.playing ? MdPause : MdPlayArrow;
 // Redo function to handle the redo state of canvas
@@ -337,13 +346,13 @@ const handleUndoButton=()=>{
             </span>
     
           </button>
-          <button className="w-10 h-10">
+          <button className="w-10 h-10" onClick={undo}>
             <span>
               <MdUndo size={24} className=" cursor-pointer" />
             </span>
        
           </button>
-          <button className="w-10 h-10">
+          <button className="w-10 h-10" onClick={redo}>
             <span>
               <MdRedo size={24} className=" cursor-pointer" />
             </span>
