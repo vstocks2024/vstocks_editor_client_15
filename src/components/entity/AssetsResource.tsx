@@ -21,16 +21,16 @@ export const AssetsResource = observer(
     const [formatedVideoLength, setFormatedVideoLength] =React.useState("00:00");
 
     return (
-      <div className="rounded-lg overflow-hidden items-center bg-slate-800 m-[15px] flex flex-col relative">
-        <div className="bg-[rgba(0,0,0,.25)] text-white py-1 absolute text-base bottom-2 left-2">
+      <div className="rounded-lg overflow-hidden items-center bg-slate-800 m-3 flex flex-col relative">
+        <div className="bg-transparent text-white py-1 absolute text-base bottom-2 left-2">
           {formatedVideoLength}
           </div>
-          <button className="hover:bg-[#00a0f5] bg-[rgba(0,0,0,.25)] rounded z-10 text-white font-bold py-1 absolute text-lg top-2 left-2">
+          <button className="hover:bg-[#00a0f5] bg-transparent rounded z-10 text-white font-bold py-1 absolute text-lg top-2 left-2">
             <IoIosPricetag size={20}/>
           </button>
-          <button className="hover:bg-[#00a0f5] bg-[rgba(0,0,0,.25)] rounded z-10 text-white font-bold py-1 absolute text-lg top-2 right-2"
+          <button className="hover:bg-[#00a0f5] bg-transparent rounded z-10 text-white font-bold py-1 absolute text-lg top-2 right-2"
           onClick={() => {}}><MdDelete size={20}/></button>
-        <button className="hover:bg-[#00a0f5] bg-[rgba(0,0,0,.25)] rounded z-10 text-white font-bold py-1 absolute text-lg bottom-2 right-2"
+        <button className="hover:bg-[#00a0f5] bg-transparent rounded z-10 text-white font-bold py-1 absolute text-lg bottom-2 right-2"
           onClick={() => {store.addVideo(fileid,filename,index) }}>
           <MdAdd size={20} />
         </button>
@@ -41,7 +41,7 @@ export const AssetsResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="max-h-[150px] max-w-[150px]"
+          className=" aspect-auto object-fill"
           src={filesource}
           height={200}
           width={200}

@@ -65,7 +65,7 @@ export const ImageResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="object-fill as"
+          className="object-fill aspect-square"
           src={filesource}
           id={`image-${index}`}
         ></img>

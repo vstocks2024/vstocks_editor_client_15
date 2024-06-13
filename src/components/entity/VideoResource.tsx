@@ -62,7 +62,7 @@ export const VideoResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="max-h-[150px] max-w-[150px] transition-all"
+          className=" aspect-video transition-all"
           src={filesource}
           height={150}
           width={150}

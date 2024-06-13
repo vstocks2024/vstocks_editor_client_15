@@ -62,10 +62,7 @@ export const MainCanvas = observer(() => {
     <div className='flex w-full h-full flex-col items-center justify-center grow shrink basis-0 p-[1px]  min-[977px]:min-w-[33%] min-[977px]:max-w-[74%]'>
     <div className='flex flex-col w-full m-[1px] p-[1px] justify-center items-center '>
         <div className='relative inline-flex m-[1px] gap-x-2 flex-row items-center justify-center p-1 gap-3'>
-          <button onClick={()=>
-            setResizeOpen(true)
-      
-          } className='bg-[#202020] text-[14px]  hover:bg-[#101010]  h-full px-4 py-2 font-bold rounded'>Resize</button>
+          <button onClick={()=>setResizeOpen(true)} className='bg-[#202020] text-[14px]  hover:bg-[#101010]  h-full px-4 py-2 font-bold rounded'>Resize</button>
           <button className=''><IoMdVolumeOff className={` rounded-md   brightness-50`} size={24}/></button>
           <button onClick={()=>{setOpenElementsShortPanel(!openElementsShortPanel)}} className='flex min-[977px]:hidden'><BsThreeDotsVertical color='#FFF' size={18}/></button>
           {openElementsShortPanel===true ? <ElementsShortPanel elementtype={store.selectedElement?.type} />:null}

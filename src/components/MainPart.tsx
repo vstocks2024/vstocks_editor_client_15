@@ -24,34 +24,27 @@ import { EditorElement } from "@/types";
 import { useRouter } from "next/navigation";
 import { isHtmlVideoElement } from "@/utils";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
+import wait from "@/utils/wait";
 //import { useReducer } from "react";
 
 export const MainPart = observer(() => {
   const store = React.useContext(StoreContext);
-  const [value,setValue,undo,redo,inputRef]=useUndoRedo({},10);
+  const [value, setValue, undo, redo, inputRef] = useUndoRedo({}, 10);
   console.log(store.editorElements);
-  console.log("value:",value);
+  console.log("value:", value);
 
-  useEffect(()=>{
+  useEffect(() => {
     setValue(store.editorElements);
-  },[store.editorElements.length])
-  
-  
+  }, [store.editorElements.length]);
+
   const Icon = store.playing ? MdPause : MdPlayArrow;
-// Redo function to handle the redo state of canvas
-  const handleRedoButton=()=>{
+  // Redo function to handle the redo state of canvas
+  const handleRedoButton = () => {};
+  //End of redo function
 
-  }
-//End of redo function
-
-//Undo function to handle the undo state of canvas
-const handleUndoButton=()=>{
-
-}
-// End of undo function
-
-
-
+  //Undo function to handle the undo state of canvas
+  const handleUndoButton = () => {};
+  // End of undo function
 
   const handleDeleteButton = async () => {
     try {
@@ -121,10 +114,10 @@ const handleUndoButton=()=>{
                   console.log(err);
                 });
             } else if (ele.type === "text") {
+              await wait(2000);
               store.addEditorElementAfterFetch(ele);
             } else if (ele.type === "audio") {
             }
-            
           });
         })
         .catch((reject) => {
@@ -287,13 +280,13 @@ const handleUndoButton=()=>{
     }
     store.setPlaying(!store.playing);
   };
-   React.useEffect(() => {
-  console.log(store.editorElements);
- }, []);
+  React.useEffect(() => {
+    console.log(store.editorElements);
+  }, []);
 
-  const handleMaximizeButton=()=>{
-        store.setMaximizeButton(false);
-  }
+  const handleMaximizeButton = () => {
+    store.setMaximizeButton(false);
+  };
   return (
     <div className=" bg-[#202020] py-1  dark:bg-[#202020] flex  ">
       <div className="justify-between items-center flex-row py-2 flex w-full">
@@ -306,7 +299,6 @@ const handleUndoButton=()=>{
                 className="cursor-pointer"
               />
             </span>
-         
           </button>
           <button className="w-10 h-10">
             <span>
@@ -316,7 +308,6 @@ const handleUndoButton=()=>{
                 className=" cursor-pointer"
               />
             </span>
-       
           </button>
           <button className="w-10 h-10">
             <span>
@@ -327,7 +318,6 @@ const handleUndoButton=()=>{
                 } `}
               />
             </span>
-          
           </button>
           <button className="w-10 h-10">
             <span>
@@ -338,35 +328,33 @@ const handleUndoButton=()=>{
                 } `}
               />
             </span>
-       
           </button>
           <button className="w-10 h-10">
             <span>
               <MdContentPaste size={24} className=" cursor-pointer" />
             </span>
-    
           </button>
           <button className="w-10 h-10" onClick={undo}>
             <span>
               <MdUndo size={24} className=" cursor-pointer" />
             </span>
-       
           </button>
           <button className="w-10 h-10" onClick={redo}>
             <span>
               <MdRedo size={24} className=" cursor-pointer" />
             </span>
-    
           </button>
         </div>
         <div className="inline-flex flex-row items-center  justify-end  w-full">
-          <button onClick={()=>{
-            handleMaximizeButton
-          }} className="w-10 h-10">
+          <button
+            onClick={() => {
+              handleMaximizeButton;
+            }}
+            className="w-10 h-10"
+          >
             <span>
               <MdFullscreen size={24} className=" cursor-pointer" />
             </span>
-         
           </button>
           <button className="w-10 h-10">
             <span>
@@ -387,7 +375,6 @@ const handleUndoButton=()=>{
                 className="cursor-pointer"
               ></Icon>
             </span>
-          
           </button>
           <button className="w-10 h-10">
             <span>
