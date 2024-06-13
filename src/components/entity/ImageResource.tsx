@@ -36,7 +36,7 @@ export const ImageResource = observer(
     useEffect(() => {}, [deleted]);
 
     return (
-      <div className="rounded-lg overflow-hidden items-center bg-slate-800 m-3 flex flex-col relative">
+      <div className="rounded-lg border border-white p-[1px] overflow-hidden items-center bg-slate-800 m-3 flex flex-col relative">
         <div className=" bg-transparent text-white py-1 absolute text-sm bottom-2 left-2">
           {resolution.w}x{resolution.h}
         </div>
@@ -65,7 +65,7 @@ export const ImageResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="h-[125px] w-[187.5px]"
+          className="object-fill as"
           src={filesource}
           id={`image-${index}`}
         ></img>
