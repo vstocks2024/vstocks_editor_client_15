@@ -47,13 +47,12 @@ export const VideoResource = observer(
           <button className="hover:bg-[#00a0f5]  rounded z-10 text-white font-bold py-1 absolute text-lg top-2 left-2  bg-transparent">
             <IoIosPricetag size={20}/>
           </button>
-          <button className="hover:bg-[#00a0f5] rounded z-10 text-white font-bold py-1 absolute text-lg top-2 right-2 bg-transparent"
-          onClick={() => {handleDeleteButton(filename)}}><MdDelete size={20}/></button>
-        <button
+        
+        {/* <button
           className="hover:bg-[#00a0f5] bg-transparent rounded z-10 text-white font-bold py-1 absolute text-lg bottom-2 right-2"
           onClick={() => {store.addVideo(fileid,filename,index) }}>
           <MdAdd size={20} />
-        </button>
+        </button> */}
         <video
           onLoadedData={() => {
             const videoLength = ref.current?.duration ?? 0;
@@ -61,7 +60,7 @@ export const VideoResource = observer(
           }}
           crossOrigin="anonymous"
           ref={ref}
-          className="max-h-[100px] max-w-[150px] transition-all"
+          className=" transition-all"
           src={filesource}
           height={200}
           width={200}

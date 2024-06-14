@@ -24,6 +24,7 @@ import { EditorElement } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
 import { isHtmlVideoElement } from "@/utils";
 import { useTemplate } from "@/app/context/template";
+import wait from "@/utils/wait";
 
 export const MainPart = observer(() => {
   
@@ -100,6 +101,7 @@ export const MainPart = observer(() => {
                   console.log(err);
                 });
             } else if (ele.type === "text") {
+              await wait(2000);
               store.addEditorElementAfterFetch(ele);
             } else if (ele.type === "audio") {
             }
