@@ -27,7 +27,7 @@ export const Menu = observer(() => {
   
   
   return (
-    <div className="hidden  min-[977px]:flex min-[977px]:flex-col min-[977px]:items-center min-[977px]:justify-between gap-y-[18px] min-w-[59px] max-w-[4.3%]   py-10 bg-[#202020]">
+    <div className="hidden h-full border border-green-500 m-[1px] p-[1px]  min-[977px]:flex min-[977px]:flex-col min-[977px]:items-center min-[977px]:justify-between gap-y-[18px] min-w-[59px] max-w-[4.3%]   py-10 bg-[#202020]">
       {MENU_OPTIONS.map((option) => {
         return (
           <button

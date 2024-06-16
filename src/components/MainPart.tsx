@@ -23,18 +23,22 @@ import { Store } from "@/store/Store";
 import { EditorElement } from "@/types";
 import { useRouter } from "next/navigation";
 import { isHtmlVideoElement } from "@/utils";
-import { useUndoRedo } from "@/hooks/useUndoRedo";
+
 import wait from "@/utils/wait";
+import { useUndoRedo2 } from "@/hooks/useUndoRedo2";
 //import { useReducer } from "react";
 
 export const MainPart = observer(() => {
   const store = React.useContext(StoreContext);
-  const [value, setValue, undo, redo, inputRef] = useUndoRedo({}, 10);
-  console.log(store.editorElements);
-  console.log("value:", value);
+  const [value, setValue, undo, redo] = useUndoRedo2(store.editorElements, 10);
+ console.log(store.editorElements);
+  // console.log("value:", value);
+
+ 
 
   useEffect(() => {
     setValue(store.editorElements);
+    console.log("From UseEffect");
   }, [store.editorElements.length]);
 
   const Icon = store.playing ? MdPause : MdPlayArrow;
@@ -334,12 +338,12 @@ export const MainPart = observer(() => {
               <MdContentPaste size={24} className=" cursor-pointer" />
             </span>
           </button>
-          <button className="w-10 h-10" onClick={undo}>
+          <button className="w-10 h-10" onClick={()=>{undo()}}>
             <span>
               <MdUndo size={24} className=" cursor-pointer" />
             </span>
           </button>
-          <button className="w-10 h-10" onClick={redo}>
+          <button className="w-10 h-10" onClick={()=>{redo()}}>
             <span>
               <MdRedo size={24} className=" cursor-pointer" />
             </span>
