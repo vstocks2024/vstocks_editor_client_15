@@ -53,12 +53,23 @@ export const MenuFooter=observer(()=>{
       name: "Text",
       icon: MdTitle,
       action: (store: Store) => {
-        //store.setSelectedMenuOption("Text")
-        store.addText({text:"Start Typing",
-          fontSize:36,
-          fontWeight:400,
-          fontFamily:"ABeeZee",
-        });
+        const fontFile = new FontFace(
+          "FontFamily Style Epilogue",
+          "url(https://fonts.gstatic.com/s/epilogue/v17/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDLiDJXVigHPVA.ttf)"
+        );
+        document.fonts.add(fontFile);
+        fontFile.load().then(() => {
+            // font loaded successfully!
+            store.addText({
+              text: "Start Typing",
+              fontSize: 40,
+              fontFamily: fontFile.family,
+            });
+          },
+          (err) => {
+            console.error(err);
+          }
+        );
       },
     },
     {
