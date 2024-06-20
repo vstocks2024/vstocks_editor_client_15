@@ -2,6 +2,7 @@ import { EditorElement, EffecType } from "@/types";
 import { fabric } from "fabric";
 // https://jsfiddle.net/i_prikot/pw7yhaLf/
 
+
 export const CoverImage = fabric.util.createClass(fabric.Image, {
     type: "coverImage",
     customFilter: "none",

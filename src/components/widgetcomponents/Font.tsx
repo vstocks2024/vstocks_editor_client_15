@@ -2,7 +2,7 @@
 import axios from "axios";
 import { observer } from "mobx-react";
 import { StoreContext } from "@/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   MdColorLens,
   MdOutlineExpandLess,
@@ -21,23 +21,19 @@ import {
   isEditorVideoElement,
 } from "@/store/Store";
 
-import fs from 'fs';
-
-
-
-
+import fs from "fs";
+import { error } from "console";
+import { GiConsoleController } from "react-icons/gi";
 
 export const Font = observer(() => {
   const store = React.useContext(StoreContext);
   const [expand, setExpand] = React.useState<boolean>(true);
   const [results, setResults] = React.useState([]);
-  const [family, setFamily] = React.useState<string>("");
-  const [variants, setVariants] = React.useState([]);
-  const [files,setFiles]=React.useState({});
-  
+  const [family, setFamily] = React.useState({ name: "" });
+  const [files, setFiles] = React.useState();
   const reftextcolorfill = React.useRef<HTMLInputElement>(null);
-  
-  
+
+  const refVariant = React.useRef<HTMLSelectElement>(null);
 
   const fontsizearr: Number[] = [];
   for (let i = 8; i < 101; i++) {
@@ -52,20 +48,19 @@ export const Font = observer(() => {
   ) => {
     if (!event) return;
     if (!event.target) return;
-    if(!store.selectedElement) return;
+    if (!store.selectedElement) return;
     try {
-    const familyname= event.target.value;
-    
-    await axios.get(`https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${familyname}&capability=WOFF2`)
-    .then((response)=>{
-      setFiles(response["data"]["items"][0]["files"]);
-    })
-    .catch((reject)=>{
-      console.log(reject);
-    })
-      
-       
-      
+      const familyname = event.target.value;
+      await axios
+        .get(
+          `https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${familyname}&capability=WOFF2`
+        )
+        .then((response) => {
+          setFamily((prev) => ({ ...prev, name: event.target.value }));
+        })
+        .catch((reject) => {
+          console.log(reject);
+        });
     } catch (err) {
       console.log(err);
     }
@@ -89,30 +84,28 @@ export const Font = observer(() => {
     }
   };
 
-
-  // This function is to set the Font Weight
-  const handleFontWeight = async (
+  // This function is to set the Font Style and Weight
+  const handleFontStyleAndWeight = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     if (!event) return;
     if (!event.target) return;
     if (!store.selectedElement) return;
     try {
-      //console.log(event.target.value);
-      if(event.target.value.split("i").length>1){
-        const arr=event.target.value.split("i");
-        console.log(arr[0]);
-       store.setTextBoxFontWeight(store.selectedElement,arr[0]);
-      }
-      else if(event.target.value.split("i").length<=1){
-          if(event.target.value==="regular"){       
-            store.setTextBoxFontWeight(store.selectedElement,400);
-          }
-          else{
-          store.setTextBoxFontWeight(store.selectedElement,Number(event.target.value));
-          }
-      }
-      
+      const newfontFamily = new FontFace(
+        `FontFamily Style ${family}`,
+        "url(".concat(event.target.value).concat(")")
+      );
+      document.fonts.add(newfontFamily);
+      newfontFamily
+        .load()
+        .then(() => {
+          if (!store.selectedElement) return;
+          store.setTextBoxFontFamily(store.selectedElement, newfontFamily);
+        })
+        .catch((err) => {
+          console.log(err);
+        }); 
     } catch (err) {
       console.log(err);
     }
@@ -180,36 +173,64 @@ export const Font = observer(() => {
     }
   };
 
-
   // This is font family function
-  const getfontFamily =async()=>{
-    try{
-      const query=await fetch(`https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${family}`);
+  const getfontFamily = async () => {
+    try {
+      const query = await fetch(
+        `https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${family}`
+      );
       const response = await query.json();
       //console.log(response);
-      return  response;
-
-    }
-    catch(err){
+      return response;
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
-// End of this code
+  // End of this code
+
+  const getFiles = async () => {
+    await axios
+      .get(
+        `https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUxAEdaAzpfth29oW8K4TcUBdV2Uacv58&family=${family.name}&capability=WOFF2`
+      )
+      .then((response) => {
+        setFiles(response["data"]["items"][0]["files"]);
+        const regular = response["data"]["items"][0]["files"]["regular"];
+        const newfontFamily = new FontFace(
+          `FontFamily Style ${family}`,
+          `url(${regular})`
+        );
+        document.fonts.add(newfontFamily);
+        newfontFamily
+          .load()
+          .then(() => {
+            if (!store.selectedElement) return;
+            store.setTextBoxFontFamily(store.selectedElement, newfontFamily);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   React.useEffect(() => {
     getFonts(process.env.NEXT_PUBLIC_GET_FONT_URL as string);
     //console.log(results);
   }, []);
 
- // Calling this use effect when the file changes
-  React.useEffect(()=>{
-  const filesarr=Object.values(files);
-  filesarr.map(async(file)=>{
-   const response=await axios.get(file as string);
-  });
-  },[files]);
-// End of file
+  // Calling this use effect when the name of font family changes
+  React.useEffect(() => {
+    getFiles();
+  }, [family]);
+  // End of file
+  React.useEffect(() => {
+    console.log("fonts",document.fonts.size);
+    
+  }, [files]);
   return (
     <>
       <div className="border border-pink-500 p-0.5 m-0.5">
@@ -248,9 +269,16 @@ export const Font = observer(() => {
                     >
                       Family
                     </label>
-                    {results.length > 0 ? (
+                    { (results && results.length) > 0 ? (
                       <select
-                        
+                        defaultValue={
+                          store.selectedElement &&
+                          !isEditorAudioElement(store.selectedElement) &&
+                          !isEditorImageElement(store.selectedElement) &&
+                          !isEditorVideoElement(store.selectedElement)
+                            ? store.selectedElement.properties.fontFamily
+                            : "Actor"
+                        }
                         onChange={handleFontFamily}
                         className="focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] cursor-pointer"
                       >
@@ -313,36 +341,18 @@ export const Font = observer(() => {
                     Variant
                   </label>
                   <select
+                    ref={refVariant}
                     defaultValue={"Select Variant"}
-                    onChange={handleFontWeight}
-                    className="focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] select-none cursor-pointer"
+                    onChange={handleFontStyleAndWeight}
+                    className="focus:outline-none text-white w-full bg-black border-b-[1px] border-[#444444] bg-transparent text-[11px] cursor-pointer"
                   >
                     <option hidden disabled>
                       Select Variant
                     </option>
-                    {results.length > 0 && variants.length > 0
-                      ? variants.map((val, ind, oa) => {
-                          return (
-                            <>
-                              {`${val}`.split("i").length > 1 ? (
-                                <option
-                                  className="bg-white text-[16px] text-black italic"
-                                  value={`${val}`}
-                                >
-                                  {family_variants_arr[`${val}`]}
-                                </option>
-                              ) : (
-                                <option
-                                  className="bg-white text-black text-[16px] not-italic"
-                                  value={`${val}`}
-                                >
-                                  {family_variants_arr[`${val}`]}
-                                </option>
-                              )}
-                            </>
-                          );
-                        })
-                      : null}
+                    { (files && Object.keys(files).length>0) ?
+                    Object.keys(files).map((val,ind,oa)=>{
+                    return <><option key={files[`${val}_${ind}`]} value={files[`${val}`]}>{val}</option></>
+                    }):null }
                   </select>
                 </div>
                 <div className=" w-1/2 inline-flex flex-row items-center border justify-between space-x-2 border-blue-500 m-[1px] p-[1px]">

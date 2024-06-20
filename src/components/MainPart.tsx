@@ -31,7 +31,7 @@ import { useUndoRedo2 } from "@/hooks/useUndoRedo2";
 export const MainPart = observer(() => {
   const store = React.useContext(StoreContext);
   const [value, setValue, undo, redo] = useUndoRedo2(store.editorElements, 10);
- console.log(store.editorElements);
+ //console.log(store.editorElements);
   // console.log("value:", value);
 
  

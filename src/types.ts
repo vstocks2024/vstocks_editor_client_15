@@ -25,7 +25,6 @@ export type TextEditorElement = EditorElementBase<
   {
     text: string;
     fontSize?: number | undefined;
-    fontWeight?: string | number | undefined;
     fontFamily?: string | undefined;
     splittedTexts: fabric.Text[];
     textboxObject?:fabric.Textbox
@@ -70,6 +69,7 @@ export type Placement = {
   strokeLineJoin?: string | undefined;
   strokeMiterLimit?: number | undefined;
   shadow?: Shadow | string | undefined;
+  borderScaleFactor?: number | undefined;
 
   
 
