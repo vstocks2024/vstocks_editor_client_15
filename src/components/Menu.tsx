@@ -61,12 +61,13 @@ const MENU_OPTIONS = [
     icon: MdTitle,
     action: (store: Store) => {
       const fontFile = new FontFace(
-        "FontFamily Style Epilogue",
+        "Epilogue",
         "url(https://fonts.gstatic.com/s/epilogue/v17/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDLiDJXVigHPVA.ttf)"
       );
       document.fonts.add(fontFile);
       fontFile.load().then(() => {
           // font loaded successfully!
+        console.log(fontFile.family);
           store.addText({
             text: "Start Typing",
             fontSize: 40,

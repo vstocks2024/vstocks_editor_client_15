@@ -93,7 +93,7 @@ export const Font = observer(() => {
     if (!store.selectedElement) return;
     try {
       const newfontFamily = new FontFace(
-        `FontFamily Style ${family}`,
+        `${family}`,
         "url(".concat(event.target.value).concat(")")
       );
       document.fonts.add(newfontFamily);
@@ -198,7 +198,7 @@ export const Font = observer(() => {
         setFiles(response["data"]["items"][0]["files"]);
         const regular = response["data"]["items"][0]["files"]["regular"];
         const newfontFamily = new FontFace(
-          `FontFamily Style ${family}`,
+          `${family}`,
           `url(${regular})`
         );
         document.fonts.add(newfontFamily);
@@ -228,7 +228,7 @@ export const Font = observer(() => {
   }, [family]);
   // End of file
   React.useEffect(() => {
-    console.log("fonts",document.fonts.size);
+    
     
   }, [files]);
   return (

@@ -37,8 +37,8 @@ export const MainPart = observer(() => {
  
 
   useEffect(() => {
-    setValue(store.editorElements);
-    console.log("From UseEffect");
+    // setValue(store.editorElements);
+    // console.log("From UseEffect");
   }, [store.editorElements.length]);
 
   const Icon = store.playing ? MdPause : MdPlayArrow;
@@ -72,10 +72,11 @@ export const MainPart = observer(() => {
   };
 
   const handleGetTemplateById = async () => {
+    //console.log(store.editorElements);
     try {
       await axios
         .get(
-          `${process.env.NEXT_PUBLIC_URL}/get_template_by_id/93478276-e060-4a28-9f81-e46c55106b50`
+          `${process.env.NEXT_PUBLIC_URL}/get_template_by_id/b99944f8-8055-4ebc-8477-983363264453`
         )
         .then(async (resolve) => {
           store.setVideos([]);
@@ -184,7 +185,7 @@ export const MainPart = observer(() => {
         background: store.canvas?.backgroundColor,
       };
       await axios
-        .post("${process.env.NEXT_PUBLIC_URL}/create_template", newCanvasObj)
+        .post(`${process.env.NEXT_PUBLIC_URL}/create_template`, newCanvasObj)
         .then((resolve) => {
           console.log(resolve);
         })
