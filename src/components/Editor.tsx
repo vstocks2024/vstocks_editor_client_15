@@ -39,12 +39,14 @@ export const Editor = observer(() => {
       height: store.height,
       width: store.width,
       backgroundColor: "#242728",
+      
     });
     fabric.Object.prototype.transparentCorners = false;
     fabric.Object.prototype.cornerColor = "#00a0f5";
     fabric.Object.prototype.cornerStyle = "circle";
     fabric.Object.prototype.cornerStrokeColor = "#0063d8";
     fabric.Object.prototype.cornerSize = 10;
+    
 
     // canvas mouse down without target should deselect active object
     canvas.on("mouse:down", function (e) {
@@ -67,8 +69,9 @@ export const Editor = observer(() => {
       <BackCustomize/>
           <MainPart />
         </div>
-        <div className=" w-full border border-blue-500 m-[1px] p-[1px]  h-[79.5632vh] ">
-        <div className="flex flex-row items-start h-full border border-pink-500 m-[1px] p-[1px]  justify-between w-full">
+        {/* h-[79.5632vh] */}
+        <div className=" w-full  h-[510px]  ">
+        <div className="flex flex-row items-start h-full   justify-between w-full">
           <Menu />
           {store.selectedMenuOption ? <Resources /> : null}
           <MainCanvas />

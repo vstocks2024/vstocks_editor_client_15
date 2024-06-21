@@ -63,7 +63,7 @@ export const ImageResource = observer(
               h: ref.current?.naturalHeight ?? 0,
             });
           }}
-          crossOrigin="anonymous"
+          crossOrigin='anonymous'
           ref={ref}
           className="object-fill aspect-square"
           src={filesource}

@@ -2,7 +2,7 @@ import { fabric } from "fabric";
 import { Gradient, Pattern, Shadow } from "fabric/fabric-impl";
 
 export type EditorElementBase<T extends string, Properties> = {
-  readonly id: string;
+  id: string;
   fabricObject?: fabric.Object;
   name: string;
   readonly type: T;
@@ -12,10 +12,10 @@ export type EditorElementBase<T extends string, Properties> = {
 };
 export type VideoEditorElement = EditorElementBase<
   "video",
-  { src: string; readonly elementId: string; imageObject?: fabric.Image, effect: Effect }>;
+  { crossOrigin?: '' | 'anonymous' | 'use-credentials' | undefined;   src: string; readonly elementId: string; imageObject?: fabric.Image, effect: Effect }>;
 export type ImageEditorElement = EditorElementBase<
   "image",
-  {  src: string; readonly elementId: string; imageObject?: fabric.Object, effect: Effect }>;
+  { crossOrigin?: '' | 'anonymous' | 'use-credentials' | undefined; src: string | "undefined"; readonly elementId: string; imageObject?: fabric.Object, effect: Effect }>;
 
 export type AudioEditorElement = EditorElementBase<
   "audio",

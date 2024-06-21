@@ -1,42 +1,58 @@
-import { action, makeAutoObservable } from 'mobx';
-import { fabric } from 'fabric';
-import { getUid, isHtmlAudioElement, isHtmlImageElement, isHtmlVideoElement } from '@/utils';
-import anime, { get } from 'animejs';
-import { MenuOption, EditorElement, Animation, TimeFrame, VideoEditorElement, AudioEditorElement, Placement, ImageEditorElement, Effect, TextEditorElement } from '@/types';
-import { FabricUitls } from '@/utils/fabric-utils';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { toBlobURL } from '@ffmpeg/util';
-import { Gradient, IShadowOptions, Pattern, Shadow,Textbox } from 'fabric/fabric-impl';
-import { RiFontFamily } from 'react-icons/ri';
-
+import { action, makeAutoObservable } from "mobx";
+import { fabric } from "fabric";
+import {
+  getUid,
+  isHtmlAudioElement,
+  isHtmlImageElement,
+  isHtmlVideoElement,
+} from "@/utils";
+import anime, { get } from "animejs";
+import {
+  MenuOption,
+  EditorElement,
+  Animation,
+  TimeFrame,
+  VideoEditorElement,
+  AudioEditorElement,
+  Placement,
+  ImageEditorElement,
+  Effect,
+  TextEditorElement,
+} from "@/types";
+import { FabricUitls } from "@/utils/fabric-utils";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { toBlobURL } from "@ffmpeg/util";
+import {
+  Gradient,
+  IShadowOptions,
+  Pattern,
+  Shadow,
+  Textbox,
+} from "fabric/fabric-impl";
+import { RiFontFamily } from "react-icons/ri";
 
 export class Store {
   canvas: fabric.Canvas | null;
   backgroundColor: string;
-  width:number;
-  height:number;
+  width: number;
+  height: number;
 
   selectedMenuOption: MenuOption;
-  audios: {fileid:string;filename:string;
-    filesource:string;}[]
-  videos: {fileid:string;filename:string;
-              filesource:string;}[]
-  images: {fileid:string;filename:string;
-       filesource:string;}[]
-  editorElements: EditorElement[]
+  audios: { fileid: string; filename: string; filesource: string }[];
+  videos: { fileid: string; filename: string; filesource: string }[];
+  images: { fileid: string; filename: string; filesource: string }[];
+  editorElements: EditorElement[];
   selectedElement: EditorElement | null;
-  maxTime: number
-  animations: Animation[]
+  maxTime: number;
+  animations: Animation[];
   animationTimeLine: anime.AnimeTimelineInstance;
   playing: boolean;
   currentKeyFrame: number;
   fps: number;
-  possibleVideoFormats: string[] = ['mp4', 'webm'];
-  selectedVideoFormat: 'mp4' | 'webm';
-  expandAll:boolean;
-  maximize:boolean;
-  
-   
+  possibleVideoFormats: string[] = ["mp4", "webm"];
+  selectedVideoFormat: "mp4" | "webm";
+  expandAll: boolean;
+  maximize: boolean;
 
   constructor() {
     this.canvas = null;
@@ -44,9 +60,9 @@ export class Store {
     this.images = [];
     this.audios = [];
     this.editorElements = [];
-    this.width=775;
-    this.height=449;
-    this.backgroundColor = '#242728';
+    this.width = 775;
+    this.height = 449;
+    this.backgroundColor = "#242728";
     this.maxTime = 15 * 1000;
     this.playing = false;
     this.currentKeyFrame = 0;
@@ -55,37 +71,35 @@ export class Store {
     this.animations = [];
     this.animationTimeLine = anime.timeline();
     this.selectedMenuOption = null;
-    this.selectedVideoFormat = 'mp4';
-    this.expandAll=true;
-    this.maximize=false;
-    
+    this.selectedVideoFormat = "mp4";
+    this.expandAll = true;
+    this.maximize = false;
 
     makeAutoObservable(this);
   }
 
-  toggleExpandAll(expand:boolean){
-    this.expandAll=expand;
+  toggleExpandAll(expand: boolean) {
+    this.expandAll = expand;
   }
 
   get currentTimeInMs() {
-    return this.currentKeyFrame * 1000 / this.fps;
+    return (this.currentKeyFrame * 1000) / this.fps;
   }
-  
-setMaximizeButton(maximize:boolean){
-  this.maximize=true;
-}
 
-
-  setCanvasWidthandHeight(canvas: fabric.Canvas | null,w:number,h:number){
-    this.canvas=canvas;
-    if(this.canvas){
-    this.canvas.setWidth(w);
-    this.canvas.setHeight(h);
+  setMaximizeButton(maximize: boolean) {
+    this.maximize = true;
   }
-}
+
+  setCanvasWidthandHeight(canvas: fabric.Canvas | null, w: number, h: number) {
+    this.canvas = canvas;
+    if (this.canvas) {
+      this.canvas.setWidth(w);
+      this.canvas.setHeight(h);
+    }
+  }
 
   setCurrentTimeInMs(time: number) {
-    this.currentKeyFrame = Math.floor(time / 1000 * this.fps);
+    this.currentKeyFrame = Math.floor((time / 1000) * this.fps);
   }
 
   setSelectedMenuOption(selectedMenuOption: MenuOption) {
@@ -99,1051 +113,1433 @@ setMaximizeButton(maximize:boolean){
     }
   }
 
-
-  
-  
-  setFlipHorizontal(element:EditorElement){
-    if(isEditorAudioElement(element)) return;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:!element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-    overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-  lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setFlipHorizontal(element: EditorElement) {
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: !element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setFlipVertical(element:EditorElement){
-    if(isEditorAudioElement(element)) return;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:!element.placement.flipY,
-    textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-    underline:element.placement.underline,
-    overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-    lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setFlipVertical(element: EditorElement) {
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: !element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setTextAlignmentToLeft(element:EditorElement){
-    if(isEditorVideoElement(element) || isEditorImageElement(element) || isEditorAudioElement(element)) return;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-    textAlign:"left",opacity:element.placement.opacity,
-    underline:element.placement.underline,
-    overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-    lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setTextAlignmentToLeft(element: EditorElement) {
+    if (
+      isEditorVideoElement(element) ||
+      isEditorImageElement(element) ||
+      isEditorAudioElement(element)
+    )
+      return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: "left",
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setTextAlignmentToRight(element:EditorElement){
-    if(isEditorVideoElement(element) || isEditorImageElement(element) || isEditorAudioElement(element)) return;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-    textAlign:"right",opacity:element.placement.opacity,
-    underline:element.placement.underline,
-    overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-    lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setTextAlignmentToRight(element: EditorElement) {
+    if (
+      isEditorVideoElement(element) ||
+      isEditorImageElement(element) ||
+      isEditorAudioElement(element)
+    )
+      return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: "right",
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setTextAlignmentToCenter(element:EditorElement){
-    if(isEditorVideoElement(element) || isEditorImageElement(element) || isEditorAudioElement(element)) return;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-    textAlign:"center",opacity:element.placement.opacity,
-    underline:element.placement.underline,
-    overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-    lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setTextAlignmentToCenter(element: EditorElement) {
+    if (
+      isEditorVideoElement(element) ||
+      isEditorImageElement(element) ||
+      isEditorAudioElement(element)
+    )
+      return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: "center",
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setTextAlignmentToJustify(element:EditorElement){
-    if(isEditorVideoElement(element) || isEditorImageElement(element) || isEditorAudioElement(element)) return;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-    textAlign:"justify",opacity:element.placement.opacity,
-    underline:element.placement.underline,
-    overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-    lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setTextAlignmentToJustify(element: EditorElement) {
+    if (
+      isEditorVideoElement(element) ||
+      isEditorImageElement(element) ||
+      isEditorAudioElement(element)
+    )
+      return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: "justify",
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setObjectAlignmentToLeft(element:EditorElement){
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:0,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setObjectAlignmentToLeft(element: EditorElement) {
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: 0,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setObjectAlignmentCanvasCenter(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:(this.canvas.getWidth()-element.placement.width)/2,y:(this.canvas.getHeight()-element.placement.height)/2,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setObjectAlignmentCanvasCenter(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: (this.canvas.getWidth() - element.placement.width) / 2,
+      y: (this.canvas.getHeight() - element.placement.height) / 2,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setObjectAlignmentHorizontalCenter(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:(this.canvas.getWidth()-element.placement.width)/2,y:element.placement.y,scaleX:element.placement.scaleX
-    ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-    ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-    textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-    underline:element.placement.underline,
-    overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-    lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-  const newElement={...element,placement:newPlacement};
-  this.updateEditorElement(newElement);
-  }
-
-  setObjectAlignmentVerticalCenter(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:(this.canvas.getHeight()-element.placement.height)/2,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+  setObjectAlignmentHorizontalCenter(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: (this.canvas.getWidth() - element.placement.width) / 2,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
   }
 
-  setObjectAlignmentToRight(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:this.canvas.getWidth()-element.placement.width,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-fill:element.placement.fill,
-backgroundColor:element.placement.backgroundColor,
-selectable:element.placement.selectable,
-visible:element.placement.visible,
-hasControls:element.placement.hasControls,
-hasBorders: element.placement.hasBorders,
-hasRotatingPoint: element.placement.hasRotatingPoint,
-lockMovementX:element.placement.lockMovementX,
-stroke:element.placement.stroke,
-strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);    
+  setObjectAlignmentVerticalCenter(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: (this.canvas.getHeight() - element.placement.height) / 2,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
   }
-  setObjectAlignmentToBottom(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:this.canvas.getHeight()-element.placement.height,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+
+  setObjectAlignmentToRight(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: this.canvas.getWidth() - element.placement.width,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);    
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
   }
-  
-  setObjectAligmentToTop(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:0,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectAlignmentToBottom(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: this.canvas.getHeight() - element.placement.height,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);    
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
   }
-  
-   setObjectOpacity(element:EditorElement,opacity:number)
-   {
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
-      hasBorders: element.placement.hasBorders,
-      hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);    
-   }
 
-   setObjectWidth(element:EditorElement,newwidth:number){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:newwidth,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectAligmentToTop(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: 0,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);   
-   }
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
+  }
 
-   setObjectHeight(element:EditorElement,newHeight:number){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:newHeight
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectOpacity(element: EditorElement, opacity: number) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);   
-   }
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
+  }
 
-   setObjectLeftPosition(element:EditorElement,newLeft:number){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:newLeft,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectWidth(element: EditorElement, newwidth: number) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: newwidth,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
+  }
 
-   setObjectTopPosition(element:EditorElement,newTop:number){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:newTop,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectHeight(element: EditorElement, newHeight: number) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: newHeight,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
-   
+  }
 
-   setObjectRotation(element:EditorElement,newAngle:number){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:newAngle,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,
-      overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectLeftPosition(element: EditorElement, newLeft: number) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: newLeft,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
-   setTextBoxUnderLine(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:!element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
-      hasBorders: element.placement.hasBorders,
-      hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX, 
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);
+  }
 
-   }
-   setTextBoxOverLine(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:!element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectTopPosition(element: EditorElement, newTop: number) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: newTop,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
-   setTextBoxLineThrough(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:!element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
-      hasBorders: element.placement.hasBorders,
-      hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);
-   }
-   
-   setTextBoxLineHeight(element:EditorElement,newlineHeight:number){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:newlineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
-      hasBorders: element.placement.hasBorders,
-      hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
-    this.updateEditorElement(newElement);
+  }
 
-   }
-
-      
-   setTextBoxFill(element:EditorElement,newFill:string|Pattern|Gradient|undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:newFill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setObjectRotation(element: EditorElement, newAngle: number) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: newAngle,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
-
-   setTextBoxBackgroundColor(element:EditorElement,newBackgroundColor:string|undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:newBackgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  }
+  setTextBoxUnderLine(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: !element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-      strokeWidth:element.placement.strokeWidth,
-      strokeUniform:element.placement.strokeUniform,
-      strokeLineCap:element.placement.strokeLineCap,
-      strokeLineJoin:element.placement.strokeLineJoin,
-      strokeMiterLimit:element.placement.strokeMiterLimit,
-      shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
-   
-   setObjectHidden(element:EditorElement){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:!element.placement.selectable,
-      visible:!element.placement.visible,
-      hasControls:!element.placement.hasControls,
+  }
+  setTextBoxOverLine(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: !element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
+  }
+  setTextBoxLineThrough(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: !element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
+  }
+
+  setTextBoxLineHeight(element: EditorElement, newlineHeight: number) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: newlineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
+  }
+
+  setTextBoxFill(
+    element: EditorElement,
+    newFill: string | Pattern | Gradient | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: newFill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
+  }
+
+  setTextBoxBackgroundColor(
+    element: EditorElement,
+    newBackgroundColor: string | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: newBackgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
+    this.updateEditorElement(newElement);
+  }
+
+  setObjectHidden(element: EditorElement) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: !element.placement.selectable,
+      visible: !element.placement.visible,
+      hasControls: !element.placement.hasControls,
       hasBorders: !element.placement.hasBorders,
       hasRotatingPoint: !element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-      stroke:element.placement.stroke,
-    strokeWidth:element.placement.strokeWidth,
-    strokeUniform:element.placement.strokeUniform,
-    strokeLineCap:element.placement.strokeLineCap,
-    strokeLineJoin:element.placement.strokeLineJoin,
-    strokeMiterLimit:element.placement.strokeMiterLimit,
-    shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
+  }
 
-   }
-
-   setTextBoxStrokeColor(element:EditorElement,newStroke:string|undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setTextBoxStrokeColor(element: EditorElement, newStroke: string | undefined) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:newStroke,
-    strokeWidth:element.placement.strokeWidth,
-    strokeUniform:element.placement.strokeUniform,
-    strokeLineCap:element.placement.strokeLineCap,
-    strokeLineJoin:element.placement.strokeLineJoin,
-    strokeMiterLimit:element.placement.strokeMiterLimit,
-    shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: newStroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
+  }
 
-   }
-
-   setTextBoxStrokeWidth(element:EditorElement,newStrokeWidth:number|undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setTextBoxStrokeWidth(
+    element: EditorElement,
+    newStrokeWidth: number | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:element.placement.stroke,
-    strokeWidth:newStrokeWidth,
-  strokeUniform:element.placement.strokeUniform,
-  strokeLineCap:element.placement.strokeLineCap,
-  strokeLineJoin:element.placement.strokeLineJoin,
-  strokeMiterLimit:element.placement.strokeMiterLimit,
-  shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: newStrokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
+  }
 
-   }
-
-   setTextBoxUniformStrokeWidth(element:EditorElement,newstrokeUniform:boolean|undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setTextBoxUniformStrokeWidth(
+    element: EditorElement,
+    newstrokeUniform: boolean | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:element.placement.stroke,
-    strokeWidth:element.placement.strokeWidth,
-  strokeUniform:newstrokeUniform,
-  strokeLineCap:element.placement.strokeLineCap,
-  strokeLineJoin:element.placement.strokeLineJoin,
-  strokeMiterLimit:element.placement.strokeMiterLimit,
-  shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: newstrokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
-   setTextBoxStrokeLineCap(element:EditorElement,newStrokeLineCap: string | undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  }
+  setTextBoxStrokeLineCap(
+    element: EditorElement,
+    newStrokeLineCap: string | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:element.placement.stroke,
-    strokeWidth:element.placement.strokeWidth,
-  strokeUniform:element.placement.strokeUniform,
-  strokeLineCap:newStrokeLineCap,
-  strokeLineJoin:element.placement.strokeLineJoin,
-  strokeMiterLimit:element.placement.strokeMiterLimit,
-  shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: newStrokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
-   setTextBoxStrokeLineJoin(element:EditorElement,newStrokeLineJoin: string | undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  }
+  setTextBoxStrokeLineJoin(
+    element: EditorElement,
+    newStrokeLineJoin: string | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:element.placement.stroke,
-    strokeWidth:element.placement.strokeWidth,
-  strokeUniform:element.placement.strokeUniform,
-  strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:newStrokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: newStrokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-   }
+  }
 
-   setTextBoxStrokeMiterLimit(element:EditorElement,newStrokeMiterLimit: number | undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setTextBoxStrokeMiterLimit(
+    element: EditorElement,
+    newStrokeMiterLimit: number | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:element.placement.stroke,
-    strokeWidth:element.placement.strokeWidth,
-  strokeUniform:element.placement.strokeUniform,
-  strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:newStrokeMiterLimit,
-shadow:element.placement.shadow,};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: newStrokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
+  }
 
-   }
-
-  setTextBoxShadow(element:EditorElement,newShadow:Shadow | string | undefined){
-    if(!this.canvas) return;
-    if(isEditorAudioElement(element)) return ;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setTextBoxShadow(
+    element: EditorElement,
+    newShadow: Shadow | string | undefined
+  ) {
+    if (!this.canvas) return;
+    if (isEditorAudioElement(element)) return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:element.placement.stroke,
-    strokeWidth:element.placement.strokeWidth,
-  strokeUniform:element.placement.strokeUniform,
-  strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:newShadow};
-    const newElement={...element,placement:newPlacement};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: newShadow,
+    };
+    const newElement = { ...element, placement: newPlacement };
     this.updateEditorElement(newElement);
-}
+  }
 
-setTextBoxFontSize(element:EditorElement,newfontSize:number | undefined){
-    if(isEditorAudioElement(element)||isEditorImageElement(element)||isEditorVideoElement(element)) return;
-    const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-      ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-      ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-      textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-      underline:element.placement.underline,overline:element.placement.overline,
-      linethrough:element.placement.linethrough,
-      lineHeight:element.placement.lineHeight,
-      fill:element.placement.fill,
-      backgroundColor:element.placement.backgroundColor,
-      selectable:element.placement.selectable,
-      visible:element.placement.visible,
-      hasControls:element.placement.hasControls,
+  setTextBoxFontSize(element: EditorElement, newfontSize: number | undefined) {
+    if (
+      isEditorAudioElement(element) ||
+      isEditorImageElement(element) ||
+      isEditorVideoElement(element)
+    )
+      return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
       hasBorders: element.placement.hasBorders,
       hasRotatingPoint: element.placement.hasRotatingPoint,
-      lockMovementX:element.placement.lockMovementX,
-    stroke:element.placement.stroke,
-    strokeWidth:element.placement.strokeWidth,
-  strokeUniform:element.placement.strokeUniform,
-  strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow};
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
 
-const newProperties={text:element.properties.text,fontSize:newfontSize,
-  fontFamily:element.properties.fontFamily,
-  splittedTexts:element.properties.splittedTexts,textboxObject:element.properties.textboxObject
-}
-const newElement={...element,placement:newPlacement,properties:newProperties};
-this.updateEditorElement(newElement);
-}
+    const newProperties = {
+      text: element.properties.text,
+      fontSize: newfontSize,
+      fontFamily: element.properties.fontFamily,
+      splittedTexts: element.properties.splittedTexts,
+      textboxObject: element.properties.textboxObject,
+    };
+    const newElement = {
+      ...element,
+      placement: newPlacement,
+      properties: newProperties,
+    };
+    this.updateEditorElement(newElement);
+  }
 
+  setTextBoxFontFamily(element: EditorElement, newfontFamily: FontFace) {
+    if (
+      isEditorAudioElement(element) ||
+      isEditorImageElement(element) ||
+      isEditorVideoElement(element)
+    )
+      return;
+    const newPlacement = {
+      x: element.placement.x,
+      y: element.placement.y,
+      scaleX: element.placement.scaleX,
+      scaleY: element.placement.scaleY,
+      width: element.placement.width,
+      height: element.placement.height,
+      rotation: element.placement.rotation,
+      flipX: element.placement.flipX,
+      flipY: element.placement.flipY,
+      textAlign: element.placement.textAlign,
+      opacity: element.placement.opacity,
+      underline: element.placement.underline,
+      overline: element.placement.overline,
+      linethrough: element.placement.linethrough,
+      lineHeight: element.placement.lineHeight,
+      fill: element.placement.fill,
+      backgroundColor: element.placement.backgroundColor,
+      selectable: element.placement.selectable,
+      visible: element.placement.visible,
+      hasControls: element.placement.hasControls,
+      hasBorders: element.placement.hasBorders,
+      hasRotatingPoint: element.placement.hasRotatingPoint,
+      lockMovementX: element.placement.lockMovementX,
+      stroke: element.placement.stroke,
+      strokeWidth: element.placement.strokeWidth,
+      strokeUniform: element.placement.strokeUniform,
+      strokeLineCap: element.placement.strokeLineCap,
+      strokeLineJoin: element.placement.strokeLineJoin,
+      strokeMiterLimit: element.placement.strokeMiterLimit,
+      shadow: element.placement.shadow,
+    };
 
-
-setTextBoxFontFamily(element:EditorElement,newfontFamily: FontFace){
-  if(isEditorAudioElement(element)||isEditorImageElement(element)||isEditorVideoElement(element)) return;
-  const newPlacement={x:element.placement.x,y:element.placement.y,scaleX:element.placement.scaleX
-    ,scaleY:element.placement.scaleY,width:element.placement.width,height:element.placement.height
-    ,rotation:element.placement.rotation,flipX:element.placement.flipX,flipY:element.placement.flipY,
-    textAlign:element.placement.textAlign,opacity:element.placement.opacity,
-    underline:element.placement.underline,overline:element.placement.overline,
-    linethrough:element.placement.linethrough,
-    lineHeight:element.placement.lineHeight,
-    fill:element.placement.fill,
-    backgroundColor:element.placement.backgroundColor,
-    selectable:element.placement.selectable,
-    visible:element.placement.visible,
-    hasControls:element.placement.hasControls,
-    hasBorders: element.placement.hasBorders,
-    hasRotatingPoint: element.placement.hasRotatingPoint,
-    lockMovementX:element.placement.lockMovementX,
-  stroke:element.placement.stroke,
-  strokeWidth:element.placement.strokeWidth,
-strokeUniform:element.placement.strokeUniform,
-strokeLineCap:element.placement.strokeLineCap,
-strokeLineJoin:element.placement.strokeLineJoin,
-strokeMiterLimit:element.placement.strokeMiterLimit,
-shadow:element.placement.shadow};
-
-const newProperties={text:element.properties.text,fontSize:element.properties.fontSize,
-fontFamily:newfontFamily.family,
-splittedTexts:element.properties.splittedTexts,textboxObject:element.properties.textboxObject
-}
-const newElement={...element,placement:newPlacement,properties:newProperties};
-this.updateEditorElement(newElement);
-
-}
-
-
+    const newProperties = {
+      text: element.properties.text,
+      fontSize: element.properties.fontSize,
+      fontFamily: newfontFamily.family,
+      splittedTexts: element.properties.splittedTexts,
+      textboxObject: element.properties.textboxObject,
+    };
+    const newElement = {
+      ...element,
+      placement: newPlacement,
+      properties: newProperties,
+    };
+    this.updateEditorElement(newElement);
+  }
 
   setBackgroundColor(backgroundColor: string) {
     this.backgroundColor = backgroundColor;
@@ -1151,10 +1547,6 @@ this.updateEditorElement(newElement);
       this.canvas.backgroundColor = backgroundColor;
     }
   }
-
-
-
-
 
   updateEffect(id: string, effect: Effect) {
     const index = this.editorElements.findIndex((element) => element.id === id);
@@ -1165,27 +1557,41 @@ this.updateEditorElement(newElement);
     this.refreshElements();
   }
 
-  setVideos(videos:{fileid:string,filename:string,filesource:string}[]) {
+  setVideos(
+    videos: { fileid: string; filename: string; filesource: string }[]
+  ) {
     this.videos = videos;
   }
-  setImages(images:{fileid:string,filename:string, filesource:string}[])
-  {
-    this.images=images;
+  setImages(
+    images: { fileid: string; filename: string; filesource: string }[]
+  ) {
+    this.images = images;
   }
-  setAudios(audios:{fileid:string;filename:string;
-    filesource:string;}[])
-    {
-      this.audios=audios;
-    }
+  setAudios(
+    audios: { fileid: string; filename: string; filesource: string }[]
+  ) {
+    this.audios = audios;
+  }
 
-  addVideoResource(video:{fileid:string,filename:string,filesource:string}) {
+  addVideoResource(video: {
+    fileid: string;
+    filename: string;
+    filesource: string;
+  }) {
     this.videos = [...this.videos, video];
   }
-  addAudioResource(audio: {fileid:string ;filename:string;
-    filesource:string;}) {
+  addAudioResource(audio: {
+    fileid: string;
+    filename: string;
+    filesource: string;
+  }) {
     this.audios = [...this.audios, audio];
   }
-  addImageResource(image: {fileid:string,filename:string;filesource:string;}) {
+  addImageResource(image: {
+    fileid: string;
+    filename: string;
+    filesource: string;
+  }) {
     this.images = [...this.images, image];
   }
 
@@ -1207,7 +1613,9 @@ this.updateEditorElement(newElement);
     });
     for (let i = 0; i < this.animations.length; i++) {
       const animation = this.animations[i];
-      const editorElement = this.editorElements.find((element) => element.id === animation.targetId);
+      const editorElement = this.editorElements.find(
+        (element) => element.id === animation.targetId
+      );
       const fabricObject = editorElement?.fabricObject;
       if (!editorElement || !fabricObject) {
         continue;
@@ -1215,135 +1623,217 @@ this.updateEditorElement(newElement);
       fabricObject.clipPath = undefined;
       switch (animation.type) {
         case "fadeIn": {
-          this.animationTimeLine.add({
-            opacity: [0, 1],
-            duration: animation.duration,
-            targets: fabricObject,
-            easing: 'linear',
-          }, editorElement.timeFrame.start);
+          this.animationTimeLine.add(
+            {
+              opacity: [0, 1],
+              duration: animation.duration,
+              targets: fabricObject,
+              easing: "linear",
+            },
+            editorElement.timeFrame.start
+          );
           break;
         }
         case "fadeOut": {
-          this.animationTimeLine.add({
-            opacity: [1, 0],
-            duration: animation.duration,
-            targets: fabricObject,
-            easing: 'linear',
-          }, editorElement.timeFrame.end - animation.duration);
-          break
+          this.animationTimeLine.add(
+            {
+              opacity: [1, 0],
+              duration: animation.duration,
+              targets: fabricObject,
+              easing: "linear",
+            },
+            editorElement.timeFrame.end - animation.duration
+          );
+          break;
         }
         case "slideIn": {
           const direction = animation.properties.direction;
           const targetPosition = {
             left: editorElement.placement.x,
             top: editorElement.placement.y,
-          }
+          };
           const startPosition = {
-            left: (direction === "left" ? - editorElement.placement.width : direction === "right" ? this.canvas?.width : editorElement.placement.x),
-            top: (direction === "top" ? - editorElement.placement.height : direction === "bottom" ? this.canvas?.height : editorElement.placement.y),
-          }
+            left:
+              direction === "left"
+                ? -editorElement.placement.width
+                : direction === "right"
+                ? this.canvas?.width
+                : editorElement.placement.x,
+            top:
+              direction === "top"
+                ? -editorElement.placement.height
+                : direction === "bottom"
+                ? this.canvas?.height
+                : editorElement.placement.y,
+          };
           if (animation.properties.useClipPath) {
-            const clipRectangle = FabricUitls.getClipMaskRect(editorElement, 50);
-            fabricObject.set('clipPath', clipRectangle)
+            const clipRectangle = FabricUitls.getClipMaskRect(
+              editorElement,
+              50
+            );
+            fabricObject.set("clipPath", clipRectangle);
           }
-          if (editorElement.type === "text" && animation.properties.textType === "character") {
-            this.canvas?.remove(...editorElement.properties.splittedTexts)
+          if (
+            editorElement.type === "text" &&
+            animation.properties.textType === "character"
+          ) {
+            this.canvas?.remove(...editorElement.properties.splittedTexts);
             // @ts-ignore
-            editorElement.properties.splittedTexts = getTextObjectsPartitionedByCharacters(editorElement.fabricObject, editorElement);
+            if(!editorElement.fabricObject) return;
+            editorElement.properties.splittedTexts =
+              getTextObjectsPartitionedByCharacters(
+                editorElement.fabricObject as fabric.Textbox,
+                editorElement
+              );
             editorElement.properties.splittedTexts.forEach((textObject) => {
               this.canvas!.add(textObject);
-            })
+            });
             const duration = animation.duration / 2;
-            const delay = duration / editorElement.properties.splittedTexts.length;
-            for (let i = 0; i < editorElement.properties.splittedTexts.length; i++) {
+            const delay =
+              duration / editorElement.properties.splittedTexts.length;
+            for (
+              let i = 0;
+              i < editorElement.properties.splittedTexts.length;
+              i++
+            ) {
               const splittedText = editorElement.properties.splittedTexts[i];
               const offset = {
                 left: splittedText.left! - editorElement.placement.x,
-                top: splittedText.top! - editorElement.placement.y
-              }
-              this.animationTimeLine.add({
-                left: [startPosition.left! + offset.left, targetPosition.left + offset.left],
-                top: [startPosition.top! + offset.top, targetPosition.top + offset.top],
-                delay: i * delay,
-                duration: duration,
-                targets: splittedText,
-              }, editorElement.timeFrame.start);
+                top: splittedText.top! - editorElement.placement.y,
+              };
+              this.animationTimeLine.add(
+                {
+                  left: [
+                    startPosition.left! + offset.left,
+                    targetPosition.left + offset.left,
+                  ],
+                  top: [
+                    startPosition.top! + offset.top,
+                    targetPosition.top + offset.top,
+                  ],
+                  delay: i * delay,
+                  duration: duration,
+                  targets: splittedText,
+                },
+                editorElement.timeFrame.start
+              );
             }
-            this.animationTimeLine.add({
-              opacity: [1, 0],
-              duration: 1,
-              targets: fabricObject,
-              easing: 'linear',
-            }, editorElement.timeFrame.start);
-            this.animationTimeLine.add({
-              opacity: [0, 1],
-              duration: 1,
-              targets: fabricObject,
-              easing: 'linear',
-            }, editorElement.timeFrame.start + animation.duration);
+            this.animationTimeLine.add(
+              {
+                opacity: [1, 0],
+                duration: 1,
+                targets: fabricObject,
+                easing: "linear",
+              },
+              editorElement.timeFrame.start
+            );
+            this.animationTimeLine.add(
+              {
+                opacity: [0, 1],
+                duration: 1,
+                targets: fabricObject,
+                easing: "linear",
+              },
+              editorElement.timeFrame.start + animation.duration
+            );
 
-            this.animationTimeLine.add({
-              opacity: [0, 1],
-              duration: 1,
-              targets: editorElement.properties.splittedTexts,
-              easing: 'linear',
-            }, editorElement.timeFrame.start);
-            this.animationTimeLine.add({
-              opacity: [1, 0],
-              duration: 1,
-              targets: editorElement.properties.splittedTexts,
-              easing: 'linear',
-            }, editorElement.timeFrame.start + animation.duration);
+            this.animationTimeLine.add(
+              {
+                opacity: [0, 1],
+                duration: 1,
+                targets: editorElement.properties.splittedTexts,
+                easing: "linear",
+              },
+              editorElement.timeFrame.start
+            );
+            this.animationTimeLine.add(
+              {
+                opacity: [1, 0],
+                duration: 1,
+                targets: editorElement.properties.splittedTexts,
+                easing: "linear",
+              },
+              editorElement.timeFrame.start + animation.duration
+            );
           }
-          this.animationTimeLine.add({
-            left: [startPosition.left, targetPosition.left],
-            top: [startPosition.top, targetPosition.top],
-            duration: animation.duration,
-            targets: fabricObject,
-            easing: 'linear',
-          }, editorElement.timeFrame.start);
-          break
+          this.animationTimeLine.add(
+            {
+              left: [startPosition.left, targetPosition.left],
+              top: [startPosition.top, targetPosition.top],
+              duration: animation.duration,
+              targets: fabricObject,
+              easing: "linear",
+            },
+            editorElement.timeFrame.start
+          );
+          break;
         }
         case "slideOut": {
           const direction = animation.properties.direction;
           const startPosition = {
             left: editorElement.placement.x,
             top: editorElement.placement.y,
-          }
+          };
           const targetPosition = {
-            left: (direction === "left" ? - editorElement.placement.width : direction === "right" ? this.canvas?.width : editorElement.placement.x),
-            top: (direction === "top" ? -100 - editorElement.placement.height : direction === "bottom" ? this.canvas?.height : editorElement.placement.y),
-          }
+            left:
+              direction === "left"
+                ? -editorElement.placement.width
+                : direction === "right"
+                ? this.canvas?.width
+                : editorElement.placement.x,
+            top:
+              direction === "top"
+                ? -100 - editorElement.placement.height
+                : direction === "bottom"
+                ? this.canvas?.height
+                : editorElement.placement.y,
+          };
           if (animation.properties.useClipPath) {
-            const clipRectangle = FabricUitls.getClipMaskRect(editorElement, 50);
-            fabricObject.set('clipPath', clipRectangle)
+            const clipRectangle = FabricUitls.getClipMaskRect(
+              editorElement,
+              50
+            );
+            fabricObject.set("clipPath", clipRectangle);
           }
-          this.animationTimeLine.add({
-            left: [startPosition.left, targetPosition.left],
-            top: [startPosition.top, targetPosition.top],
-            duration: animation.duration,
-            targets: fabricObject,
-            easing: 'linear',
-          }, editorElement.timeFrame.end - animation.duration);
-          break
+          this.animationTimeLine.add(
+            {
+              left: [startPosition.left, targetPosition.left],
+              top: [startPosition.top, targetPosition.top],
+              duration: animation.duration,
+              targets: fabricObject,
+              easing: "linear",
+            },
+            editorElement.timeFrame.end - animation.duration
+          );
+          break;
         }
         case "breathe": {
-          const itsSlideInAnimation = this.animations.find((a) => a.targetId === animation.targetId && (a.type === "slideIn"));
-          const itsSlideOutAnimation = this.animations.find((a) => a.targetId === animation.targetId && (a.type === "slideOut"));
-          const timeEndOfSlideIn = itsSlideInAnimation ? editorElement.timeFrame.start + itsSlideInAnimation.duration : editorElement.timeFrame.start;
-          const timeStartOfSlideOut = itsSlideOutAnimation ? editorElement.timeFrame.end - itsSlideOutAnimation.duration : editorElement.timeFrame.end;
+          const itsSlideInAnimation = this.animations.find(
+            (a) => a.targetId === animation.targetId && a.type === "slideIn"
+          );
+          const itsSlideOutAnimation = this.animations.find(
+            (a) => a.targetId === animation.targetId && a.type === "slideOut"
+          );
+          const timeEndOfSlideIn = itsSlideInAnimation
+            ? editorElement.timeFrame.start + itsSlideInAnimation.duration
+            : editorElement.timeFrame.start;
+          const timeStartOfSlideOut = itsSlideOutAnimation
+            ? editorElement.timeFrame.end - itsSlideOutAnimation.duration
+            : editorElement.timeFrame.end;
           if (timeEndOfSlideIn > timeStartOfSlideOut) {
             continue;
           }
           const duration = timeStartOfSlideOut - timeEndOfSlideIn;
           const easeFactor = 4;
-          const suitableTimeForHeartbeat = 1000 * 60 / 72 * easeFactor
+          const suitableTimeForHeartbeat = ((1000 * 60) / 72) * easeFactor;
           const upScale = 1.05;
           const currentScaleX = fabricObject.scaleX ?? 1;
           const currentScaleY = fabricObject.scaleY ?? 1;
           const finalScaleX = currentScaleX * upScale;
           const finalScaleY = currentScaleY * upScale;
-          const totalHeartbeats = Math.floor(duration / suitableTimeForHeartbeat);
+          const totalHeartbeats = Math.floor(
+            duration / suitableTimeForHeartbeat
+          );
           if (totalHeartbeats < 1) {
             continue;
           }
@@ -1353,15 +1843,18 @@ this.updateEditorElement(newElement);
             keyframes.push({ scaleX: currentScaleX, scaleY: currentScaleY });
           }
 
-          this.animationTimeLine.add({
-            duration: duration,
-            targets: fabricObject,
-            keyframes,
-            easing: 'linear',
-            loop: true
-          }, timeEndOfSlideIn);
+          this.animationTimeLine.add(
+            {
+              duration: duration,
+              targets: fabricObject,
+              keyframes,
+              easing: "linear",
+              loop: true,
+            },
+            timeEndOfSlideIn
+          );
 
-          break
+          break;
         }
       }
     }
@@ -1379,13 +1872,14 @@ this.updateEditorElement(newElement);
     if (this.canvas) {
       if (selectedElement?.fabricObject)
         this.canvas.setActiveObject(selectedElement.fabricObject);
-      else
-        this.canvas.discardActiveObject();
+      else this.canvas.discardActiveObject();
     }
-    
   }
   updateSelectedElement() {
-    this.selectedElement = this.editorElements.find((element) => element.id === this.selectedElement?.id) ?? null;
+    this.selectedElement =
+      this.editorElements.find(
+        (element) => element.id === this.selectedElement?.id
+      ) ?? null;
   }
 
   setEditorElements(editorElements: EditorElement[]) {
@@ -1396,12 +1890,17 @@ this.updateEditorElement(newElement);
   }
 
   updateEditorElement(editorElement: EditorElement) {
-    this.setEditorElements(this.editorElements.map((element) =>
-      element.id === editorElement.id ? editorElement : element
-    ));
+    this.setEditorElements(
+      this.editorElements.map((element) =>
+        element.id === editorElement.id ? editorElement : element
+      )
+    );
   }
 
-  updateEditorElementTimeFrame(editorElement: EditorElement, timeFrame: Partial<TimeFrame>) {
+  updateEditorElementTimeFrame(
+    editorElement: EditorElement,
+    timeFrame: Partial<TimeFrame>
+  ) {
     if (timeFrame.start != undefined && timeFrame.start < 0) {
       timeFrame.start = 0;
     }
@@ -1413,40 +1912,39 @@ this.updateEditorElement(newElement);
       timeFrame: {
         ...editorElement.timeFrame,
         ...timeFrame,
-      }
-    }
+      },
+    };
     this.updateVideoElements();
     this.updateAudioElements();
     this.updateEditorElement(newEditorElement);
     this.refreshAnimations();
   }
 
-  addEditorElementAfterFetch(editorElement:EditorElement)
-  {
+  addEditorElementAfterFetch(editorElement: EditorElement) {
     this.setEditorElements([...this.editorElements, editorElement]);
     this.refreshElements();
   }
   addEditorElement(editorElement: EditorElement) {
     this.setEditorElements([...this.editorElements, editorElement]);
     this.refreshElements();
-    this.setSelectedElement(this.editorElements[this.editorElements.length - 1]);
+    this.setSelectedElement(
+      this.editorElements[this.editorElements.length - 1]
+    );
   }
 
   removeEditorElement(id: string) {
-    this.setEditorElements(this.editorElements.filter(
-      (editorElement) => editorElement.id !== id
-    ));
+    this.setEditorElements(
+      this.editorElements.filter((editorElement) => editorElement.id !== id)
+    );
     this.refreshElements();
   }
 
-  removeAllEditorElements()
-  {
-    this.editorElements=[];
+  removeAllEditorElements() {
+    this.editorElements = [];
   }
   setMaxTime(maxTime: number) {
     this.maxTime = maxTime;
   }
-
 
   setPlaying(playing: boolean) {
     this.playing = playing;
@@ -1454,7 +1952,7 @@ this.updateEditorElement(newElement);
     this.updateAudioElements();
     if (playing) {
       this.startedTime = Date.now();
-      this.startedTimePlay = this.currentTimeInMs
+      this.startedTimePlay = this.currentTimeInMs;
       requestAnimationFrame(() => {
         this.playFrames();
       });
@@ -1486,12 +1984,12 @@ this.updateEditorElement(newElement);
     if (this.canvas) {
       this.canvas.backgroundColor = this.backgroundColor;
     }
-    this.editorElements.forEach( e => {
-        if (!e.fabricObject) return;
-        const isInside = e.timeFrame.start <= newTime && newTime <= e.timeFrame.end;
-        e.fabricObject.visible = isInside;
-      }
-    )
+    this.editorElements.forEach((e) => {
+      if (!e.fabricObject) return;
+      const isInside =
+        e.timeFrame.start <= newTime && newTime <= e.timeFrame.end;
+      e.fabricObject.visible = isInside;
+    });
   }
 
   handleSeek(seek: number) {
@@ -1502,206 +2000,246 @@ this.updateEditorElement(newElement);
     this.updateVideoElements();
     this.updateAudioElements();
   }
-  
-  addVideo(fileid:string,filename:string,index: number) {
-    const videoElement = document.getElementById(`video-${index}`)
+
+  addVideo(fileid: string, filename: string, index: number) {
+    const videoElement = document.getElementById(`video-${index}`);
     if (!isHtmlVideoElement(videoElement)) {
       return;
     }
     const videoDurationMs = videoElement.duration * 1000;
     const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
     const id = `${fileid}.${getUid()}`;
-    this.addEditorElement(
-      {
-        id,
-        name: `${filename}`,
-        type: "video",
-        placement: {
-          x: 100,
-          y: 100,
-          width: 100 * aspectRatio,
-          height: 100,
-          rotation: 0,
-          scaleX: 1,
-          scaleY: 1,
-          flipX: false,
-          flipY: false,
-          opacity: 1.0,
-        },
-        timeFrame: {
-          start: 0,
-          end: videoDurationMs,
-        },
-        properties: {
-          elementId: `${id}`,
-          src: videoElement.src,
-          effect: {
-            type: "none",
-          }
-        },
-        
+    this.addEditorElement({
+      id,
+      name: `${filename}`,
+      type: "video",
+      placement: {
+        x: 100,
+        y: 100,
+        width: 100 * aspectRatio,
+        height: 100,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+        flipX: false,
+        flipY: false,
+        opacity: 1.0,
       },
-    );
+      timeFrame: {
+        start: 0,
+        end: videoDurationMs,
+      },
+      properties: {
+        crossOrigin:`anonymous`,
+        elementId: `${id}`,
+        src: videoElement.src,
+        effect: {
+          type: "none",
+        },
+      },
+    });
   }
 
-  addImage(fileid:string,filename:string,index: number) {
-    const imageElement = document.getElementById(`image-${index}`)
+  addImage(fileid: string, filename: string, index: number) {
+    const imageElement = document.getElementById(`image-${index}`);
     if (!isHtmlImageElement(imageElement)) {
       return;
     }
     const aspectRatio = imageElement.naturalWidth / imageElement.naturalHeight;
     const id = `${fileid}.${getUid()}`;
-    this.addEditorElement(
-      {
-        id,
-        name: `${filename}`,
-        type: "image",
-        placement: {
-          x: 0,
-          y: 0,
-          width: 100 * aspectRatio,
-          height: 100,
-          rotation: 0,
-          scaleX: 1,
-          scaleY: 1,
-          flipX: false,
-          flipY: false,
-          opacity: 1.0,
-        },
-        timeFrame: {
-          start: 0,
-          end: this.maxTime,
-        },
-        properties: {
-          elementId: `${id}`,
-          src: imageElement.src,
-          effect: {
-            type: "none",
-          }
-        },
-        
+    this.addEditorElement({
+      id,
+      name: `${filename}`,
+      type: "image",
+      placement: {
+        x: 0,
+        y: 0,
+        width: 100 * aspectRatio,
+        height: 100,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+        flipX: false,
+        flipY: false,
+        opacity: 1.0,
       },
-    );
+      timeFrame: {
+        start: 0,
+        end: this.maxTime,
+      },
+      properties: {
+        crossOrigin:`anonymous`,
+        elementId: `${id}`,
+        src: imageElement.src,
+        effect: {
+          type: "none",
+        },
+      },
+    });
   }
 
-  addAudio(fileid:string,filename:string,index: number) {
-    const audioElement = document.getElementById(`audio-${index}`)
+  addAudio(fileid: string, filename: string, index: number) {
+    const audioElement = document.getElementById(`audio-${index}`);
     if (!isHtmlAudioElement(audioElement)) {
       return;
     }
     const audioDurationMs = audioElement.duration * 1000;
     const id = getUid();
-    this.addEditorElement(
-      {
-        id,
-        name: `Media(audio) ${index + 1}`,
-        type: "audio",
-        placement: {
-          x: 0,
-          y: 0,
-          width: 100,
-          height: 100,
-          rotation: 0,
-          scaleX: 1,
-          scaleY: 1,
-          textAlign: "center",
-          flipX: false,
-          flipY: false,
-          opacity: 0
-        },
-        timeFrame: {
-          start: 0,
-          end: audioDurationMs,
-        },
-        properties: {
-          elementId: `audio-${id}`,
-          src: audioElement.src,
-        },
-        
+    this.addEditorElement({
+      id,
+      name: `Media(audio) ${index + 1}`,
+      type: "audio",
+      placement: {
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+        textAlign: "center",
+        flipX: false,
+        flipY: false,
+        opacity: 0,
       },
-    );
-
+      timeFrame: {
+        start: 0,
+        end: audioDurationMs,
+      },
+      properties: {
+        elementId: `audio-${id}`,
+        src: audioElement.src,
+      },
+    });
   }
   addText(options: {
-
     fontSize: number | undefined;
-    
     fontFamily: string | undefined;
     text: string;
   }) {
     const id = getUid();
     const index = this.editorElements.length;
-/////////////////////////////////////////////////////////
-
-
-
-
-////////////////////////////////////////////////////////
-  this.addEditorElement(
-      {
-        id,
-        name: `Text ${index + 1}`,
-        type: "text",
-        placement: {
-          x: 0,
-          y: 0,
-          width: 200,
-          height: 200,
-          rotation: 0,
-          scaleX: 1,
-          scaleY: 1,
-          flipX: false,
-          flipY: false,
-          textAlign: "center",
-          opacity: 1.0,
-          underline: false,
-          overline: false,
-          linethrough: false,
-          lineHeight: 1.6,
-          fill: "#FFFFFF",
-          backgroundColor: undefined,
-          selectable: true,
-          visible: true,
-          hasControls: true,
-          hasBorders: true,
-          hasRotatingPoint: true,
-          lockMovementX: false,
-          stroke: undefined,
-          strokeWidth: 1,
-          strokeUniform: undefined,
-          strokeLineCap: "butt",
-          strokeLineJoin: "milter",
-          strokeMiterLimit: 1,
-          // shadow:new fabric.Shadow({color:"blue",blur:0.6,offsetX:2,offsetY:2}),
-          shadow: undefined,
-          borderScaleFactor:1
-
-        },
-        timeFrame: {
-          start: 0,
-          end: this.maxTime,
-        },
-        properties: {
-          text: options.text,
-          fontSize: options.fontSize,
-          fontFamily:options.fontFamily,
-          splittedTexts: [],
-        },
-        
+    this.addEditorElement({
+      id,
+      name: `Text ${index + 1}`,
+      type: "text",
+      placement: {
+        x: 0,
+        y: 0,
+        width: 200,
+        height: 200,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+        flipX: false,
+        flipY: false,
+        textAlign: "center",
+        opacity: 1.0,
+        underline: false,
+        overline: false,
+        linethrough: false,
+        lineHeight: 1.6,
+        fill: "#FFFFFF",
+        backgroundColor: undefined,
+        selectable: true,
+        visible: true,
+        hasControls: true,
+        hasBorders: true,
+        hasRotatingPoint: true,
+        lockMovementX: false,
+        stroke: undefined,
+        strokeWidth: 1,
+        strokeUniform: undefined,
+        strokeLineCap: "butt",
+        strokeLineJoin: "milter",
+        strokeMiterLimit: 1,
+        // shadow:new fabric.Shadow({color:"blue",blur:0.6,offsetX:2,offsetY:2}),
+        shadow: undefined,
+        borderScaleFactor: 1,
       },
-    );
+      timeFrame: {
+        start: 0,
+        end: this.maxTime,
+      },
+      properties: {
+        text: options.text,
+        fontSize: options.fontSize,
+        fontFamily: options.fontFamily,
+        splittedTexts: [],
+      },
+    });
+    console.log(this.editorElements);
+  }
+  addTextAfterFetch(options: {
+    id:string,
+    fontSize: number | undefined;
+    fontFamily: string | undefined;
+    text: string;
+  }) {
+    const id = getUid();
+    const index = this.editorElements.length;
+    this.addEditorElement({
+      id,
+      name: `Text ${index + 1}`,
+      type: "text",
+      placement: {
+        x: 0,
+        y: 0,
+        width: 200,
+        height: 200,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+        flipX: false,
+        flipY: false,
+        textAlign: "center",
+        opacity: 1.0,
+        underline: false,
+        overline: false,
+        linethrough: false,
+        lineHeight: 1.6,
+        fill: "#FFFFFF",
+        backgroundColor: undefined,
+        selectable: true,
+        visible: true,
+        hasControls: true,
+        hasBorders: true,
+        hasRotatingPoint: true,
+        lockMovementX: false,
+        stroke: undefined,
+        strokeWidth: 1,
+        strokeUniform: undefined,
+        strokeLineCap: "butt",
+        strokeLineJoin: "milter",
+        strokeMiterLimit: 1,
+        // shadow:new fabric.Shadow({color:"blue",blur:0.6,offsetX:2,offsetY:2}),
+        shadow: undefined,
+        borderScaleFactor: 1,
+      },
+      timeFrame: {
+        start: 0,
+        end: this.maxTime,
+      },
+      properties: {
+        text: options.text,
+        fontSize: options.fontSize,
+        fontFamily: options.fontFamily,
+        splittedTexts: [],
+      },
+    });
     console.log(this.editorElements);
   }
 
   updateVideoElements() {
-    this.editorElements.filter(
-      (element): element is VideoEditorElement =>
-        element.type === "video"
-    )
+    this.editorElements
+      .filter(
+        (element): element is VideoEditorElement => element.type === "video"
+      )
       .forEach((element) => {
         const video = document.getElementById(element.properties.elementId);
         if (isHtmlVideoElement(video)) {
-          const videoTime = (this.currentTimeInMs - element.timeFrame.start) / 1000;
+          const videoTime =
+            (this.currentTimeInMs - element.timeFrame.start) / 1000;
           video.currentTime = videoTime;
           if (this.playing) {
             video.play();
@@ -1709,17 +2247,18 @@ this.updateEditorElement(newElement);
             video.pause();
           }
         }
-      })
+      });
   }
   updateAudioElements() {
-    this.editorElements.filter(
-      (element): element is AudioEditorElement =>
-        element.type === "audio"
-    )
+    this.editorElements
+      .filter(
+        (element): element is AudioEditorElement => element.type === "audio"
+      )
       .forEach((element) => {
         const audio = document.getElementById(element.properties.elementId);
         if (isHtmlAudioElement(audio)) {
-          const audioTime = (this.currentTimeInMs - element.timeFrame.start) / 1000;
+          const audioTime =
+            (this.currentTimeInMs - element.timeFrame.start) / 1000;
           audio.currentTime = audioTime;
           if (this.playing) {
             audio.play();
@@ -1727,7 +2266,7 @@ this.updateEditorElement(newElement);
             audio.pause();
           }
         }
-      })
+      });
   }
   // saveCanvasToVideo() {
   //   const video = document.createElement("video");
@@ -1757,7 +2296,7 @@ this.updateEditorElement(newElement);
 
   // }
 
-  setVideoFormat(format: 'mp4' | 'webm') {
+  setVideoFormat(format: "mp4" | "webm") {
     this.selectedVideoFormat = format;
   }
 
@@ -1766,16 +2305,18 @@ this.updateEditorElement(newElement);
   }
 
   saveCanvasToVideoWithAudioWebmMp4() {
-    console.log('modified')
-    let mp4 = this.selectedVideoFormat === 'mp4'
+    console.log("modified");
+    let mp4 = this.selectedVideoFormat === "mp4";
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     console.log(canvas);
     const stream = canvas.captureStream(30);
-    
-    const audioElements = this.editorElements.filter(isEditorAudioElement)
+
+    const audioElements = this.editorElements.filter(isEditorAudioElement);
     const audioStreams: MediaStream[] = [];
     audioElements.forEach((audio) => {
-      const audioElement = document.getElementById(audio.properties.elementId) as HTMLAudioElement;
+      const audioElement = document.getElementById(
+        audio.properties.elementId
+      ) as HTMLAudioElement;
       let ctx = new AudioContext();
       let sourceNode = ctx.createMediaElementSource(audioElement);
       let dest = ctx.createMediaStreamDestination();
@@ -1798,33 +2339,44 @@ this.updateEditorElement(newElement);
       mediaRecorder.ondataavailable = function (e) {
         chunks.push(e.data);
         console.log("data available");
-
       };
       mediaRecorder.onstop = async function (e) {
         const blob = new Blob(chunks, { type: "video/webm" });
 
         if (mp4) {
           // lets use ffmpeg to convert webm to mp4
-          const data = new Uint8Array(await (blob).arrayBuffer());
+          const data = new Uint8Array(await blob.arrayBuffer());
           const ffmpeg = new FFmpeg();
-          const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd"
+          const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd";
           await ffmpeg.load({
-            coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-            wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+            coreURL: await toBlobURL(
+              `${baseURL}/ffmpeg-core.js`,
+              "text/javascript"
+            ),
+            wasmURL: await toBlobURL(
+              `${baseURL}/ffmpeg-core.wasm`,
+              "application/wasm"
+            ),
             // workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
           });
-          await ffmpeg.writeFile('video.webm', data);
-          await ffmpeg.exec(["-y", "-i", "video.webm", "-c", "copy", "video.mp4"]);
+          await ffmpeg.writeFile("video.webm", data);
+          await ffmpeg.exec([
+            "-y",
+            "-i",
+            "video.webm",
+            "-c",
+            "copy",
+            "video.mp4",
+          ]);
           // await ffmpeg.exec(["-y", "-i", "video.webm", "-c:v", "libx264", "video.mp4"]);
 
-          const output = await ffmpeg.readFile('video.mp4');
+          const output = await ffmpeg.readFile("video.mp4");
           const outputBlob = new Blob([output], { type: "video/mp4" });
           const outputUrl = URL.createObjectURL(outputBlob);
           const a = document.createElement("a");
           a.download = "video.mp4";
           a.href = outputUrl;
           a.click();
-
         } else {
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
@@ -1838,16 +2390,14 @@ this.updateEditorElement(newElement);
         mediaRecorder.stop();
       }, this.maxTime);
       video.remove();
-    })
+    });
   }
-
- 
 
   refreshElements() {
     const store = this;
     if (!store.canvas) return;
     const canvas = store.canvas;
-    
+
     store.canvas.remove(...store.canvas.getObjects());
     for (let index = 0; index < store.editorElements.length; index++) {
       const element = store.editorElements[index];
@@ -1872,14 +2422,14 @@ this.updateEditorElement(newElement);
             height: element.placement.height,
             scaleX: element.placement.scaleX,
             scaleY: element.placement.scaleY,
-            flipX:element.placement.flipX,
-            flipY:element.placement.flipY,
+            flipX: element.placement.flipX,
+            flipY: element.placement.flipY,
             angle: element.placement.rotation,
             objectCaching: false,
             selectable: true,
             lockUniScaling: true,
-        
-            opacity:element.placement.opacity,
+
+            opacity: element.placement.opacity,
             // filters: filters,
             // @ts-ignore
             customFilter: element.properties.effect.type,
@@ -1911,14 +2461,19 @@ this.updateEditorElement(newElement);
                   : placement.height,
               scaleX: 1,
               scaleY: 1,
-              flipX:target.flipX ??placement.flipX,
-              flipY:target.flipY ?? placement.flipY,
-              opacity:target.opacity ?? placement.opacity,
-   
+              flipX: target.flipX ?? placement.flipX,
+              flipY: target.flipY ?? placement.flipY,
+              opacity: target.opacity ?? placement.opacity,
             };
             const newElement = {
               ...element,
               placement: newPlacement,
+              properties: {
+                ...element.properties,
+                // @ts-ignore
+                crossOrigin: target.crossOrigin ?? element.properties.crossOrigin,
+              },
+              
             };
             store.updateEditorElement(newElement);
           });
@@ -1931,7 +2486,7 @@ this.updateEditorElement(newElement);
             element.properties.elementId
           );
           if (!isHtmlImageElement(imageElement)) continue;
-          
+
           // const filters = [];
           // if (element.properties.effect?.type === "blackAndWhite") {
           //   filters.push(new fabric.Image.filters.Grayscale());
@@ -1940,15 +2495,15 @@ this.updateEditorElement(newElement);
             name: element.id,
             left: element.placement.x,
             top: element.placement.y,
-            flipX:element.placement.flipX,
-            flipY:element.placement.flipY,
+            flipX: element.placement.flipX,
+            flipY: element.placement.flipY,
             angle: element.placement.rotation,
             objectCaching: false,
             selectable: true,
             lockUniScaling: true,
-      
-            opacity:element.placement.opacity,
-            
+
+            opacity: element.placement.opacity,
+
             // filters
             // @ts-ignore
             customFilter: element.properties.effect.type,
@@ -1965,7 +2520,7 @@ this.updateEditorElement(newElement);
           imageObject.height = image.h;
           imageElement.width = image.w;
           imageElement.height = image.h;
-  
+
           imageObject.scaleToHeight(image.w);
           imageObject.scaleToWidth(image.h);
           const toScale = {
@@ -1988,17 +2543,21 @@ this.updateEditorElement(newElement);
               ...placement,
               x: target.left ?? placement.x,
               y: target.top ?? placement.y,
-              flipX:target.flipX ?? placement.flipX,
-              flipY:target.flipY ?? placement.flipY,
+              flipX: target.flipX ?? placement.flipX,
+              flipY: target.flipY ?? placement.flipY,
               rotation: target.angle ?? placement.rotation,
               scaleX: fianlScale,
               scaleY: fianlScale,
-              opacity:target.opacity ?? placement.opacity,
-          
+              opacity: target.opacity ?? placement.opacity,
             };
             const newElement = {
               ...element,
               placement: newPlacement,
+              properties: {
+                ...element.properties,
+                // @ts-ignore
+                crossOrigin: target.crossOrigin ?? element.properties.crossOrigin,
+              },
             };
             store.updateEditorElement(newElement);
           });
@@ -2008,57 +2567,55 @@ this.updateEditorElement(newElement);
           break;
         }
         case "text": {
- 
+          const textObject: fabric.Textbox = new fabric.Textbox(
+            element.properties.text,
+            {
+              name: element.id,
+              left: element.placement.x,
+              top: element.placement.y,
+              scaleX: element.placement.scaleX,
+              scaleY: element.placement.scaleY,
+              width: element.placement.width,
+              height: element.placement.height,
+              flipX: element.placement.flipX,
+              flipY: element.placement.flipY,
+              angle: element.placement.rotation,
+              fontSize: element.properties.fontSize,
+              fontFamily: element.properties.fontFamily,
+              textAlign: element.placement.textAlign,
+              underline: element.placement.underline,
+              overline: element.placement.overline,
+              linethrough: element.placement.linethrough,
+              lineHeight: element.placement.lineHeight,
+              opacity: element.placement.opacity,
+              objectCaching: false,
+              lockUniScaling: true,
+              fill: element.placement.fill,
+              backgroundColor: element.placement.backgroundColor,
+              selectable: element.placement.selectable,
+              visible: element.placement.visible,
+              hasControls: element.placement.hasControls,
+              hasBorders: element.placement.hasBorders,
+              hasRotatingPoint: element.placement.hasRotatingPoint,
+              lockMovementX: element.placement.lockMovementX,
 
-          const textObject:fabric.Textbox = new fabric.Textbox(element.properties.text, {
-            name: element.id,
-            left: element.placement.x,
-            top: element.placement.y,
-            scaleX:element.placement.scaleX,
-            scaleY:element.placement.scaleY,
-            width:element.placement.width,
-            height:element.placement.height,
-            flipX:element.placement.flipX,
-            flipY:element.placement.flipY,
-            angle:element.placement.rotation,
-            fontSize: element.properties.fontSize,
-            fontFamily:element.properties.fontFamily,
-            textAlign:element.placement.textAlign,
-            underline:element.placement.underline,
-            overline:element.placement.overline,
-            linethrough:element.placement.linethrough,
-            lineHeight:element.placement.lineHeight,
-            opacity:element.placement.opacity,
-            objectCaching: false,
-            lockUniScaling: true,
-            fill:element.placement.fill,
-            backgroundColor:element.placement.backgroundColor,
-            selectable:element.placement.selectable,
-            visible:element.placement.visible,
-            hasControls:element.placement.hasControls,
-            hasBorders:element.placement.hasBorders,
-            hasRotatingPoint:element.placement.hasRotatingPoint,
-            lockMovementX:element.placement.lockMovementX,
-
-            stroke:element.placement.stroke,
-            strokeWidth:element.placement.strokeWidth,
-            strokeUniform:element.placement.strokeUniform,
-            strokeLineCap:element.placement.strokeLineCap,
-            strokeLineJoin:element.placement.strokeLineJoin,
-            strokeMiterLimit:element.placement.strokeMiterLimit,
-            shadow:element.placement.shadow,
-
-            
-
-          });
+              stroke: element.placement.stroke,
+              strokeWidth: element.placement.strokeWidth,
+              strokeUniform: element.placement.strokeUniform,
+              strokeLineCap: element.placement.strokeLineCap,
+              strokeLineJoin: element.placement.strokeLineJoin,
+              strokeMiterLimit: element.placement.strokeMiterLimit,
+              shadow: element.placement.shadow,
+            }
+          );
           element.fabricObject = textObject;
-          element.properties.textboxObject=textObject;
+          element.properties.textboxObject = textObject;
           canvas.add(textObject);
           canvas.on("object:modified", function (e) {
             if (!e.target) return;
             const target = e.target as fabric.Textbox;
             if (target != textObject) return;
-            
+
             const placement = element.placement;
             const newPlacement: Placement = {
               ...placement,
@@ -2069,30 +2626,32 @@ this.updateEditorElement(newElement);
               height: target.height ?? placement.height,
               scaleX: target.scaleX ?? placement.scaleX,
               scaleY: target.scaleY ?? placement.scaleY,
-              flipX:target.flipX ??placement.flipX,
-              flipY:target.flipY ?? placement.flipY,
-              textAlign:target.textAlign ?? placement.textAlign,
-              opacity:target.opacity ?? placement.opacity,
-              underline:target.underline ?? placement.underline,
-              overline:target.overline ?? placement.overline,
-              linethrough:target.linethrough ?? placement.linethrough,
-              lineHeight:target.lineHeight ?? placement.lineHeight,
-              fill:target.fill ?? placement.fill,
-              backgroundColor:target.backgroundColor ?? placement.backgroundColor,
+              flipX: target.flipX ?? placement.flipX,
+              flipY: target.flipY ?? placement.flipY,
+              textAlign: target.textAlign ?? placement.textAlign,
+              opacity: target.opacity ?? placement.opacity,
+              underline: target.underline ?? placement.underline,
+              overline: target.overline ?? placement.overline,
+              linethrough: target.linethrough ?? placement.linethrough,
+              lineHeight: target.lineHeight ?? placement.lineHeight,
+              fill: target.fill ?? placement.fill,
+              backgroundColor:
+                target.backgroundColor ?? placement.backgroundColor,
               selectable: target.selectable ?? element.placement.selectable,
-              visible:target.visible ?? placement.visible,
+              visible: target.visible ?? placement.visible,
               hasControls: target.hasControls ?? placement.hasControls,
               hasBorders: target.hasBorders ?? placement.hasBorders,
-              hasRotatingPoint:target.hasRotatingPoint ?? placement.hasRotatingPoint,
-              lockMovementX:target.lockMovementX ?? placement.lockMovementX,
-              stroke:target.stroke ?? placement.stroke,
-              strokeWidth:target.strokeWidth ?? placement.strokeWidth,
-              strokeUniform:target.strokeUniform ?? placement.strokeUniform,
-              strokeLineCap:target.strokeLineCap ?? placement.strokeLineCap,
-              strokeLineJoin:target.strokeLineJoin ?? placement.strokeLineJoin,
-              strokeMiterLimit:target.strokeMiterLimit ?? placement.strokeMiterLimit,
-              shadow:target.shadow ?? placement.shadow,
-              
+              hasRotatingPoint:
+                target.hasRotatingPoint ?? placement.hasRotatingPoint,
+              lockMovementX: target.lockMovementX ?? placement.lockMovementX,
+              stroke: target.stroke ?? placement.stroke,
+              strokeWidth: target.strokeWidth ?? placement.strokeWidth,
+              strokeUniform: target.strokeUniform ?? placement.strokeUniform,
+              strokeLineCap: target.strokeLineCap ?? placement.strokeLineCap,
+              strokeLineJoin: target.strokeLineJoin ?? placement.strokeLineJoin,
+              strokeMiterLimit:
+                target.strokeMiterLimit ?? placement.strokeMiterLimit,
+              shadow: target.shadow ?? placement.shadow,
             };
             const newElement = {
               ...element,
@@ -2101,10 +2660,9 @@ this.updateEditorElement(newElement);
                 ...element.properties,
                 // @ts-ignore
                 text: target.text ?? element.properties.text,
-                fontSize:target.fontSize ?? element.properties.fontSize,
-                fontFamily:target.fontFamily ?? element.properties.fontFamily
+                fontSize: target.fontSize ?? element.properties.fontSize,
+                fontFamily: target.fontFamily ?? element.properties.fontFamily,
               },
-           
             };
             // const properties = element.properties;
             // const newProperties :Properties={
@@ -2112,9 +2670,6 @@ this.updateEditorElement(newElement);
             //   text:target?
             // }
             store.updateEditorElement(newElement);
-        
-
-            
           });
           break;
         }
@@ -2136,9 +2691,7 @@ this.updateEditorElement(newElement);
     this.updateTimeTo(this.currentTimeInMs);
     store.canvas.renderAll();
   }
-
 }
-
 
 export function isEditorAudioElement(
   element: EditorElement
@@ -2157,14 +2710,20 @@ export function isEditorImageElement(
   return element.type === "image";
 }
 
-
-function getTextObjectsPartitionedByCharacters(textObject: fabric.Text, element: TextEditorElement): fabric.Text[] {
+function getTextObjectsPartitionedByCharacters(
+  textObject: fabric.Text,
+  element: TextEditorElement
+): fabric.Text[] {
   let copyCharsObjects: fabric.Text[] = [];
   // replace all line endings with blank
-  const characters = (textObject.text ?? "").split('').filter((m) => m !== '\n');
+  const characters = (textObject.text ?? "")
+    .split("")
+    .filter((m) => m !== "\n");
   const charObjects = textObject.__charBounds;
   if (!charObjects) return [];
-  const charObjectFixed = charObjects.map((m, index) => m.slice(0, m.length - 1).map(m => ({ m, index }))).flat();
+  const charObjectFixed = charObjects
+    .map((m, index) => m.slice(0, m.length - 1).map((m) => ({ m, index })))
+    .flat();
   const lineHeight = textObject.getHeightOfLine(0);
   for (let i = 0; i < characters.length; i++) {
     if (!charObjectFixed[i]) continue;
@@ -2173,13 +2732,13 @@ function getTextObjectsPartitionedByCharacters(textObject: fabric.Text, element:
     const scaleX = textObject.scaleX ?? 1;
     const scaleY = textObject.scaleY ?? 1;
     const charTextObject = new fabric.Text(char, {
-      left: charObject.left * scaleX + (element.placement.x),
+      left: charObject.left * scaleX + element.placement.x,
       scaleX: scaleX,
       scaleY: scaleY,
-      top: lineIndex * lineHeight * scaleY + (element.placement.y),
+      top: lineIndex * lineHeight * scaleY + element.placement.y,
       fontSize: textObject.fontSize,
       fontWeight: textObject.fontWeight,
-      fill: '#fff',
+      fill: "#fff",
     });
     copyCharsObjects.push(charTextObject);
   }

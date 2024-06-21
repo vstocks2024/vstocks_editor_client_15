@@ -135,6 +135,7 @@ export const ImageResourcesPanel = observer(() => {
               filename={file["filename"]}
               filesource={file["filesource"]}
               index={index}
+              
             />
           );
         })}

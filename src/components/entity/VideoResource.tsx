@@ -59,10 +59,11 @@ export const VideoResource = observer(
           onLoadedData={() => {
             const videoLength = ref.current?.duration ?? 0;
             setFormatedVideoLength(formatTimeToMinSec(videoLength));
+            
           }}
-          crossOrigin="anonymous"
+          crossOrigin='anonymous'
           ref={ref}
-          className=" aspect-video transition-all"
+          className='aspect-video transition-all'
           src={filesource}
           height={150}
           width={150}

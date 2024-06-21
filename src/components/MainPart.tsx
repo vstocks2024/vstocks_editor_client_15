@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from "react";
 import { observer } from "mobx-react";
 import { StoreContext } from "@/store";
 import axios from "axios";
-
 import {
   MdSave,
   MdFileDownload,
@@ -20,19 +19,72 @@ import {
 
 import { getObjectURL } from "./functions/get_put_url";
 import { Store } from "@/store/Store";
-import { EditorElement } from "@/types";
+import { EditorElement, TextEditorElement } from "@/types";
 import { useRouter } from "next/navigation";
 import { isHtmlVideoElement } from "@/utils";
 
 import wait from "@/utils/wait";
 import { useUndoRedo2 } from "@/hooks/useUndoRedo2";
+import { fabric } from "fabric";
 //import { useReducer } from "react";
 
 export const MainPart = observer(() => {
   const store = React.useContext(StoreContext);
   const [value, setValue, undo, redo] = useUndoRedo2(store.editorElements, 10);
  //console.log(store.editorElements);
-  // console.log("value:", value);
+// console.log("value:", value);
+
+
+//This function id used to fetch any Template by its id
+//const handleTemplateFetchById=async(templateId:string)=>{
+  // console.log(templateId);
+  // await axios.get(`${process.env.NEXT_PUBLIC_URL}/get_template_by_id/${templateId}`)
+  // .then((resp)=>{
+  //   while (store.editorElements.length > 0) {
+  //     store.editorElements.pop();
+  //   }
+  //   resp.data["template_data"].map((element:any,ind:number,oa:any)=>{
+  //   const fontFile = new FontFace(
+  //     "Epilogue",
+  //     "url(https://fonts.gstatic.com/s/epilogue/v17/O4ZMFGj5hxF0EhjimngomvnCCtqb30OXMDLiDJXVigHPVA.ttf)"
+  //   );
+  //   document.fonts.add(fontFile);
+  //   fontFile.load().then(() => {
+  //   const textbox:TextEditorElement=new fabric.Textbox(element.properties.text, { fill:"#FFFFFF", left: 100, top: 100 ,fontFamily:fontFile.family });
+    
+  //   },(err)=>{
+  //     console.log(err);
+  //   })
+  //   })
+     
+  // })
+  // .catch((reject)=>{
+  //     console.log(reject);
+  // })
+  //End of Function
+  
+  const handleNewTemplate=async()=>{
+    if(!store.canvas) return;
+    //console.log("JSON",store.canvas?.toJSON());
+    //console.log("Canvas Element",store.canvas?.toCanvasElement());
+    //console.log("Canvas Objects",store.canvas?.toObject());
+    console.log("saved-image-example",store.canvas?.toDataURL({format:'png'}));
+    //console.log("To SVG",store.canvas?.toSVG());
+
+ await axios.post(`${process.env.NEXT_PUBLIC_URL}/template/new_template`,store.canvas?.toJSON(), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((resp)=>{
+    console.log(resp.data);
+    //location.reload();
+  }).catch((err)=>{
+     console.log(err);
+  });
+}
+
+
+
 
  
 
@@ -300,7 +352,14 @@ export const MainPart = observer(() => {
             <span>
               <MdSave
                 size={24}
-                onClick={handleSaveTemplate4}
+                //Old way
+                //onClick={handleSaveTemplate4}
+
+
+                //New Way through store.canvas?.toJSON() method
+                onClick={handleNewTemplate}
+
+                
                 className="cursor-pointer"
               />
             </span>
@@ -309,7 +368,11 @@ export const MainPart = observer(() => {
             <span>
               <MdFileDownload
                 size={24}
-                onClick={handleGetTemplateById}
+                //Actual Function is this one
+                //onClick={handleGetTemplateById}
+
+                //Trial Function
+                //onClick={()=>handleTemplateFetchById("b99944f8-8055-4ebc-8477-983363264453")}
                 className=" cursor-pointer"
               />
             </span>
