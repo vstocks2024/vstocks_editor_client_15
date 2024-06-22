@@ -59,7 +59,7 @@ export const MainCanvas = observer(() => {
   return (
     // <div className='flex border border-green-500 m-0.5 grow shrink basis-0 p-4 min-w-[785] h-[510px] max-w-[1035px]'>
     //   <div className='flex flex-col border  border-yellow-400 m-0.5 p-0.5 w-full min-h-[478px] min-w-[753px] max-h-[478px] max-w-[1003px] justify-center items-center '>
-    <div className='flex w-full h-full flex-col items-center justify-center grow shrink basis-0 p-[1px]  min-[977px]:min-w-[33%] min-[977px]:max-w-[74%]'>
+    <div className='flex w-full h-full flex-col items-center justify-center grow shrink basis-0 p-[1px]  min-[977px]:min-w-[33%] min-[977px]:max-w-full'>
     <div className='flex flex-col w-full m-[1px] p-[1px] justify-center items-center '>
         <div className='relative inline-flex m-[1px] gap-x-2 flex-row items-center justify-center p-1 gap-3'>
           <button onClick={()=>setResizeOpen(true)} className='bg-[#202020] text-[14px]  hover:bg-[#101010]  h-full px-4 py-2 font-bold rounded'>Resize</button>

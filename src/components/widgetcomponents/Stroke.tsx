@@ -77,19 +77,19 @@ export const Stroke =  observer(() => {
     }
   return (
     <>
-    <div className='border border-pink-500 p-0.5 m-0.5'>
+    <div className='topdivlayer'>
     <section onClick={()=>setExpand(!expand)} className={`comphead ${expand===true ? "border-none":"border-b-[0.2px]"}`}>
     <div className='compheadsec1'>
-    <h3 className='border border-green-500 m-0.5 p-0.5'>Stroke</h3>
+    <h3 className='widgetheading'>Stroke</h3>
         <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
         </div>
     </section>
-    {expand   ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
-        <div className='flex flex-col items-center border border-pink-500 gap-y-3 justify-between px-3 py-2'>
+    {expand   ? <section className={` innersection ${expand ? "border-b-[0.2px]":"border-none"}`}>
+        <div className='flex flex-col items-center gap-y-3 justify-between px-3 py-2'>
         <div className='flex flex-row items-center w-full gap-x-1  justify-between'>
             <div className='inline-flex  w-3/5 flex-row items-center gap-x-1 justify-start'>
-            <input type='checkbox' ref={refstrokecheckbox}   className= 'accent-white bg-transparent cursor-pointer border-[0.1px] '/>
-            <input type='color' value={store.selectedElement?.placement.stroke ? store.selectedElement.placement.stroke: undefined} onChange={handleTextBoxStrokeColor} className='h-6 w-5 bg-transparent cursor-pointer'/>
+            <input type='checkbox' ref={refstrokecheckbox}   className= 'checkboxclass'/>
+            <input type='color' value={store.selectedElement?.placement.stroke ? store.selectedElement.placement.stroke: undefined} onChange={handleTextBoxStrokeColor} className='colorboxclass'/>
             <h4 className=' flex items-center cursor-default text-[11px] '>Stroke Color</h4>
             </div>
             <div className='inline-flex  w-1/5  flex-col items-center gap-y-1 justify-between '>
@@ -102,7 +102,7 @@ export const Stroke =  observer(() => {
         </div>
         <div className='flex flex-row items-center w-full  justify-between '>
             <div className='inline-flex flex-row items-center justify-between space-x-1'>
-            <input type='checkbox' checked={store.selectedElement?.placement.strokeUniform ? store.selectedElement.placement.strokeUniform :false} onChange={handleTextBoxUniformStroke} className='accent-white text-black bg-transparent cursor-pointer border '/>
+            <input type='checkbox'  checked={store.selectedElement?.placement.strokeUniform ? store.selectedElement.placement.strokeUniform :false} onChange={handleTextBoxUniformStroke} className='checkboxclass'/>
                 <label htmlFor='uniform stroke' className='text-[11px]'>Uniform Stroke</label>
             </div>
         </div>

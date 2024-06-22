@@ -233,7 +233,7 @@ export const Font = observer(() => {
   }, [files]);
   return (
     <>
-      <div className="border border-pink-500 p-0.5 m-0.5">
+      <div className='topdivlayer'>
         <section
           onClick={() => setExpand(!expand)}
           className={`comphead ${
@@ -241,7 +241,7 @@ export const Font = observer(() => {
           }`}
         >
           <div className="compheadsec1">
-            <h3 className="border border-green-500 m-0.5 p-0.5">Font</h3>
+          <h3 className='widgetheading'>Font</h3>
             <button>
               <span>
                 {expand ? (
@@ -255,14 +255,12 @@ export const Font = observer(() => {
         </section>
         {expand ? (
           <section
-            className={`cursor-pointer w-full border-white bg-[#202020] ${
-              expand ? "border" : "border-none"
-            }`}
+          className={` innersection ${expand ? "border-b-[0.2px]":"border-none"}`}
           >
-            <div className="flex flex-col items-center gap-y-3 px-3 py-2 justify-between border border-green-500">
-              <div className="flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]">
-                <div className="inline-flex w-[75%] flex-row items-center justify-between border border-blue-500 m-[1px] p-[1px]">
-                  <div className="inline-flex flex-col gap-y-1 w-4/5 items-start justify-between border border-orange-500 m-[1px] p-[1px]">
+            <div className="flex flex-col items-center gap-y-3 px-3 py-2 justify-between">
+              <div className="flex flex-row items-center justify-between w-full  m-[1px] p-[1px]">
+                <div className="inline-flex w-[75%] flex-row items-center justify-between m-[1px] p-[1px]">
+                  <div className="inline-flex flex-col gap-y-1 w-4/5 items-start justify-between m-[1px] p-[1px]">
                     <label
                       htmlFor="Family"
                       className="m-[1px] p-[1px] font-semibold text-start text-[11px] text-[#999999]"
@@ -298,11 +296,13 @@ export const Font = observer(() => {
                       <select></select>
                     )}
                   </div>
-                  <div>
+                  
+                  <div >
                     <HiDotsVertical size={24} />
                   </div>
+                  
                 </div>
-                <div className="inline-flex flex-col w-1/4 gap-y-1 items-center justify-between border border-blue-500 m-[1px] p-[1px]">
+                <div className="inline-flex flex-col w-1/4 gap-y-1 items-center justify-between  m-[1px] p-[1px]">
                   <label className="font-semibold text-[11px] text-[#999999]">
                     Size
                   </label>
@@ -332,8 +332,8 @@ export const Font = observer(() => {
                   </select>
                 </div>
               </div>
-              <div className="flex flex-row items-center justify-between w-full  border border-red-500 m-[1px] p-[1px]">
-                <div className=" w-1/2 inline-flex flex-col items-start justify-between border border-blue-500 m-[1px] p-[1px]">
+              <div className="flex flex-row items-center justify-between w-full m-[1px] p-[1px]">
+                <div className=" w-1/2 inline-flex flex-col items-start justify-between m-[1px] p-[1px]">
                   <label
                     htmlFor="Variant"
                     className=" font-semibold text-[11px]  text-[#999999]"
@@ -355,7 +355,7 @@ export const Font = observer(() => {
                     }):null }
                   </select>
                 </div>
-                <div className=" w-1/2 inline-flex flex-row items-center border justify-between space-x-2 border-blue-500 m-[1px] p-[1px]">
+                <div className=" w-1/2 inline-flex flex-row items-center justify-center space-x-2 m-[1px] p-[1px]">
                   <button onClick={handleUnderLine} className="">
                     <span>
                       <MdFormatUnderlined
@@ -394,17 +394,17 @@ export const Font = observer(() => {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-row items-center justify-between   border border-red-500 m-[1px] p-[1px]">
-                <div className="inline-flex flex-row items-center justify-start   border-blue-500 border m-[1px] p-[1px]">
-                  <div className="inline-flex flex-col w-1/4 items-start justify-between space-y-1 border border-green-500 m-[1px] p-[1px]">
+              <div className="flex flex-row items-center justify-between   m-[1px] p-[1px]">
+                <div className="inline-flex flex-row items-center justify-start  m-[1px] p-[1px]">
+                  <div className="inline-flex flex-col w-1/4 items-start justify-between space-y-1  m-[1px] p-[1px]">
                     <label
                       htmlFor="L. Height"
-                      className=" border border-yellow-400 font-semibold text-[11px]  text-[#999999]"
+                      className=" font-semibold text-[11px]  text-[#999999]"
                     >
                       L.Height
                     </label>
                     <input
-                      className="border w-full border-yellow-400 bg-transparent text-[11px] focus:outline-none  cursor-pointer"
+                      className="w-full bg-transparent text-[11px] focus:outline-none  cursor-pointer"
                       onChange={handleLineHeight}
                       value={
                         store.selectedElement?.placement.lineHeight
@@ -413,35 +413,35 @@ export const Font = observer(() => {
                       }
                     />
                   </div>
-                  <div className="inline-flex flex-col  items-start w-1/4 justify-between space-y-1 border border-green-500 m-[1px] p-[1px]">
+                  <div className="inline-flex flex-col  items-start w-1/4 justify-between space-y-1 m-[1px] p-[1px]">
                     <label
                       htmlFor="Spacing"
-                      className="font-semibold text-[11px] border border-yellow-400  text-[#999999]"
+                      className="font-semibold text-[11px]   text-[#999999]"
                     >
                       Spacing
                     </label>
                     <input
-                      className=" border border-yellow-400 w-full  bg-transparent text-[11px] focus:outline-none  cursor-pointer"
+                      className=" w-full  bg-transparent text-[11px] focus:outline-none  cursor-pointer"
                       value={0.5}
                     />
                   </div>
                 </div>
               </div>
-              <div className="flex flex-row items-center justify-between w-full   border border-red-500 m-[1px] p-[1px]">
-                <div className="inline-flex flex-row border-blue-500 border m-[1px] p-[1px]  items-center justify-between space-x-1">
+              <div className="flex flex-row items-center justify-between w-full  m-[1px] p-[1px]">
+                <div className="inline-flex flex-row  m-[1px] p-[1px]  items-center justify-between space-x-1">
                   <input
                     type="checkbox"
                     ref={reftextcolorfill}
-                    className="bg-transparent border"
+                    className="checkboxclass"
                   />
                   <input
                     type="color"
                     onChange={handleTextBoxFill}
-                    className="bg-transparent h-6 w-5 border-none "
+                    className='colorboxclass'
                   />
                   <h3 className="text-[12px]">Text Color</h3>
                 </div>
-                <div className="flex flex-col border border-blue-500 p-[1px] m-[1px]  items-center justify-center">
+                <div className="flex flex-col  p-[1px] m-[1px]  items-center justify-center">
                   <MdColorLens size={24} />
                 </div>
               </div>

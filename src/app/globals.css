@@ -2,11 +2,18 @@
 @tailwind components;
 
 .comphead{
-  @apply cursor-pointer border border-red-600 m-0.5 p-0.5 dark:border-gray-50 font-semibold flex flex-row justify-between items-center text-xs bg-[#151515]
+  @apply cursor-pointer  m-0.5 p-0.5 dark:border-gray-50 font-semibold flex flex-row justify-between items-center text-xs bg-[#151515]
 }
 
 .compheadsec1{
-  @apply w-full inline-flex justify-between items-center flex-row border border-orange-300 m-0.5 p-0.5
+  @apply w-full inline-flex justify-between items-center flex-row m-0.5 p-0.5
+}
+
+.topdivlayer{
+  @apply m-[1px] p-[1px]
+}
+.widgetheading{
+  @apply m-[1px] p-[1px]
 }
 
 .uploadbutton{
@@ -14,10 +21,26 @@
 }
 
 .sidesection{
-  @apply overflow-y-auto border w-full space-y-1 border-green-400 m-0.5 p-0.5 block 
+  @apply overflow-y-auto  w-full space-y-1  block 
 }
 
+.innersection{
+  @apply cursor-pointer w-full bg-[#202020] py-3
+}
 
+.checkboxclass
+{
+  @apply  accent-white bg-transparent cursor-pointer h-4 w-4 border-[0.1px] 
+}
+
+.colorboxclass
+{
+  @apply h-7 w-6  accent-black bg-transparent cursor-pointer
+}
+
+.maincanvasheight{
+  height: 79.563vh
+}
 
 @tailwind utilities;
 

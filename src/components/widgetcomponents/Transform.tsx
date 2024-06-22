@@ -71,14 +71,14 @@ export const Transform = observer(() => {
     }
     return (
       <>
-      <div className='border border-pink-500 p-0.5 m-0.5'>
+      <div className='topdivlayer'>
        <section onClick={()=>setExpand(!expand)} className={`comphead ${expand===true ? "border-none":"border-b-[0.2px]"}`}>
         <div className='compheadsec1'>
-        <h3 className='border border-green-500 m-0.5 p-0.5'>Transform</h3>
+        <h3 className='widgetheading'>Transform</h3>
           <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
           </div>
       </section>
-      {expand   ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
+      {expand   ? <section className={` innersection ${expand ? "border-b-[0.2px]":"border-none"}`}>
         <div className='flex flex-row py-2 px-3 items-start'>
           <div  className='flex flex-col m-[1px] p-[1px] w-[28%] gap-y-1'>
             <div className='flex flex-col items-start justify-between m-[1px] p-[1px] gap-y-1 w-full  font-semibold text-center text-[11px]'>

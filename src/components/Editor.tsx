@@ -70,8 +70,8 @@ export const Editor = observer(() => {
           <MainPart />
         </div>
         {/* h-[79.5632vh] */}
-        <div className=" w-full  h-[510px]  ">
-        <div className="flex flex-row items-start h-full   justify-between w-full">
+        <div className=" w-full  h-[510px] ">
+        <div className="flex flex-row items-start h-full justify-between w-full">
           <Menu />
           {store.selectedMenuOption ? <Resources /> : null}
           <MainCanvas />

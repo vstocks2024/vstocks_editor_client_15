@@ -23,14 +23,14 @@ export const Flip = observer(() => {
     
   return (
     <>
-    <div className='border border-pink-500 p-0.5 m-0.5'>
+    <div className='topdivlayer'>
        <section onClick={()=>setExpand(!expand)} className={`comphead ${expand===true ? "border-none":"border-b-[0.2px]"}`}>
        <div className='compheadsec1'>
-       <h3 className='border border-green-500 m-0.5 p-0.5'>Flip</h3>
+       <h3 className='widgetheading'>Flip</h3>
           <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
           </div>
       </section>
-      {expand   ? <section className={`cursor-pointer m-0.5  p-0.5 w-full border-white bg-[#202020] ${expand ? "border":"border-none"}`}>
+      {expand   ? <section className={` innersection ${expand ? "border-b-[0.2px]":"border-none"}`}>
         <div className='inline-flex flex-row items-center justify-start space-x-3  px-3 py-2'>
         <button onClick={handleFlipHorizontal}  className=''>
           <span><LuFlipHorizontal2 className={`cursor-pointer`} size={24}/></span>

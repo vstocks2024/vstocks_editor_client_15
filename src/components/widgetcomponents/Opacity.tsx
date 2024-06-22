@@ -24,14 +24,14 @@ export const Opacity = observer(() => {
   }
 
   return (<> 
-  <div className='border border-pink-500 p-0.5 m-0.5'>
+    <div className='topdivlayer'>
   <section onClick={()=>setExpand(!expand)} className={`comphead ${expand===true ? "border-none":"border-b-[0.2px]"}`}>
    <div className='compheadsec1'>
-   <h3 className='border border-green-500 m-0.5 p-0.5'>Opacity</h3>
+   <h3 className='widgetheading'>Opacity</h3>
   <button ><span>{expand ? <MdOutlineExpandLess  size={24}/> :<MdOutlineExpandMore size={24} />}</span></button>
   </div>
 </section>
-{expand ? <section className={`cursor-pointer w-full border-white bg-[#202020] ${expand ? "border-b-[0.2px]":"border-none"}`}>
+{expand ? <section className={` innersection ${expand ? "border-b-[0.2px]":"border-none"}`}>
          <div className='flex flex-row items-center justify-between gap-x-1 px-3 py-2'>
          <div className='inline-flex flex-col items-center w-[70%] justify-center'>
          <input id="slider" value={store.selectedElement?.placement.opacity ? store.selectedElement?.placement.opacity*100 : 0 } onChange={handleChangeSlider}  className=' appearance-none rounded-s-lg  accent-black cursor-pointer' type="range" max="100" min="0"/>
