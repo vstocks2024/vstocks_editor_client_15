@@ -83,11 +83,6 @@ export const MainPart = observer(() => {
   });
 }
 
-
-
-
- 
-
   useEffect(() => {
     // setValue(store.editorElements);
     // console.log("From UseEffect");
@@ -353,11 +348,11 @@ export const MainPart = observer(() => {
               <MdSave
                 size={24}
                 //Old way
-                //onClick={handleSaveTemplate4}
+                onClick={handleSaveTemplate4}
 
 
                 //New Way through store.canvas?.toJSON() method
-                onClick={handleNewTemplate}
+                // onClick={handleNewTemplate}
 
                 
                 className="cursor-pointer"
@@ -369,7 +364,7 @@ export const MainPart = observer(() => {
               <MdFileDownload
                 size={24}
                 //Actual Function is this one
-                //onClick={handleGetTemplateById}
+                onClick={handleGetTemplateById}
 
                 //Trial Function
                 //onClick={()=>handleTemplateFetchById("b99944f8-8055-4ebc-8477-983363264453")}
