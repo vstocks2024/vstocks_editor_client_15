@@ -143,11 +143,11 @@ const MENU_OPTIONS = [
   //     store.setSelectedMenuOption("Fill");
   //   },
   // },
-  // {
-  //   name: "Export",
-  //   icon: MdDownload,
-  //   action: (store: Store) => {
-  //     store.setSelectedMenuOption("Export");
-  //   },
-  // },
+  {
+    name: "Export",
+    icon: MdDownload,
+    action: (store: Store) => {
+      store.setSelectedMenuOption("Export");
+    },
+  },
 ];

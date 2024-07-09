@@ -12,10 +12,10 @@ export type EditorElementBase<T extends string, Properties> = {
 };
 export type VideoEditorElement = EditorElementBase<
   "video",
-  { crossOrigin?: '' | 'anonymous' | 'use-credentials' | undefined;   src: string; readonly elementId: string; imageObject?: fabric.Image, effect: Effect }>;
+  { src: string; readonly elementId: string; imageObject?: fabric.Image, effect: Effect }>;
 export type ImageEditorElement = EditorElementBase<
   "image",
-  { crossOrigin?: '' | 'anonymous' | 'use-credentials' | undefined; src: string | "undefined"; readonly elementId: string; imageObject?: fabric.Object, effect: Effect }>;
+  {  src: string | "undefined"; readonly elementId: string; imageObject?: fabric.Object, effect: Effect }>;
 
 export type AudioEditorElement = EditorElementBase<
   "audio",

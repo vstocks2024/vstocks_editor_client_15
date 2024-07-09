@@ -68,8 +68,10 @@ export const MainPart = observer(() => {
     //console.log("JSON",store.canvas?.toJSON());
     //console.log("Canvas Element",store.canvas?.toCanvasElement());
     //console.log("Canvas Objects",store.canvas?.toObject());
-    console.log("saved-image-example",store.canvas?.toDataURL({format:'png'}));
+    //console.log("saved-image-example",store.canvas?.toDataURL({format:'png'}));
     //console.log("To SVG",store.canvas?.toSVG());
+    store.convertCanvasToMP4();
+    
 
  await axios.post(`${process.env.NEXT_PUBLIC_URL}/template/new_template`,store.canvas?.toJSON(), {
     headers: {
@@ -348,11 +350,11 @@ export const MainPart = observer(() => {
               <MdSave
                 size={24}
                 //Old way
-                onClick={handleSaveTemplate4}
+                // onClick={handleSaveTemplate4}
 
 
                 //New Way through store.canvas?.toJSON() method
-                // onClick={handleNewTemplate}
+                onClick={handleNewTemplate}
 
                 
                 className="cursor-pointer"
@@ -364,10 +366,10 @@ export const MainPart = observer(() => {
               <MdFileDownload
                 size={24}
                 //Actual Function is this one
-                onClick={handleGetTemplateById}
+                 onClick={handleGetTemplateById}
 
                 //Trial Function
-                //onClick={()=>handleTemplateFetchById("b99944f8-8055-4ebc-8477-983363264453")}
+                // onClick={()=>handleTemplateFetchById("b99944f8-8055-4ebc-8477-983363264453")}
                 className=" cursor-pointer"
               />
             </span>

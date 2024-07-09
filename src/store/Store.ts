@@ -2030,7 +2030,6 @@ export class Store {
         end: videoDurationMs,
       },
       properties: {
-        crossOrigin:`anonymous`,
         elementId: `${id}`,
         src: videoElement.src,
         effect: {
@@ -2068,7 +2067,7 @@ export class Store {
         end: this.maxTime,
       },
       properties: {
-        crossOrigin:`anonymous`,
+
         elementId: `${id}`,
         src: imageElement.src,
         effect: {
@@ -2304,10 +2303,20 @@ export class Store {
     this.saveCanvasToVideoWithAudioWebmMp4();
   }
 
+  //Mayank wrote this code 
+
+  convertCanvasToMP4(){
+     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const stream = canvas.captureStream(30);
+    console.log(canvas);
+    //const canvas = document.getElementById("lower-canvas") as HTMLCanvasElement;
+  //console.log(this.canvas?.item(0));
+  }
+
   saveCanvasToVideoWithAudioWebmMp4() {
     console.log("modified");
     let mp4 = this.selectedVideoFormat === "mp4";
-    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const canvas = document.getElementById("lower-canvas") as HTMLCanvasElement;
     console.log(canvas);
     const stream = canvas.captureStream(30);
 
@@ -2428,6 +2437,7 @@ export class Store {
             objectCaching: false,
             selectable: true,
             lockUniScaling: true,
+            crossOrigin:"anonymous",
 
             opacity: element.placement.opacity,
             // filters: filters,
@@ -2501,6 +2511,7 @@ export class Store {
             objectCaching: false,
             selectable: true,
             lockUniScaling: true,
+            crossOrigin:"anonymous",
 
             opacity: element.placement.opacity,
 

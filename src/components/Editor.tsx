@@ -35,17 +35,17 @@ export const Editor = observer(() => {
 
   useEffect(() => {
     console.log(store.width,store.height);
-    const canvas = new fabric.Canvas("lower-canvas", {
+    var canvas = new fabric.Canvas("lower-canvas",{
       height: store.height,
       width: store.width,
       backgroundColor: "#242728",
-      
     });
     fabric.Object.prototype.transparentCorners = false;
     fabric.Object.prototype.cornerColor = "#00a0f5";
     fabric.Object.prototype.cornerStyle = "circle";
     fabric.Object.prototype.cornerStrokeColor = "#0063d8";
     fabric.Object.prototype.cornerSize = 10;
+    
     
 
     // canvas mouse down without target should deselect active object
@@ -56,6 +56,7 @@ export const Editor = observer(() => {
     });
 
     store.setCanvas(canvas);
+    
     fabric.util.requestAnimFrame(function render() {
       canvas.renderAll();
       fabric.util.requestAnimFrame(render);
